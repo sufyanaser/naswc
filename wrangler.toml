@@ -1,0 +1,6 @@
+name = "naswc"
+compatibility_date = "2025-08-01"
+
+[[r2_buckets]]
+binding = "NASCW_UPLOADS"
+bucket_name = "nascw-uploads"

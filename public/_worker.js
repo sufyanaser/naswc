@@ -9,7 +9,7 @@ export default {
     return new HTMLRewriter()
       .on('head', {
         element(element) {
-          element.append('\n<link rel="stylesheet" href="/team-orbit.css" data-nas-team-orbit="base">\n<link rel="stylesheet" href="/team-orbit-polish.css" data-nas-team-orbit="polish">\n<link rel="stylesheet" href="/premium-team-services.css" data-nas-premium-team-services="true">\n<link rel="stylesheet" href="/layout-rhythm-pass.css" data-nas-layout-rhythm="true">\n<link rel="stylesheet" href="/hero-workflow.css" data-nas-hero-workflow="style">\n<link rel="stylesheet" href="/intro-logo.css" data-nas-intro="style">\n<script src="/hero-workflow.js" defer data-nas-hero-workflow="script"></script>\n<script src="/intro-logo.js" defer data-nas-intro="script"></script>', { html: true });
+          element.append('\n<link rel="stylesheet" href="/team-orbit.css" data-nas-team-orbit="base">\n<link rel="stylesheet" href="/team-orbit-polish.css" data-nas-team-orbit="polish">\n<link rel="stylesheet" href="/premium-team-services.css" data-nas-premium-team-services="true">\n<link rel="stylesheet" href="/layout-rhythm-pass.css" data-nas-layout-rhythm="true">\n<link rel="stylesheet" href="/hero-workflow.css" data-nas-hero-workflow="style">\n<script src="/hero-workflow.js" defer data-nas-hero-workflow="script"></script>', { html: true });
         }
       })
       .transform(response);

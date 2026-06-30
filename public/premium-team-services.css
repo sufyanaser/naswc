@@ -1,6 +1,13 @@
 @import url('/team-final-cards.css');
 @import url('/team-photo-transparent-fix.css');
 
+.brand > svg{display:none!important}
+.brand::before{content:"";width:36px;height:36px;flex:none;display:inline-block;background:url('/brand/nascw-mark.svg') center/contain no-repeat;filter:drop-shadow(0 8px 18px rgba(0,212,255,.22))}
+.logo-img{max-height:36px!important;width:auto!important;object-fit:contain!important}
+.tb-brand .mk{width:34px!important;height:34px!important;border-radius:10px!important;background:url('/brand/nascw-mark.svg') center/contain no-repeat!important;box-shadow:none!important}
+.tb-brand .mk::before{display:none!important}
+@media (max-width:620px){.brand::before{width:32px;height:32px}.tb-brand .mk{width:30px!important;height:30px!important}}
+
 /* NAS CodeWorks — Premium services + team refinement
    Scope: featured service restraint, icon hover cinema, premium scalable team cards. */
 

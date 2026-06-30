@@ -9,7 +9,7 @@ export default {
     return new HTMLRewriter()
       .on('head', {
         element(element) {
-          element.append('\n<link rel="stylesheet" href="/team-orbit.css" data-nas-team-orbit="true">', { html: true });
+          element.append('\n<link rel="stylesheet" href="/team-orbit.css" data-nas-team-orbit="base">\n<link rel="stylesheet" href="/team-orbit-polish.css" data-nas-team-orbit="polish">', { html: true });
         }
       })
       .transform(response);

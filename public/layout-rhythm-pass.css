@@ -8,8 +8,12 @@
 }
 html{scroll-padding-top:84px;}
 body::before{
-  opacity:.82!important;
-  background-size:96px 96px!important;
+  opacity:.24!important;
+  background-size:132px 132px!important;
+  filter:blur(.15px)!important;
+}
+body::after{
+  opacity:.42!important;
 }
 section{
   padding-block:64px!important;
@@ -46,12 +50,12 @@ section .wrap{
 .hero .cta{
   margin-top:22px!important;
 }
-.nas-hero-workflow{opacity:.88!important;}
-.wf-card{opacity:.55!important;}
-.wf-left .wf-card{opacity:.48!important;}
-.wf-right .wf-card{opacity:.62!important;border-color:rgba(34,201,138,.20)!important;}
-.wf-lane{opacity:.26!important;}
-.wf-packet{box-shadow:0 0 26px rgba(0,212,255,.14)!important;}
+.nas-hero-workflow{opacity:.72!important;}
+.wf-card{opacity:.42!important;}
+.wf-left .wf-card{opacity:.36!important;}
+.wf-right .wf-card{opacity:.48!important;border-color:rgba(34,201,138,.18)!important;}
+.wf-lane{opacity:.18!important;}
+.wf-packet{box-shadow:0 0 22px rgba(0,212,255,.10)!important;}
 
 /* Pain cards: wider and less cramped. */
 .pain-grid{
@@ -135,27 +139,36 @@ section .wrap{
   border-radius:22px!important;
 }
 
-/* Team: keep compact; it is support proof, not the main conversion mechanism. */
+/* Team: force one row on desktop; keep compact and non-dominant. */
 #team{
   padding-top:54px!important;
   padding-bottom:58px!important;
 }
-#team .team-grid{
-  max-width:920px!important;
-  gap:16px!important;
+#team .team-grid,
+.team-grid{
+  max-width:1060px!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+  align-items:stretch!important;
 }
 .team-grid .tm{
-  min-height:330px!important;
+  min-width:0!important;
+  min-height:318px!important;
+  padding:20px 14px 18px!important;
 }
 .team-grid .tm-photo,
 .team-grid .tm:first-child .tm-photo{
-  width:142px!important;
-  height:142px!important;
-  min-height:142px!important;
-  margin-bottom:18px!important;
+  width:132px!important;
+  height:132px!important;
+  min-height:132px!important;
+  margin-bottom:16px!important;
 }
+.team-grid .tm .nm{font-size:15.5px!important;}
+.team-grid .tm .rl{font-size:12px!important;}
 .team-grid .tm .bio{
-  min-height:44px!important;
+  min-height:38px!important;
+  font-size:12px!important;
+  max-width:160px!important;
 }
 
 /* Process: timeline feel. */
@@ -238,6 +251,14 @@ footer .wrap{
   .pain-grid,.proof-grid,.proc,#services .svc-grid{grid-template-columns:1fr 1fr!important;}
   .proof-card:first-child{grid-row:auto;grid-column:1/-1;}
   .start{grid-template-columns:1fr!important;}
+  #team .team-grid,.team-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;max-width:940px!important;}
+  .team-grid .tm{padding:18px 10px 16px!important;}
+  .team-grid .tm-photo,.team-grid .tm:first-child .tm-photo{width:110px!important;height:110px!important;min-height:110px!important;}
+  .team-grid .tm .bio{font-size:11.4px!important;max-width:140px!important;}
+}
+@media (max-width:760px){
+  #team .team-grid,.team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:620px!important;gap:14px!important;}
+  .team-grid .tm-photo,.team-grid .tm:first-child .tm-photo{width:124px!important;height:124px!important;min-height:124px!important;}
 }
 @media (max-width:680px){
   section{padding-block:48px!important;}
@@ -247,4 +268,7 @@ footer .wrap{
   .hero{min-height:auto!important;padding-top:72px!important;padding-bottom:50px!important;}
   .pricing-note{align-items:stretch!important;}
   .pricing-note span{justify-content:center!important;}
+}
+@media (max-width:520px){
+  #team .team-grid,.team-grid{grid-template-columns:1fr!important;max-width:330px!important;}
 }

@@ -80,12 +80,15 @@
 .team-grid .tm:first-child .tm-photo img{
   object-fit:contain!important;
   object-position:center center!important;
-  transform:scale(.96)!important;
+  transform:scale(1.18)!important;
 }
-.team-grid .tm:hover .tm-photo img,
-.team-grid .tm:first-child:hover .tm-photo img{
+.team-grid .tm:hover .tm-photo img{
   filter:grayscale(0%) contrast(1.03) brightness(1.03) drop-shadow(0 16px 18px rgba(0,0,0,.25))!important;
   transform:scale(1.03)!important;
+}
+.team-grid .tm:first-child:hover .tm-photo img{
+  filter:grayscale(0%) contrast(1.03) brightness(1.03) drop-shadow(0 16px 18px rgba(0,0,0,.25))!important;
+  transform:scale(1.25)!important;
 }
 .team-grid .tm-photo .tm-ph{
   position:absolute!important;
@@ -117,5 +120,11 @@
     width:146px!important;
     height:146px!important;
     min-height:146px!important;
+  }
+  .team-grid .tm:first-child .tm-photo img{
+    transform:scale(1.16)!important;
+  }
+  .team-grid .tm:first-child:hover .tm-photo img{
+    transform:scale(1.23)!important;
   }
 }

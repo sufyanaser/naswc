@@ -15,6 +15,57 @@
   ];
   const packets = ['XLS', 'WA', 'PDF', 'INV'];
 
+  function installPngSafeUpload() {
+    const pngSafeCompressor = function(file, maxW = 1600, quality = .82) {
+      return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            let w = img.width;
+            let h = img.height;
+            if (w > maxW) {
+              h = Math.round(h * maxW / w);
+              w = maxW;
+            }
+            const cv = document.createElement('canvas');
+            cv.width = w;
+            cv.height = h;
+            const ctx = cv.getContext('2d', { willReadFrequently: true });
+            ctx.clearRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0, w, h);
+
+            let hasAlpha = file.type === 'image/png' || file.type === 'image/webp';
+            try {
+              const sample = ctx.getImageData(0, 0, w, h).data;
+              for (let i = 3; i < sample.length; i += 4) {
+                if (sample[i] < 255) { hasAlpha = true; break; }
+              }
+            } catch (_) {}
+
+            if (hasAlpha) {
+              res(cv.toDataURL('image/png'));
+            } else {
+              res(cv.toDataURL('image/jpeg', quality));
+            }
+          };
+          img.onerror = rej;
+          img.src = r.result;
+        };
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+    };
+
+    try {
+      window.fileToCompressedDataURL = pngSafeCompressor;
+      fileToCompressedDataURL = pngSafeCompressor;
+      window.__NAS_PNG_SAFE_UPLOAD__ = true;
+    } catch (_) {
+      window.fileToCompressedDataURL = pngSafeCompressor;
+    }
+  }
+
   function cardMarkup(items, side) {
     return `<div class="wf-side wf-${side}">${items.map(([icon, label]) =>
       `<div class="wf-card"><i>${icon}</i><span>${label}</span></div>`
@@ -122,8 +173,9 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { waitForHero(); waitForTeam(); bindScroll(); }, { once: true });
+    document.addEventListener('DOMContentLoaded', () => { installPngSafeUpload(); waitForHero(); waitForTeam(); bindScroll(); }, { once: true });
   } else {
+    installPngSafeUpload();
     waitForHero();
     waitForTeam();
     bindScroll();

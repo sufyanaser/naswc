@@ -121,6 +121,31 @@
     }
   }
 
+  function installSafeSaveOverride() {
+    if (typeof window.save !== "function") return;
+
+    window.save = function safeCloudAwareSave(silent) {
+      C.meta = C.meta || {};
+      C.meta.updatedAt = new Date().toISOString();
+
+      const nextValue = JSON.stringify(C);
+      const previousValue = localStorage.getItem(STORE_KEY);
+
+      try {
+        localStorage.removeItem(STORE_KEY);
+        localStorage.setItem(STORE_KEY, nextValue);
+        if (!silent) toast("تم الحفظ بنجاح ✓");
+        return true;
+      } catch (error) {
+        try {
+          if (previousValue) localStorage.setItem(STORE_KEY, previousValue);
+        } catch (_) {}
+        toast("خطأ: التخزين ممتلئ. احذف الصور القديمة المحفوظة ثم احفظ من جديد.", true);
+        return false;
+      }
+    };
+  }
+
   window.NASCWUpload = {
     uploadImage,
     clearToken() { localStorage.removeItem(CONFIG.tokenKey); },
@@ -128,6 +153,7 @@
   };
 
   window.fileToCompressedDataURL = cloudImageValue;
+  installSafeSaveOverride();
 
   console.info("[NASCW Upload] Cloud image upload override active. Raster images are stored as R2 URLs, not Base64.");
 })();

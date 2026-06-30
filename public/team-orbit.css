@@ -1,0 +1,231 @@
+/* NAS CodeWorks — Team Orbit visual layer
+   Purpose: compact, scalable team section with automatic reflow. */
+#team{
+  padding:48px 0 58px;
+  overflow:hidden;
+}
+#team .wrap{
+  position:relative;
+}
+#team .wrap::before{
+  content:"";
+  position:absolute;
+  inset:86px 20px auto 20px;
+  height:320px;
+  pointer-events:none;
+  opacity:.42;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(0,212,255,.13),transparent 34%),
+    radial-gradient(circle at 28% 50%,rgba(124,58,237,.10),transparent 30%),
+    radial-gradient(circle at 72% 50%,rgba(34,201,138,.08),transparent 28%);
+  filter:blur(3px);
+}
+#team .kicker,
+#team .sec,
+#team .sec-sub{
+  position:relative;
+  z-index:2;
+}
+#team .sec{
+  max-width:720px;
+}
+#team .sec-sub{
+  max-width:620px;
+  margin-bottom:30px;
+}
+.team-grid{
+  position:relative;
+  z-index:2;
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(min(245px,100%),1fr))!important;
+  gap:16px!important;
+  align-items:stretch;
+  max-width:1030px;
+  margin-inline:auto;
+}
+.team-grid::before{
+  content:"";
+  position:absolute;
+  inset:42px 12% auto 12%;
+  height:1px;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,.35),rgba(124,58,237,.35),transparent);
+  opacity:.55;
+}
+.tm{
+  position:relative;
+  min-height:308px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border-radius:22px!important;
+  background:
+    linear-gradient(180deg,rgba(19,35,62,.96),rgba(10,18,32,.96))!important;
+  border:1px solid rgba(30,51,84,.82)!important;
+  box-shadow:0 18px 50px -32px rgba(0,0,0,.9);
+  isolation:isolate;
+  transition:transform .36s cubic-bezier(.22,.61,.36,1),border-color .36s ease,box-shadow .36s ease!important;
+}
+.tm::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.75;
+  background:
+    linear-gradient(135deg,rgba(0,212,255,.10),transparent 36%),
+    radial-gradient(circle at 22% 16%,rgba(0,212,255,.13),transparent 20%),
+    radial-gradient(circle at 88% 82%,rgba(124,58,237,.13),transparent 23%);
+  z-index:-1;
+}
+.tm::after{
+  content:"";
+  position:absolute;
+  top:16px;
+  inset-inline-start:16px;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 0 6px rgba(34,201,138,.10),0 0 22px rgba(34,201,138,.45);
+}
+.tm:hover{
+  transform:translateY(-7px)!important;
+  border-color:rgba(0,212,255,.72)!important;
+  box-shadow:0 26px 70px -38px rgba(0,212,255,.55),0 18px 52px -36px rgba(0,0,0,.9);
+}
+.tm-photo{
+  height:176px!important;
+  aspect-ratio:auto!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:hidden;
+  background:
+    linear-gradient(145deg,rgba(0,212,255,.08),rgba(124,58,237,.10)),
+    linear-gradient(180deg,#0B1628,#0A1220)!important;
+  border-bottom:1px solid rgba(30,51,84,.65);
+}
+.tm:first-child .tm-photo{
+  height:206px!important;
+}
+.tm-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:grayscale(100%) contrast(1.06) brightness(.9)!important;
+  transform:scale(1.01)!important;
+  transition:filter .46s ease,transform .58s cubic-bezier(.22,.61,.36,1)!important;
+}
+.tm:hover .tm-photo img{
+  filter:grayscale(0%) contrast(1) brightness(1)!important;
+  transform:scale(1.055)!important;
+}
+.tm-photo::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(0deg,rgba(8,12,20,.58),transparent 58%),
+    radial-gradient(circle at 50% 105%,rgba(0,212,255,.18),transparent 36%);
+  opacity:.72!important;
+  transition:opacity .35s ease!important;
+}
+.tm:hover .tm-photo::after{
+  opacity:.28!important;
+}
+.tm-photo .tm-ph{
+  position:relative!important;
+  inset:auto!important;
+  width:74px;
+  height:74px;
+  display:grid!important;
+  place-items:center!important;
+  border-radius:22px;
+  color:rgba(234,241,251,.78)!important;
+  font-size:28px!important;
+  font-weight:700!important;
+  background:
+    linear-gradient(135deg,rgba(0,212,255,.12),rgba(124,58,237,.16))!important;
+  border:1px solid rgba(0,212,255,.22);
+  box-shadow:inset 0 0 28px rgba(0,212,255,.05),0 16px 34px -24px rgba(0,212,255,.45);
+}
+.tm:first-child .tm-photo .tm-ph{
+  width:88px;
+  height:88px;
+  border-radius:26px;
+  font-size:34px!important;
+}
+.tm-body{
+  position:relative;
+  padding:17px 18px 20px!important;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  flex:1;
+  background:linear-gradient(180deg,rgba(15,26,46,.90),rgba(10,18,32,.94));
+}
+.tm-body::before{
+  content:"Operational Role";
+  align-self:flex-start;
+  order:-1;
+  display:inline-flex;
+  padding:4px 9px;
+  border-radius:999px;
+  color:var(--fg-3);
+  font-size:11px;
+  line-height:1;
+  border:1px solid rgba(30,51,84,.8);
+  background:rgba(8,12,20,.35);
+}
+.tm:first-child .tm-body::before{
+  content:"Core Lead";
+  color:var(--cyan);
+  border-color:rgba(0,212,255,.24);
+  background:rgba(0,212,255,.08);
+}
+.tm-body .nm{
+  font-size:17px!important;
+  line-height:1.35;
+  margin:0!important;
+}
+.tm-body .rl{
+  font-size:13px!important;
+  margin:0!important;
+  color:var(--cyan)!important;
+}
+.tm-body .bio{
+  margin-top:auto;
+  color:var(--fg-2)!important;
+  font-size:12.8px!important;
+  line-height:1.65!important;
+  padding-top:10px;
+  border-top:1px solid rgba(30,51,84,.58);
+}
+@media (min-width:980px){
+  .team-grid:has(.tm:nth-child(3):last-child){
+    grid-template-columns:minmax(230px,1fr) minmax(260px,1.08fr) minmax(230px,1fr)!important;
+  }
+  .team-grid:has(.tm:nth-child(3):last-child) .tm:first-child{
+    order:2;
+  }
+  .team-grid:has(.tm:nth-child(3):last-child) .tm:nth-child(2){
+    order:3;
+  }
+  .team-grid:has(.tm:nth-child(3):last-child) .tm:nth-child(3){
+    order:1;
+  }
+}
+@media (max-width:760px){
+  #team{padding:38px 0 44px;}
+  #team .sec-sub{margin-bottom:22px;}
+  .team-grid{grid-template-columns:1fr!important;max-width:420px;}
+  .team-grid::before{display:none;}
+  .tm{min-height:auto;}
+  .tm-photo,.tm:first-child .tm-photo{height:168px!important;}
+}
+@media (prefers-reduced-motion:reduce){
+  .tm,.tm-photo img{transition:none!important;}
+  .tm:hover{transform:none!important;}
+  .tm-photo img{filter:grayscale(0%)!important;transform:none!important;}
+}

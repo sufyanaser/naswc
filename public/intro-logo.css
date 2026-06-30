@@ -1,0 +1,32 @@
+/* NAS CodeWorks — Signal Assembly Intro */
+.nas-intro-lock{overflow:hidden!important}
+.nas-intro-running .hero .wrap{opacity:0;transform:translateY(18px) scale(.985);filter:blur(7px);transition:opacity .78s ease,transform .9s cubic-bezier(.19,1,.22,1),filter .78s ease}
+.nas-intro-reveal .hero .wrap{opacity:1;transform:none;filter:none}
+.nas-intro{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,rgba(0,212,255,.08),transparent 34%),linear-gradient(180deg,#101927,#080C14);overflow:hidden;isolation:isolate;pointer-events:auto;opacity:1;transition:opacity .72s ease,visibility .72s ease}
+.nas-intro::before{content:"";position:absolute;inset:-20%;background:linear-gradient(90deg,transparent,rgba(0,212,255,.08),transparent),radial-gradient(circle at 50% 50%,rgba(124,58,237,.10),transparent 34%);filter:blur(20px);opacity:.72;animation:nasIntroField 3.2s ease-in-out forwards}
+.nas-intro::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:92px 92px;mask-image:radial-gradient(circle at 50% 48%,black,transparent 68%);opacity:.28}
+.nas-intro.is-exiting{opacity:0;visibility:hidden;pointer-events:none}
+.intro-stage{position:relative;width:min(620px,82vw);height:min(620px,82vw);display:grid;place-items:center;perspective:1000px;z-index:2;transform:translateZ(0)}
+.intro-orbit{position:absolute;inset:0;transform-origin:center;animation:nasIntroOrbit 2.25s cubic-bezier(.19,1,.22,1) .72s forwards}
+.intro-cube{position:absolute;width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#52eaff,#1664d8);box-shadow:inset 0 2px 0 rgba(255,255,255,.38),inset 0 -4px 0 rgba(2,34,97,.35),0 16px 34px -22px rgba(0,212,255,.88),0 0 0 1px rgba(123,225,255,.22);opacity:0;transform:translate3d(var(--sx),var(--sy),0) scale(.42) rotate(var(--r));animation:nasIntroCubeIn .72s cubic-bezier(.19,1,.22,1) var(--d) forwards,nasIntroCubeSettle 1.45s cubic-bezier(.19,1,.22,1) .92s forwards}
+.intro-cube::before{content:"";position:absolute;inset:4px;border-radius:15px;background:linear-gradient(135deg,rgba(255,255,255,.32),transparent 42%);opacity:.72}
+.intro-cube::after{content:"";position:absolute;inset:-16px;border-radius:30px;background:radial-gradient(circle,rgba(0,212,255,.24),transparent 62%);filter:blur(8px);opacity:.62;z-index:-1}
+.cube-1{--sx:-190px;--sy:70px;--r:-18deg;--d:.05s;left:48%;top:26%}
+.cube-2{--sx:110px;--sy:-100px;--r:16deg;--d:.18s;left:58%;top:43%;width:56px;height:56px;border-radius:15px}
+.cube-3{--sx:150px;--sy:100px;--r:28deg;--d:.31s;left:48%;top:57%;width:78px;height:78px;border-radius:20px}
+.cube-4{--sx:-70px;--sy:-170px;--r:-10deg;--d:.44s;left:62%;top:22%;width:64px;height:64px;border-radius:17px}
+.intro-ring{position:absolute;inset:0;margin:auto;width:430px;height:430px;max-width:68vw;max-height:68vw;border-radius:50%;opacity:0;transform:scale(.76) rotate(-42deg);animation:nasIntroRing 1.35s cubic-bezier(.19,1,.22,1) 1.25s forwards}
+.intro-ring::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 205deg,rgba(15,72,167,.98),rgba(72,223,245,.98),rgba(22,92,190,.98) 56%,transparent 57%,transparent 72%,rgba(52,210,238,.92) 76%,rgba(15,72,167,.98));mask:radial-gradient(farthest-side,transparent calc(100% - 76px),#000 calc(100% - 74px));filter:drop-shadow(0 34px 52px rgba(0,0,0,.34)) drop-shadow(0 0 34px rgba(0,212,255,.20))}
+.intro-logo{position:absolute;width:420px;max-width:68vw;height:auto;opacity:0;transform:scale(.74) rotate(-6deg);filter:drop-shadow(0 34px 52px rgba(0,0,0,.42)) drop-shadow(0 0 34px rgba(0,212,255,.18));animation:nasIntroLogo 1.34s cubic-bezier(.19,1,.22,1) 1.72s forwards,nasIntroLogoExit .74s cubic-bezier(.55,.06,.68,.19) 2.72s forwards}
+.intro-signal{position:absolute;width:8px;height:8px;border-radius:50%;background:#00D4FF;box-shadow:0 0 26px rgba(0,212,255,.8),0 0 56px rgba(124,58,237,.42);opacity:0;animation:nasIntroSignal 1.2s ease-in-out 1.55s forwards}
+@keyframes nasIntroField{0%{transform:scale(1.08) rotate(-4deg);opacity:.3}55%{opacity:.85}100%{transform:scale(1) rotate(0deg);opacity:.55}}
+@keyframes nasIntroCubeIn{0%{opacity:0;filter:blur(12px);transform:translate3d(var(--sx),var(--sy),0) scale(.42) rotate(var(--r))}100%{opacity:1;filter:blur(0);transform:translate3d(0,0,0) scale(1) rotate(0deg)}}
+@keyframes nasIntroCubeSettle{0%{}100%{transform:translate3d(var(--tx),var(--ty),0) scale(.72) rotate(0deg);opacity:.82}}
+.cube-1{--tx:-20px;--ty:-18px}.cube-2{--tx:30px;--ty:-20px}.cube-3{--tx:18px;--ty:34px}.cube-4{--tx:58px;--ty:6px}
+@keyframes nasIntroOrbit{0%{transform:rotate(0deg) scale(1)}60%{transform:rotate(205deg) scale(.94)}100%{transform:rotate(320deg) scale(.72);opacity:.36}}
+@keyframes nasIntroRing{0%{opacity:0;transform:scale(.76) rotate(-42deg);filter:blur(8px)}100%{opacity:.58;transform:scale(1) rotate(0deg);filter:blur(0)}}
+@keyframes nasIntroLogo{0%{opacity:0;transform:scale(.74) rotate(-6deg);filter:blur(12px) drop-shadow(0 0 0 rgba(0,212,255,0))}100%{opacity:1;transform:scale(1) rotate(0deg);filter:blur(0) drop-shadow(0 34px 52px rgba(0,0,0,.42)) drop-shadow(0 0 34px rgba(0,212,255,.18))}}
+@keyframes nasIntroLogoExit{0%{opacity:1;transform:scale(1) translateY(0)}100%{opacity:0;transform:scale(.86) translateY(-18px);filter:blur(10px) drop-shadow(0 0 0 rgba(0,0,0,0))}}
+@keyframes nasIntroSignal{0%{opacity:0;transform:scale(.5)}35%{opacity:.72;transform:scale(1.35)}100%{opacity:0;transform:scale(4)}}
+@media (max-width:620px){.intro-stage{width:88vw;height:88vw}.intro-cube{width:50px;height:50px;border-radius:14px}.cube-2{width:42px;height:42px}.cube-3{width:56px;height:56px}.cube-4{width:46px;height:46px}.intro-logo{width:300px}.intro-ring{width:310px;height:310px}.intro-ring::before{mask:radial-gradient(farthest-side,transparent calc(100% - 54px),#000 calc(100% - 52px))}}
+@media (prefers-reduced-motion:reduce){.nas-intro{display:none!important}.nas-intro-running .hero .wrap{opacity:1;transform:none;filter:none}}

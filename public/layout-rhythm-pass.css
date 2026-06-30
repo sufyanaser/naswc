@@ -1,0 +1,250 @@
+/* NAS CodeWorks — Layout Rhythm Pass
+   Additive CSS-only improvement layer. Rollback: remove this file from _worker.js or restore branch snapshot-before-layout-rhythm-pass. */
+:root{
+  --nas-wide:1120px;
+  --nas-mid:940px;
+  --nas-copy:720px;
+  --nas-gap:18px;
+}
+html{scroll-padding-top:84px;}
+body::before{
+  opacity:.82!important;
+  background-size:96px 96px!important;
+}
+section{
+  padding-block:64px!important;
+}
+section .wrap{
+  width:min(var(--nas-wide),calc(100% - 42px))!important;
+}
+.sec,
+.sec-sub{
+  margin-inline:auto!important;
+}
+.sec{max-width:var(--nas-copy)!important;}
+.sec-sub{max-width:650px!important;}
+
+/* Hero: keep the text dominant, make workflow background readable on second glance. */
+.hero{
+  min-height:650px!important;
+  padding-top:86px!important;
+  padding-bottom:72px!important;
+}
+.hero .wrap{
+  max-width:820px!important;
+  position:relative;
+  z-index:3;
+}
+.hero h1{
+  max-width:780px!important;
+  margin-inline:auto!important;
+  text-shadow:0 22px 58px rgba(0,0,0,.42),0 0 34px rgba(0,212,255,.07);
+}
+.hero .lead{
+  max-width:640px!important;
+}
+.hero .cta{
+  margin-top:22px!important;
+}
+.nas-hero-workflow{opacity:.88!important;}
+.wf-card{opacity:.55!important;}
+.wf-left .wf-card{opacity:.48!important;}
+.wf-right .wf-card{opacity:.62!important;border-color:rgba(34,201,138,.20)!important;}
+.wf-lane{opacity:.26!important;}
+.wf-packet{box-shadow:0 0 26px rgba(0,212,255,.14)!important;}
+
+/* Pain cards: wider and less cramped. */
+.pain-grid{
+  max-width:1000px!important;
+  margin-inline:auto!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:16px!important;
+}
+.pain-card{
+  min-height:174px!important;
+  padding:24px 22px!important;
+}
+.pain-card h3{font-size:15.5px!important;line-height:1.45!important;}
+.pain-card p{font-size:13.4px!important;line-height:1.75!important;}
+
+/* Before / After: keep split readable and more deliberate. */
+.ba{
+  max-width:900px!important;
+  margin-inline:auto!important;
+  gap:18px!important;
+}
+.ba-col{
+  padding:24px 26px!important;
+  border-radius:22px!important;
+}
+.ba-col li{line-height:1.8!important;}
+
+/* Pricing: clearer hierarchy without changing content. */
+#services .svc-grid{
+  max-width:1040px!important;
+  margin-inline:auto!important;
+  gap:18px!important;
+}
+.svc{
+  min-height:430px!important;
+  padding:26px 24px!important;
+}
+.svc h3{font-size:18px!important;}
+.svc p{line-height:1.8!important;}
+.svc ul{margin-top:18px!important;}
+.svc li{line-height:1.78!important;}
+.svc .price{margin-top:18px!important;}
+.pricing-note{
+  max-width:920px!important;
+  margin-inline:auto!important;
+  gap:10px!important;
+}
+.pricing-note span{
+  padding:9px 14px!important;
+}
+
+/* Proof section: make evidence more visual, less equal-card flatness. */
+.proof-grid{
+  max-width:1040px!important;
+  margin-inline:auto!important;
+  display:grid!important;
+  grid-template-columns:1.18fr .91fr .91fr!important;
+  gap:18px!important;
+}
+.proof-card{
+  padding:0!important;
+  overflow:hidden!important;
+}
+.proof-card:first-child{
+  grid-row:span 2;
+}
+.proof-card:first-child .proof-shot{
+  min-height:248px!important;
+}
+.proof-shot{
+  min-height:150px!important;
+  border-radius:0!important;
+}
+.proof-body{
+  padding:18px 20px 20px!important;
+}
+.founder{
+  max-width:1040px!important;
+  margin-inline:auto!important;
+  padding:24px 26px!important;
+  border-radius:22px!important;
+}
+
+/* Team: keep compact; it is support proof, not the main conversion mechanism. */
+#team{
+  padding-top:54px!important;
+  padding-bottom:58px!important;
+}
+#team .team-grid{
+  max-width:920px!important;
+  gap:16px!important;
+}
+.team-grid .tm{
+  min-height:330px!important;
+}
+.team-grid .tm-photo,
+.team-grid .tm:first-child .tm-photo{
+  width:142px!important;
+  height:142px!important;
+  min-height:142px!important;
+  margin-bottom:18px!important;
+}
+.team-grid .tm .bio{
+  min-height:44px!important;
+}
+
+/* Process: timeline feel. */
+.proc{
+  max-width:1040px!important;
+  margin-inline:auto!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+  position:relative;
+}
+.proc::before{
+  content:"";
+  position:absolute;
+  left:9%;
+  right:9%;
+  top:22px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,.32),rgba(34,201,138,.24),transparent);
+  opacity:.7;
+  pointer-events:none;
+}
+.proc-step{
+  padding:22px 20px!important;
+  min-height:168px!important;
+}
+.proc-step .num{
+  position:relative;
+  z-index:2;
+}
+
+/* Comparison: less heavy, faster to scan. */
+#why .vs-wrap{
+  max-width:1000px!important;
+  margin-inline:auto!important;
+  border-radius:20px!important;
+}
+#why table.vs th,
+#why table.vs td{
+  padding:16px 18px!important;
+}
+#why table.vs th.us,
+#why table.vs td.us{
+  box-shadow:inset 0 0 0 1px rgba(0,212,255,.07)!important;
+}
+
+/* CTA: make final conversion block stronger. */
+.start{
+  max-width:1040px!important;
+  margin-inline:auto!important;
+  grid-template-columns:1fr 1.05fr!important;
+  gap:28px!important;
+  padding:34px!important;
+  border-radius:24px!important;
+}
+.start h2{
+  font-size:clamp(28px,3.4vw,40px)!important;
+  line-height:1.32!important;
+}
+.form-card{
+  border-radius:20px!important;
+  padding:24px!important;
+}
+.form-card input,
+.form-card select,
+.form-card textarea{
+  min-height:46px!important;
+}
+.form-card textarea{min-height:116px!important;}
+
+/* FAQ and footer: tighten finish. */
+.faq-list{
+  max-width:820px!important;
+  margin-inline:auto!important;
+}
+footer .wrap{
+  max-width:1040px!important;
+}
+
+@media (max-width:980px){
+  .pain-grid,.proof-grid,.proc,#services .svc-grid{grid-template-columns:1fr 1fr!important;}
+  .proof-card:first-child{grid-row:auto;grid-column:1/-1;}
+  .start{grid-template-columns:1fr!important;}
+}
+@media (max-width:680px){
+  section{padding-block:48px!important;}
+  section .wrap{width:min(100% - 28px,var(--nas-wide))!important;}
+  .pain-grid,.proof-grid,.proc,#services .svc-grid{grid-template-columns:1fr!important;}
+  .proc::before{display:none;}
+  .hero{min-height:auto!important;padding-top:72px!important;padding-bottom:50px!important;}
+  .pricing-note{align-items:stretch!important;}
+  .pricing-note span{justify-content:center!important;}
+}

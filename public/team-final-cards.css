@@ -1,0 +1,278 @@
+/* NAS CodeWorks — final team section
+   Reference: clean four-card team grid, adapted to NAS dark identity. */
+#team{
+  padding:68px 0 74px!important;
+}
+#team .wrap{
+  max-width:1060px!important;
+}
+#team .wrap::before{
+  display:none!important;
+}
+#team .kicker{
+  display:flex!important;
+  width:max-content!important;
+  margin:0 auto 12px!important;
+  justify-content:center!important;
+}
+#team .sec,
+#team .sec-sub{
+  text-align:center!important;
+  margin-inline:auto!important;
+}
+#team .sec{
+  max-width:760px!important;
+  margin-bottom:12px!important;
+}
+#team .sec-sub{
+  max-width:650px!important;
+  margin-bottom:34px!important;
+}
+.team-grid{
+  direction:rtl!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:18px!important;
+  max-width:1040px!important;
+  margin-inline:auto!important;
+  align-items:stretch!important;
+}
+.team-grid::before,
+.team-grid::after{
+  display:none!important;
+}
+.team-grid .tm{
+  order:initial!important;
+  min-height:390px!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  text-align:center!important;
+  padding:24px 18px 22px!important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(0,212,255,.10),transparent 32%),
+    linear-gradient(180deg,rgba(19,35,62,.96),rgba(10,18,32,.98))!important;
+  border:1px solid rgba(30,51,84,.82)!important;
+  box-shadow:0 22px 64px -48px rgba(0,0,0,.92),inset 0 1px 0 rgba(255,255,255,.035)!important;
+  isolation:isolate;
+  transition:transform .46s cubic-bezier(.19,1,.22,1),border-color .42s ease,box-shadow .42s ease,background .42s ease!important;
+}
+.team-grid .tm:first-child{
+  order:0!important;
+  border-color:rgba(34,201,138,.42)!important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(34,201,138,.13),transparent 34%),
+    linear-gradient(180deg,rgba(19,35,62,.96),rgba(10,18,32,.98))!important;
+}
+.team-grid .tm:hover{
+  transform:translateY(-10px)!important;
+  border-color:rgba(0,212,255,.62)!important;
+  box-shadow:0 34px 92px -56px rgba(0,212,255,.58),0 22px 70px -56px rgba(124,58,237,.50)!important;
+}
+.team-grid .tm:first-child:hover{
+  border-color:rgba(34,201,138,.68)!important;
+  box-shadow:0 34px 92px -56px rgba(34,201,138,.62),0 22px 70px -56px rgba(0,212,255,.34)!important;
+}
+.team-grid .tm::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:-1!important;
+  opacity:.58!important;
+  background:
+    linear-gradient(135deg,rgba(0,212,255,.08),transparent 42%),
+    radial-gradient(circle at 88% 88%,rgba(124,58,237,.12),transparent 28%)!important;
+  pointer-events:none!important;
+}
+.team-grid .tm::after{
+  content:""!important;
+  position:absolute!important;
+  top:14px!important;
+  inset-inline-end:14px!important;
+  inset-inline-start:auto!important;
+  width:9px!important;
+  height:9px!important;
+  border-radius:50%!important;
+  background:var(--green)!important;
+  box-shadow:0 0 0 6px rgba(34,201,138,.09),0 0 20px rgba(34,201,138,.42)!important;
+  animation:nasTeamFinalPulse 2.8s ease-in-out infinite!important;
+}
+.team-grid .tm-photo,
+.team-grid .tm:first-child .tm-photo{
+  position:relative!important;
+  width:122px!important;
+  height:122px!important;
+  min-height:122px!important;
+  padding:0!important;
+  margin:4px auto 22px!important;
+  border-radius:50%!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:visible!important;
+  background:transparent!important;
+  border:0!important;
+}
+.team-grid .tm-photo::before{
+  content:""!important;
+  position:absolute!important;
+  inset:-8px!important;
+  border-radius:50%!important;
+  background:
+    conic-gradient(from 210deg,rgba(0,212,255,.14),rgba(34,201,138,.42),rgba(124,58,237,.24),rgba(0,212,255,.14));
+  opacity:.72!important;
+  transform:rotate(0deg) scale(.98)!important;
+  transition:transform .68s cubic-bezier(.19,1,.22,1),opacity .42s ease,filter .42s ease!important;
+  filter:blur(.2px)!important;
+}
+.team-grid .tm:hover .tm-photo::before{
+  opacity:1!important;
+  transform:rotate(22deg) scale(1.04)!important;
+  filter:drop-shadow(0 0 18px rgba(0,212,255,.22))!important;
+}
+.team-grid .tm-photo::after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle at 50% 20%,rgba(234,241,251,.05),transparent 38%),linear-gradient(180deg,rgba(15,26,46,.85),rgba(9,17,31,.94))!important;
+  border:1px solid rgba(234,241,251,.10)!important;
+  opacity:1!important;
+  pointer-events:none!important;
+}
+.team-grid .tm-photo img{
+  position:relative!important;
+  z-index:2!important;
+  width:116px!important;
+  height:116px!important;
+  padding:0!important;
+  border-radius:50%!important;
+  object-fit:cover!important;
+  object-position:center 22%!important;
+  border:4px solid rgba(8,12,20,.88)!important;
+  background:transparent!important;
+  filter:grayscale(100%) contrast(1.08) brightness(.90)!important;
+  transform:scale(.96)!important;
+  box-shadow:0 18px 44px -30px rgba(0,0,0,.95)!important;
+  transition:filter .78s ease,transform .78s cubic-bezier(.19,1,.22,1),box-shadow .42s ease!important;
+}
+.team-grid .tm:hover .tm-photo img{
+  filter:grayscale(0%) contrast(1.04) brightness(1.03)!important;
+  transform:scale(1.035)!important;
+  box-shadow:0 22px 58px -30px rgba(0,212,255,.46),0 20px 46px -34px rgba(0,0,0,.96)!important;
+}
+.team-grid .tm-photo .tm-ph{
+  position:relative!important;
+  z-index:2!important;
+  width:116px!important;
+  height:116px!important;
+  margin:0!important;
+  border-radius:50%!important;
+  display:grid!important;
+  place-items:center!important;
+  background:
+    radial-gradient(circle at 50% 38%,rgba(0,212,255,.18),transparent 46%),
+    linear-gradient(180deg,rgba(19,35,62,.92),rgba(9,17,31,.98))!important;
+  border:4px solid rgba(8,12,20,.88)!important;
+  box-shadow:0 18px 44px -30px rgba(0,0,0,.95)!important;
+  color:transparent!important;
+  font-size:0!important;
+  transform:scale(.96)!important;
+  transition:transform .78s cubic-bezier(.19,1,.22,1),box-shadow .42s ease!important;
+}
+.team-grid .tm:hover .tm-photo .tm-ph{
+  transform:scale(1.035)!important;
+  box-shadow:0 22px 58px -30px rgba(0,212,255,.46),0 20px 46px -34px rgba(0,0,0,.96)!important;
+}
+.team-grid .tm-photo .tm-ph::before{
+  color:rgba(234,241,251,.82)!important;
+  font-size:28px!important;
+}
+.team-grid .tm-body{
+  width:100%!important;
+  min-height:0!important;
+  flex:1!important;
+  padding:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  text-align:center!important;
+  gap:8px!important;
+  background:transparent!important;
+}
+.team-grid .tm-body::before{
+  order:3!important;
+  align-self:center!important;
+  margin:8px 0 0!important;
+  padding:0!important;
+  border:none!important;
+  background:transparent!important;
+  color:var(--cyan)!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  letter-spacing:.6px!important;
+  text-transform:uppercase!important;
+}
+.team-grid .tm:first-child .tm-body::before{
+  color:var(--green)!important;
+}
+.team-grid .tm-body::after{
+  content:""!important;
+  order:5!important;
+  position:static!important;
+  display:block!important;
+  width:42px!important;
+  height:1px!important;
+  margin:6px auto 0!important;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,.62),transparent)!important;
+  opacity:.58!important;
+  transform:none!important;
+}
+.team-grid .tm .nm{
+  order:1!important;
+  margin:0!important;
+  color:#F3F7FC!important;
+  font-size:17.5px!important;
+  line-height:1.35!important;
+  font-weight:800!important;
+}
+.team-grid .tm .rl{
+  order:2!important;
+  margin:0!important;
+  color:var(--cyan)!important;
+  font-size:13px!important;
+  font-weight:700!important;
+}
+.team-grid .tm:first-child .rl{
+  color:var(--green)!important;
+}
+.team-grid .tm .bio{
+  order:4!important;
+  width:100%!important;
+  max-width:180px!important;
+  margin:10px auto 0!important;
+  padding:0!important;
+  border:0!important;
+  color:rgba(148,167,194,.82)!important;
+  font-size:12.6px!important;
+  line-height:1.75!important;
+  min-height:64px!important;
+  font-style:normal!important;
+}
+.team-grid .tm:nth-child(4) .tm-photo .tm-ph::before{
+  content:"▦"!important;
+  font-size:30px!important;
+}
+@keyframes nasTeamFinalPulse{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(.76);opacity:.66}
+}
+@media (max-width:1040px){
+  .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:620px!important;}
+}
+@media (max-width:620px){
+  .team-grid{grid-template-columns:1fr!important;max-width:330px!important;}
+  .team-grid .tm{min-height:auto!important;}
+  .team-grid .tm .bio{min-height:auto!important;}
+}

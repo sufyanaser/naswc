@@ -1,0 +1,113 @@
+/* NAS CodeWorks — Team Orbit polish pass
+   Adds role-specific placeholders, lighter motion, and stronger scalable reflow. */
+.team-grid{
+  grid-auto-flow:dense;
+}
+.tm{
+  min-height:292px;
+}
+.tm-photo{
+  height:164px!important;
+}
+.tm:first-child .tm-photo{
+  height:196px!important;
+}
+.tm:first-child .tm-photo img{
+  object-position:center 18%;
+}
+.tm-photo .tm-ph{
+  font-size:0!important;
+  color:transparent!important;
+}
+.tm-photo .tm-ph::before{
+  content:"⌘";
+  display:grid;
+  place-items:center;
+  width:100%;
+  height:100%;
+  color:rgba(234,241,251,.82);
+  font-size:29px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+.tm:nth-child(2) .tm-photo .tm-ph::before{
+  content:"</>";
+  font-size:25px;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+.tm:nth-child(3) .tm-photo .tm-ph::before{
+  content:"✓";
+  font-size:34px;
+}
+.tm:nth-child(4n) .tm-photo .tm-ph::before{
+  content:"▦";
+  font-size:31px;
+}
+.tm:nth-child(5n) .tm-photo .tm-ph::before{
+  content:"↯";
+  font-size:34px;
+}
+.tm::after{
+  animation:nasTeamPulse 2.8s ease-in-out infinite;
+}
+.tm-body::after{
+  content:"";
+  position:absolute;
+  inset-inline:18px;
+  bottom:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,.52),transparent);
+  opacity:.34;
+  transform:scaleX(.72);
+  transition:opacity .32s ease,transform .32s ease;
+}
+.tm:hover .tm-body::after{
+  opacity:.82;
+  transform:scaleX(1);
+}
+.tm-body::before{
+  letter-spacing:.01em;
+}
+.tm:nth-child(2) .tm-body::before{
+  content:"Build Track";
+  color:#7ddcff;
+  border-color:rgba(0,212,255,.22);
+  background:rgba(0,212,255,.07);
+}
+.tm:nth-child(3) .tm-body::before{
+  content:"Enablement";
+  color:#80f0c0;
+  border-color:rgba(34,201,138,.22);
+  background:rgba(34,201,138,.07);
+}
+.tm:nth-child(n+4) .tm-body::before{
+  content:"Team Node";
+}
+.tm-body .bio{
+  min-height:38px;
+}
+@keyframes nasTeamPulse{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(.76);opacity:.62}
+}
+@media (min-width:980px){
+  .team-grid:has(.tm:nth-child(4)){
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important;
+    max-width:1120px;
+  }
+  .team-grid:has(.tm:nth-child(4)) .tm{
+    order:initial!important;
+  }
+}
+@media (max-width:760px){
+  .tm-photo,.tm:first-child .tm-photo{
+    height:154px!important;
+  }
+  .tm-body .bio{
+    min-height:auto;
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  .tm::after{animation:none!important;}
+}

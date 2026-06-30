@@ -1,0 +1,157 @@
+/* NAS CodeWorks — comparison table focus
+   Makes the NAS column visibly premium while preserving rounded geometry. */
+#why .vs-wrap{
+  position:relative;
+  overflow-x:auto;
+  border:1px solid rgba(30,51,84,.78)!important;
+  border-radius:22px!important;
+  background:
+    linear-gradient(180deg,rgba(15,26,46,.72),rgba(8,12,20,.56)),
+    radial-gradient(circle at 50% 0%,rgba(0,212,255,.09),transparent 38%);
+  box-shadow:0 26px 80px -54px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.03);
+}
+#why table.vs{
+  border-collapse:separate!important;
+  border-spacing:0!important;
+  table-layout:fixed;
+  overflow:hidden;
+  min-width:720px;
+}
+#why table.vs th,
+#why table.vs td{
+  border-bottom:1px solid rgba(30,51,84,.72)!important;
+  background:rgba(8,12,20,.18);
+}
+#why table.vs thead th{
+  background:linear-gradient(180deg,rgba(19,35,62,.96),rgba(15,26,46,.96))!important;
+}
+#why table.vs th:first-child{
+  border-start-start-radius:20px;
+}
+#why table.vs th:last-child{
+  border-start-end-radius:20px;
+}
+#why table.vs tbody tr:last-child td{
+  border-bottom:none!important;
+}
+#why table.vs tbody tr:last-child td:first-child{
+  border-end-start-radius:20px;
+}
+#why table.vs tbody tr:last-child td:last-child{
+  border-end-end-radius:20px;
+}
+#why table.vs th.us,
+#why table.vs td.us{
+  position:relative;
+  color:#EAFBFF!important;
+  background:
+    linear-gradient(180deg,rgba(0,212,255,.145),rgba(0,212,255,.055)),
+    linear-gradient(90deg,rgba(124,58,237,.10),rgba(0,212,255,.12))!important;
+  border-inline:1px solid rgba(0,212,255,.46)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,212,255,.10),
+    inset 0 0 42px rgba(0,212,255,.055);
+}
+#why table.vs th.us{
+  color:var(--cyan)!important;
+  font-weight:800!important;
+  padding-top:22px!important;
+  padding-bottom:26px!important;
+  border-top:1px solid rgba(0,212,255,.75)!important;
+  border-start-start-radius:18px!important;
+  border-start-end-radius:18px!important;
+  overflow:hidden;
+}
+#why table.vs th.us::before{
+  content:"الاختيار العملي";
+  position:absolute;
+  left:50%;
+  bottom:6px;
+  transform:translateX(-50%);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  white-space:nowrap;
+  padding:2px 9px;
+  border-radius:999px;
+  color:#06131B;
+  background:linear-gradient(135deg,var(--cyan),var(--green));
+  font-size:10.5px;
+  line-height:1.35;
+  font-weight:800;
+  letter-spacing:0;
+  box-shadow:0 8px 20px -12px rgba(0,212,255,.9);
+}
+#why table.vs th.us::after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  border:1px solid rgba(0,212,255,.75)!important;
+  border-bottom:none!important;
+  border-radius:18px 18px 0 0!important;
+  pointer-events:none!important;
+}
+#why table.vs tbody tr:last-child td.us{
+  border-bottom:1px solid rgba(0,212,255,.72)!important;
+  border-end-start-radius:18px!important;
+  border-end-end-radius:18px!important;
+}
+#why table.vs td.us::before{
+  content:"";
+  position:absolute;
+  inset-inline:10px;
+  top:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,.42),transparent);
+  opacity:.5;
+}
+#why .vs-yes{
+  color:#2EF2B1!important;
+  font-weight:800;
+  text-shadow:0 0 18px rgba(34,201,138,.18);
+}
+#why td.us .vs-yes{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+#why td.us .vs-yes svg{
+  color:#25E6A5!important;
+  filter:drop-shadow(0 0 10px rgba(34,201,138,.28));
+}
+#why table.vs tbody tr{
+  transition:background .22s ease;
+}
+#why table.vs tbody tr:hover td{
+  background-color:rgba(19,35,62,.34);
+}
+#why table.vs tbody tr:hover td.us{
+  background:
+    linear-gradient(180deg,rgba(0,212,255,.19),rgba(0,212,255,.075)),
+    linear-gradient(90deg,rgba(124,58,237,.12),rgba(0,212,255,.15))!important;
+}
+#why table.vs td:not(.us),
+#why table.vs th:not(.us){
+  color:rgba(148,167,194,.78);
+}
+#why table.vs td:first-child,
+#why table.vs th:first-child{
+  color:#DCE8F7!important;
+  font-weight:700;
+}
+@media (max-width:760px){
+  #why .vs-wrap{
+    border-radius:18px!important;
+  }
+  #why table.vs{
+    min-width:680px;
+  }
+  #why table.vs th,
+  #why table.vs td{
+    padding:14px 15px!important;
+    font-size:13.5px!important;
+  }
+  #why table.vs th.us{
+    padding-bottom:28px!important;
+  }
+}

@@ -1,1 +1,6 @@
+/admin /admin.html 200
+/admin/ /admin.html 200
+/admin/content-default.js /content-default.js 200
+/admin/admin.js /admin.js 200
+/admin/content.json /content.json 200
 /* /index.html 200

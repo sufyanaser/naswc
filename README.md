@@ -1,6 +1,6 @@
-# NAS CodeWorks Clean Cloudflare Pages Build
+# NASCW — Clean Cloudflare Pages Deployment
 
-This repository is a clean static Cloudflare Pages deployment for NAS CodeWorks.
+Source: original NASCW static files.
 
 ## Cloudflare Pages settings
 
@@ -12,7 +12,9 @@ This repository is a clean static Cloudflare Pages deployment for NAS CodeWorks.
 
 ## Routes
 
-- `/` → public site
-- `/admin` → local static admin gate
+- / => public/index.html
+- /admin => public/admin.html
 
-No Vercel rewrites. No `/v2` nesting. No build step.
+No Vercel.
+No /v2.
+No build step.

@@ -100,11 +100,7 @@ async function fileToCompressedDataURL(file,maxW=1600,quality=.82){
   if(!file || !allowed.has(file.type)) throw new Error('Unsupported raster image type.');
 
   let token=localStorage.getItem(UPLOAD_TOKEN_KEY)||'';
-  if(!token){
-    token=(prompt('أدخل رمز رفع الصور للوحة التحكم:')||'').trim();
-    if(!token) throw new Error('Missing upload token.');
-    localStorage.setItem(UPLOAD_TOKEN_KEY,token);
-  }
+  if(!token){ toast('رمز الرفع غير موجود — اذهب للإعدادات وأدخله',true); throw new Error('Missing upload token — set it in Settings.'); }
 
   const objectUrl=URL.createObjectURL(file);
   try{
@@ -667,6 +663,28 @@ B.settings=()=>{
   const rb=ce('button',{className:'tbtn danger',innerHTML:TRASH+' إعادة ضبط المحتوى'});
   rb.onclick=()=>{ if(confirm('متأكد؟ سيُحذف كل التعديلات والصور.')){ localStorage.removeItem(STORE_KEY); C=JSON.parse(JSON.stringify(DEFAULTS)); toast('تمت الإعادة'); switchTo('hero'); } };
   b.appendChild(rb);
+  b.appendChild(ce('hr',{style:'border:none;border-top:1px solid var(--line-soft);margin:6px 0 18px'}));
+  // upload token management
+  const tkf=ce('div',{className:'fld'});
+  tkf.innerHTML='<label>رمز الرفع والنشر (Upload Token)</label><div class="sm" style="margin-bottom:10px">يجب أن يطابق <b>NASCW_ADMIN_UPLOAD_TOKEN</b> في Cloudflare Pages → Settings → Environment variables</div>';
+  const tkrow=ce('div',{style:'display:flex;gap:8px;align-items:center;flex-wrap:wrap'});
+  const tkinp=ce('input',{type:'password',placeholder:'أدخل الرمز...',style:'flex:1;min-width:200px'});
+  tkinp.value=localStorage.getItem(UPLOAD_TOKEN_KEY)||'';
+  const tksave=ce('button',{className:'tbtn save',style:'flex:none',innerHTML:svg('<path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/>')+' حفظ الرمز'});
+  tksave.onclick=()=>{const v=tkinp.value.trim();if(v){localStorage.setItem(UPLOAD_TOKEN_KEY,v);toast('تم حفظ رمز الرفع ✓');}else{toast('الرمز فارغ',true);}};
+  const tkclear=ce('button',{className:'tbtn danger',style:'flex:none',innerHTML:TRASH+' مسح'});
+  tkclear.onclick=()=>{localStorage.removeItem(UPLOAD_TOKEN_KEY);tkinp.value='';toast('تم مسح الرمز');};
+  const tktest=ce('button',{className:'tbtn',style:'flex:none',innerHTML:svg('<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>')+' اختبار'});
+  tktest.onclick=async()=>{
+    const v=localStorage.getItem(UPLOAD_TOKEN_KEY)||'';
+    if(!v){toast('لا يوجد رمز محفوظ',true);return;}
+    try{
+      const r=await fetch('/api/content',{method:'GET',headers:{'x-nascw-admin-token':v}});
+      toast(r.ok?'الرمز صحيح ✓':'الرمز غير صحيح — تحقق من Cloudflare',!r.ok);
+    }catch(e){toast('فشل الاتصال',true);}
+  };
+  tkrow.appendChild(tkinp); tkrow.appendChild(tksave); tkrow.appendChild(tkclear); tkrow.appendChild(tktest);
+  tkf.appendChild(tkrow); b.appendChild(tkf);
   return cardWrap('settings','الإعدادات','الأمان والصيانة',b);
 };
 

@@ -25,6 +25,12 @@ export default {
     const type = response.headers.get('content-type') || '';
     if (!type.includes('text/html') || response.status !== 200) return response;
 
+    // Skip frontend injection on admin routes — hero-workflow.js overwrites
+    // the R2 uploader (fileToCompressedDataURL) with a canvas/base64 compressor,
+    // causing admin images to be stripped by sanitizeContentForSave() and never reach R2.
+    const isAdmin = url.pathname === '/admin' || url.pathname === '/admin.html';
+    if (isAdmin) return response;
+
     return new HTMLRewriter()
       .on('head', {
         element(element) {

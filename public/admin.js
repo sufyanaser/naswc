@@ -77,15 +77,26 @@ function sanitizeContentForSave(value){
   }
   return value;
 }
+function setStatus(state,text){
+  const el=document.getElementById('tb-status'),t=document.getElementById('tb-status-text');
+  if(!el||!t)return; el.className='tb-status '+state; t.textContent=text;
+}
 function save(silent){
   C.meta=C.meta||{}; C.meta.updatedAt=new Date().toISOString();
   C=sanitizeContentForSave(C);
+  setStatus('saving','جاري الحفظ...');
   try{
     localStorage.removeItem(STORE_KEY);
     localStorage.setItem(STORE_KEY,JSON.stringify(C));
+    const t=new Date().toLocaleTimeString('ar-IQ',{hour:'2-digit',minute:'2-digit'});
+    setStatus('saved','محفوظ '+t);
     if(!silent) toast('تم الحفظ بنجاح ✓');
     return true;
-  }catch(e){ toast('خطأ: التخزين ممتلئ. تم حذف الصور القديمة المحفوظة، أعد تحميل الصفحة ثم احفظ من جديد.',true); return false; }
+  }catch(e){
+    setStatus('error','خطأ في الحفظ');
+    toast('خطأ: التخزين ممتلئ. تم حذف الصور القديمة المحفوظة، أعد تحميل الصفحة ثم احفظ من جديد.',true);
+    return false;
+  }
 }
 function toast(msg,err){
   const t=$('#toast'); $('#toast-msg').textContent=msg;
@@ -151,7 +162,7 @@ function cardWrap(secId,title,hint,body){
   const c=ce('div',{className:'card'});
   const meta=SECTIONS.find(s=>s.id===secId)||{icon:''};
   c.innerHTML=`<div class="card-h"><div class="ci">${svg(meta.icon)}</div><div><h2>${title}</h2>${hint?`<div class="hint">${hint}</div>`:''}</div></div>`;
-  c.appendChild(body); return c;
+  const cb=ce('div',{className:'card-body'}); cb.appendChild(body); c.appendChild(cb); return c;
 }
 function listEditor(arr,onChange,placeholder){
   const box=ce('div');
@@ -175,9 +186,23 @@ function listEditor(arr,onChange,placeholder){
   };
   render(); return box;
 }
-function scHead(num,label){
-  return `<div class="sc-head"><div class="t"><span class="num">${num}</span>${label}</div>
-    <div style="display:flex;gap:6px"><button class="mini" data-up>${UP}</button><button class="mini" data-dn>${DN}</button><button class="mini del" data-del>${TRASH}</button></div></div>`;
+function scHead(num,label,name){
+  const chevron='<svg class="sc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>';
+  return `<div class="sc-head"><span class="sc-num">${num}</span><span class="sc-label">${label}</span>${name?`<span class="sc-name">${name}</span>`:''
+  }${chevron}<div class="sc-acts"><button class="mini" data-up>${UP}</button><button class="mini" data-dn>${DN}</button><button class="mini del" data-del>${TRASH}</button></div></div>`;
+}
+function applyCollapse(container){
+  container.querySelectorAll('.sub-card').forEach((sc,idx)=>{
+    const head=sc.querySelector('.sc-head'); if(!head||sc.dataset.collapseReady) return;
+    sc.dataset.collapseReady='1';
+    const body=ce('div',{className:'sc-body'});
+    const kids=[]; let el=head.nextSibling;
+    while(el){const n=el.nextSibling;kids.push(el);el=n;}
+    kids.forEach(k=>body.appendChild(k));
+    sc.appendChild(body);
+    if(idx===0) sc.classList.add('open');
+    head.addEventListener('click',e=>{if(e.target.closest('.sc-acts')) return; sc.classList.toggle('open');});
+  });
 }
 function moveBinds(sc,arr,i,render){
   sc.querySelector('[data-up]').onclick=()=>{if(i>0){[arr[i-1],arr[i]]=[arr[i],arr[i-1]];render();}};
@@ -690,17 +715,48 @@ B.settings=()=>{
 
 /* ---------- NAV / SWITCH ---------- */
 let CUR='hero';
+const SIDE_GROUPS=[
+  {label:'الهوية',ids:['brand']},
+  {label:'المحتوى',ids:['hero','pain','ba','services','offers','proof','team','process','why','start','faq']},
+  {label:'الاتصال',ids:['contact','footer']},
+  {label:'النظام',ids:['settings']},
+];
+const SEC_DESC={
+  brand:'الشعار والأيقونة في نافذة المتصفح',hero:'أول ما يشوفه الزائر — العنوان والأزرار',
+  pain:'بطاقات المشاكل الملموسة للعميل',ba:'المقارنة قبل وبعد استخدام البرنامج',
+  services:'الخدمات والأسعار وميزات كل خدمة',offers:'العروض المؤقتة والخصومات الخاصة',
+  proof:'البرامج المنجزة وصورها',team:'أعضاء الفريق وأدوارهم',
+  process:'خطوات التعامل مع العميل',why:'جدول مقارنة مع البدائل',
+  start:'قسم الدعوة والوعود',faq:'الأسئلة الشائعة',
+  contact:'معلومات الاتصال وواتساب',footer:'التذييل ونص الحقوق',
+  settings:'الأمان والرمز ورمز الرفع'
+};
 function buildSide(){
   const side=$('#side'); side.innerHTML='';
-  SECTIONS.forEach(s=>{
-    const a=ce('a',{className:s.id===CUR?'active':'',innerHTML:svg(s.icon)+'<span>'+s.label+'</span>'});
-    a.onclick=()=>switchTo(s.id); side.appendChild(a);
+  SIDE_GROUPS.forEach((g,gi)=>{
+    const grp=ce('div',{className:'side-group'});
+    grp.appendChild(ce('span',{className:'side-group-label',textContent:g.label}));
+    g.ids.forEach(id=>{
+      const s=SECTIONS.find(s=>s.id===id); if(!s) return;
+      const a=ce('a',{className:s.id===CUR?'active':''});
+      a.innerHTML=svg(s.icon)+`<span>${s.label}</span>`;
+      a.onclick=()=>switchTo(s.id); grp.appendChild(a);
+    });
+    side.appendChild(grp);
+    if(gi<SIDE_GROUPS.length-1) side.appendChild(ce('div',{className:'side-divider'}));
   });
 }
 function switchTo(id){
   CUR=id; buildSide();
   const main=$('#main'); main.innerHTML='';
+  const s=SECTIONS.find(s=>s.id===id);
+  if(s){
+    const hero=ce('div',{className:'sec-hero'});
+    hero.innerHTML=`<div class="sh-icon">${svg(s.icon)}</div><div><h1>${s.label}</h1><p>${SEC_DESC[id]||''}</p></div>`;
+    main.appendChild(hero);
+  }
   main.appendChild(B[id]());
+  applyCollapse(main);
   window.scrollTo({top:0,behavior:'smooth'});
 }
 

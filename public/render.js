@@ -26,13 +26,13 @@ const XICON = SVG('<path d="M18 6L6 18M6 6l12 12"/>');
 const WAICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.9 1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3zM12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2z"/></svg>';
 
 async function loadContent(){
-  let local = null;
-  try{ const r = localStorage.getItem(STORE_KEY); if(r) local = JSON.parse(r); }catch(e){}
-  if(local) return local;
+  // Try R2-published content first (always up-to-date for visitors)
   try{
-    const res = await fetch('content.json', {cache:'no-store'});
-    if(res.ok) return await res.json();
+    const res = await fetch('/content.json', {cache:'no-store'});
+    if(res.ok){ const d=await res.json(); return d; }
   }catch(e){}
+  // Fall back to localStorage (admin's own browser edits)
+  try{ const r = localStorage.getItem(STORE_KEY); if(r) return JSON.parse(r); }catch(e){}
   return window.__DEFAULT_CONTENT__ || {};
 }
 
@@ -48,7 +48,15 @@ function brandInner(c){
 }
 function applyFavicon(c){
   const br=c.brand||{}; const link=document.getElementById('favicon'); if(!link) return;
-  if(br.faviconMode==='custom' && br.faviconImage){ link.href=br.faviconImage; link.type=br.faviconImage.startsWith('data:image/png')?'image/png':'image/svg+xml'; }
+  if(br.faviconMode==='custom' && br.faviconImage){
+    const img=br.faviconImage;
+    link.href=img;
+    if(img.startsWith('data:image/svg')||img.endsWith('.svg')) link.type='image/svg+xml';
+    else if(img.startsWith('data:image/png')||img.endsWith('.png')) link.type='image/png';
+    else if(img.endsWith('.webp')) link.type='image/webp';
+    else if(img.endsWith('.jpg')||img.endsWith('.jpeg')) link.type='image/jpeg';
+    else link.type='image/png';
+  }
 }
 
 /* ---------- builders ---------- */

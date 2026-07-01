@@ -16,6 +16,10 @@
   const packets = ['XLS', 'WA', 'PDF', 'INV'];
 
   function installPngSafeUpload() {
+    // Guard: do not override the R2 uploader on the admin panel
+    if (document.querySelector('.admin-shell, #adminroot, #gate')) return;
+    if (window.__NASCW_R2_UPLOAD_ACTIVE__) return;
+
     const pngSafeCompressor = function(file, maxW = 1600, quality = .82) {
       return new Promise((res, rej) => {
         const r = new FileReader();

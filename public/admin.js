@@ -4,6 +4,7 @@
 const STORE_KEY='nascw_content_v1';
 const PASS_KEY='nascw_admin_pass';
 const SESSION_KEY='nascw_admin_ok';
+const UPLOAD_TOKEN_KEY='nascwAdminUploadToken';
 const DEFAULT_PASS='nascw2026';
 let C=null, DEFAULTS=null;
 
@@ -60,13 +61,31 @@ async function loadAll(){
 }
 
 /* ---------- SAVE ---------- */
+const LEGACY_RASTER_DATA_URL_RE=/^data:image\/(?:png|jpe?g|webp);base64,/i;
+function sanitizeContentForSave(value){
+  if(typeof value==='string') return LEGACY_RASTER_DATA_URL_RE.test(value)?'':value;
+  if(Array.isArray(value)){
+    const out=[];
+    value.forEach(item=>{
+      if(typeof item==='string' && LEGACY_RASTER_DATA_URL_RE.test(item)) return;
+      out.push(sanitizeContentForSave(item));
+    });
+    return out;
+  }
+  if(value && typeof value==='object'){
+    Object.keys(value).forEach(k=>{ value[k]=sanitizeContentForSave(value[k]); });
+  }
+  return value;
+}
 function save(silent){
   C.meta=C.meta||{}; C.meta.updatedAt=new Date().toISOString();
+  C=sanitizeContentForSave(C);
   try{
+    localStorage.removeItem(STORE_KEY);
     localStorage.setItem(STORE_KEY,JSON.stringify(C));
     if(!silent) toast('تم الحفظ بنجاح ✓');
     return true;
-  }catch(e){ toast('خطأ: التخزين ممتلئ. قلّل عدد/حجم الصور.',true); return false; }
+  }catch(e){ toast('خطأ: التخزين ممتلئ. تم حذف الصور القديمة المحفوظة، أعد تحميل الصفحة ثم احفظ من جديد.',true); return false; }
 }
 function toast(msg,err){
   const t=$('#toast'); $('#toast-msg').textContent=msg;
@@ -76,18 +95,45 @@ function toast(msg,err){
 }
 
 /* ---------- IMAGE COMPRESS ---------- */
-function fileToCompressedDataURL(file,maxW=1600,quality=.82){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=()=>{ const img=new Image();
-      img.onload=()=>{ let w=img.width,h=img.height;
-        if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
-        const cv=ce('canvas'); cv.width=w; cv.height=h;
-        cv.getContext('2d').drawImage(img,0,0,w,h);
-        res(cv.toDataURL('image/jpeg',quality));
-      }; img.onerror=rej; img.src=r.result;
-    }; r.onerror=rej; r.readAsDataURL(file);
-  });
+async function fileToCompressedDataURL(file,maxW=1600,quality=.82){
+  const allowed=new Set(['image/jpeg','image/png','image/webp']);
+  if(!file || !allowed.has(file.type)) throw new Error('Unsupported raster image type.');
+
+  let token=localStorage.getItem(UPLOAD_TOKEN_KEY)||'';
+  if(!token){
+    token=(prompt('أدخل رمز رفع الصور للوحة التحكم:')||'').trim();
+    if(!token) throw new Error('Missing upload token.');
+    localStorage.setItem(UPLOAD_TOKEN_KEY,token);
+  }
+
+  const objectUrl=URL.createObjectURL(file);
+  try{
+    const img=await new Promise((res,rej)=>{
+      const im=new Image();
+      im.onload=()=>res(im);
+      im.onerror=()=>rej(new Error('Image decode failed.'));
+      im.src=objectUrl;
+    });
+    let w=img.width,h=img.height;
+    if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
+    const cv=ce('canvas'); cv.width=w; cv.height=h;
+    cv.getContext('2d').drawImage(img,0,0,w,h);
+    const blob=await new Promise((res,rej)=>{
+      cv.toBlob(b=>b?res(b):rej(new Error('WebP compression failed.')),'image/webp',quality);
+    });
+    const baseName=(file.name||'upload').replace(/\.[^.]+$/,'').replace(/[^\u0621-\u064Aa-z0-9-_]+/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')||'upload';
+    const form=new FormData();
+    form.append('file',new File([blob],`${baseName}.webp`,{type:'image/webp'}));
+    form.append('section','programs');
+    form.append('group','gallery');
+    const r=await fetch('/api/upload-image',{method:'POST',headers:{'x-nascw-admin-token':token},body:form});
+    if(r.status===401) localStorage.removeItem(UPLOAD_TOKEN_KEY);
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok || !data.url) throw new Error(data.error||'Image upload failed.');
+    return data.url;
+  }finally{
+    URL.revokeObjectURL(objectUrl);
+  }
 }
 
 /* ---------- FIELD HELPERS ---------- */
@@ -374,7 +420,7 @@ B.proof=()=>{
   b.appendChild(fText('العنوان الفرعي',p.kicker,v=>p.kicker=v));
   b.appendChild(fText('العنوان',p.title,v=>p.title=v));
   b.appendChild(fArea('الوصف',p.sub,v=>p.sub=v));
-  b.appendChild(ce('div',{innerHTML:'<div class="warn">'+svg('<path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L14.4 3.9a2 2 0 00-3.4 0zM12 9v4M12 17h.01"/>')+' الصور تُضغط تلقائياً وتُخزّن داخل المتصفح. مع كثرة الصور قد يمتلئ التخزين — استعمل «تصدير JSON» للنسخ الاحتياطي بشكل دوري.</div>'}));
+  b.appendChild(ce('div',{innerHTML:'<div class="warn">'+svg('<path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L14.4 3.9a2 2 0 00-3.4 0zM12 9v4M12 17h.01"/>')+' الصور تُرفع إلى التخزين السحابي R2 وتُحفظ داخل المحتوى كرابط /uploads فقط.</div>'}));
   const list=ce('div');
   const render=()=>{
     list.innerHTML='';

@@ -2,6 +2,17 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === '/api/content') {
+      if (request.method === 'GET') return handleContentRead(env);
+      if (request.method === 'POST') return handleContentSave(request, env);
+      return new Response('Method not allowed', { status: 405 });
+    }
+
+    if (url.pathname === '/content.json' && request.method === 'GET') {
+      const stored = await readContentObject(env);
+      if (stored) return json(stored, 200, 30);
+    }
+
     if (url.pathname === '/api/upload-image' && request.method === 'POST') {
       return handleUpload(request, env);
     }
@@ -12,10 +23,7 @@ export default {
 
     const response = await env.ASSETS.fetch(request);
     const type = response.headers.get('content-type') || '';
-
-    if (!type.includes('text/html') || response.status !== 200) {
-      return response;
-    }
+    if (!type.includes('text/html') || response.status !== 200) return response;
 
     return new HTMLRewriter()
       .on('head', {
@@ -27,23 +35,19 @@ export default {
   }
 };
 
-function json(data, status = 200) {
+function json(data, status = 200, ttl = 0) {
   return new Response(JSON.stringify(data, null, 2), {
     status,
     headers: {
       'content-type': 'application/json; charset=utf-8',
-      'cache-control': 'no-store'
+      'cache-control': ttl > 0 ? `public, max-age=${ttl}` : 'no-store'
     }
   });
 }
 
 function cleanPart(value, fallback) {
   const raw = String(value || fallback || 'general').trim().toLowerCase();
-  return raw
-    .replace(/[^\u0621-\u064Aa-z0-9-_]+/gi, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 64) || fallback;
+  return raw.replace(/[^\u0621-\u064Aa-z0-9-_]+/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').slice(0, 64) || fallback;
 }
 
 function extensionFromMime(type) {
@@ -53,84 +57,65 @@ function extensionFromMime(type) {
   return null;
 }
 
-async function handleUpload(request, env) {
-  if (!env.NASCW_UPLOADS) {
-    return json({ ok: false, error: 'R2 binding NASCW_UPLOADS is missing.' }, 500);
-  }
+async function readContentObject(env) {
+  if (!env.NASCW_UPLOADS) return null;
+  const object = await env.NASCW_UPLOADS.get('content/site-content.json');
+  if (!object) return null;
+  return await object.json();
+}
 
-  if (!env.NASCW_ADMIN_UPLOAD_TOKEN) {
-    return json({ ok: false, error: 'NASCW_ADMIN_UPLOAD_TOKEN secret is missing.' }, 500);
-  }
+async function handleContentRead(env) {
+  const stored = await readContentObject(env);
+  if (!stored) return json({ ok: false, error: 'No saved content.' }, 404);
+  return json({ ok: true, content: stored });
+}
 
+async function handleContentSave(request, env) {
+  if (!env.NASCW_UPLOADS) return json({ ok: false, error: 'R2 binding NASCW_UPLOADS is missing.' }, 500);
+  if (!env.NASCW_ADMIN_UPLOAD_TOKEN) return json({ ok: false, error: 'NASCW_ADMIN_UPLOAD_TOKEN secret is missing.' }, 500);
   const receivedToken = request.headers.get('x-nascw-admin-token') || '';
-  if (receivedToken !== env.NASCW_ADMIN_UPLOAD_TOKEN) {
-    return json({ ok: false, error: 'Unauthorized upload request.' }, 401);
-  }
+  if (receivedToken !== env.NASCW_ADMIN_UPLOAD_TOKEN) return json({ ok: false, error: 'Unauthorized content save request.' }, 401);
+  const content = await request.json();
+  if (!content || typeof content !== 'object') return json({ ok: false, error: 'Invalid content payload.' }, 400);
+  content.meta = content.meta || {};
+  content.meta.savedToR2At = new Date().toISOString();
+  await env.NASCW_UPLOADS.put('content/site-content.json', JSON.stringify(content, null, 2), {
+    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' }
+  });
+  return json({ ok: true, savedAt: content.meta.savedToR2At, content });
+}
 
+async function handleUpload(request, env) {
+  if (!env.NASCW_UPLOADS) return json({ ok: false, error: 'R2 binding NASCW_UPLOADS is missing.' }, 500);
+  if (!env.NASCW_ADMIN_UPLOAD_TOKEN) return json({ ok: false, error: 'NASCW_ADMIN_UPLOAD_TOKEN secret is missing.' }, 500);
+  const receivedToken = request.headers.get('x-nascw-admin-token') || '';
+  if (receivedToken !== env.NASCW_ADMIN_UPLOAD_TOKEN) return json({ ok: false, error: 'Unauthorized upload request.' }, 401);
   const form = await request.formData();
   const file = form.get('file');
-
-  if (!file || typeof file === 'string') {
-    return json({ ok: false, error: 'Missing image file.' }, 400);
-  }
-
+  if (!file || typeof file === 'string') return json({ ok: false, error: 'Missing image file.' }, 400);
   const allowed = new Set(['image/webp', 'image/jpeg', 'image/png']);
-  if (!allowed.has(file.type)) {
-    return json({ ok: false, error: 'Unsupported image type. Use WebP, JPG, or PNG.' }, 400);
-  }
-
+  if (!allowed.has(file.type)) return json({ ok: false, error: 'Unsupported image type. Use WebP, JPG, or PNG.' }, 400);
   const maxBytes = 2 * 1024 * 1024;
-  if (file.size > maxBytes) {
-    return json({ ok: false, error: 'Image is too large after compression. Max size is 2MB.' }, 413);
-  }
-
+  if (file.size > maxBytes) return json({ ok: false, error: 'Image is too large after compression. Max size is 2MB.' }, 413);
   const section = cleanPart(form.get('section'), 'programs');
   const group = cleanPart(form.get('group'), 'gallery');
   const ext = extensionFromMime(file.type);
   const key = `${section}/${group}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
-
   await env.NASCW_UPLOADS.put(key, await file.arrayBuffer(), {
-    httpMetadata: {
-      contentType: file.type,
-      cacheControl: 'public, max-age=31536000, immutable'
-    },
-    customMetadata: {
-      originalName: file.name || '',
-      uploadedAt: new Date().toISOString()
-    }
+    httpMetadata: { contentType: file.type, cacheControl: 'public, max-age=31536000, immutable' },
+    customMetadata: { originalName: file.name || '', uploadedAt: new Date().toISOString() }
   });
-
-  return json({
-    ok: true,
-    key,
-    url: `/uploads/${key}`,
-    size: file.size,
-    type: file.type
-  });
+  return json({ ok: true, key, url: `/uploads/${key}`, size: file.size, type: file.type });
 }
 
 async function handleUploadRead(key, env) {
-  if (!env.NASCW_UPLOADS) {
-    return new Response('R2 binding missing', { status: 500 });
-  }
-
-  if (!key || key.includes('..') || key.startsWith('/') || key.includes('\\')) {
-    return new Response('Bad upload path', { status: 400 });
-  }
-
+  if (!env.NASCW_UPLOADS) return new Response('R2 binding missing', { status: 500 });
+  if (!key || key.includes('..') || key.startsWith('/') || key.includes('\\')) return new Response('Bad upload path', { status: 400 });
   const object = await env.NASCW_UPLOADS.get(key);
-
-  if (!object) {
-    return new Response('Not found', {
-      status: 404,
-      headers: { 'cache-control': 'no-store' }
-    });
-  }
-
+  if (!object) return new Response('Not found', { status: 404, headers: { 'cache-control': 'no-store' } });
   const headers = new Headers();
   object.writeHttpMetadata(headers);
   headers.set('etag', object.httpEtag);
   headers.set('cache-control', 'public, max-age=31536000, immutable');
-
   return new Response(object.body, { headers });
 }

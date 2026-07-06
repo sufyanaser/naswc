@@ -1,3 +1,1 @@
-(()=>{
-  console.log('NAS CodeWorks CMS toolkit placeholder loaded');
-})();
+console.log('cms active');

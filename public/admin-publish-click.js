@@ -33,3 +33,21 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
   let n=0,t=setInterval(()=>{bind();if(++n>30)clearInterval(t)},250);
 })();
+
+function nascwCmsToolbarLite(){
+  if(document.getElementById('cms-tools'))return;
+  var root=document.getElementById('adminroot')||document.body;
+  var box=document.createElement('div');
+  box.id='cms-tools';
+  box.style.cssText='position:fixed;left:12px;top:72px;z-index:180;width:54px;padding:8px;border:1px solid var(--line);border-radius:16px;background:rgba(15,26,46,.94);display:flex;flex-direction:column;gap:8px';
+  ['T','—','▧','!'].forEach(function(label){
+    var b=document.createElement('button');
+    b.type='button';
+    b.textContent=label;
+    b.style.cssText='width:38px;height:38px;border-radius:11px;border:1px solid var(--line-soft);background:var(--panel-3);color:var(--fg-2);font-weight:800;cursor:pointer';
+    b.onclick=function(){alert('Custom Blocks foundation: '+label);};
+    box.appendChild(b);
+  });
+  root.appendChild(box);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nascwCmsToolbarLite,{once:true});else nascwCmsToolbarLite();

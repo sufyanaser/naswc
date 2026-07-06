@@ -7,7 +7,7 @@
     m.textContent=msg;
     t.style.borderColor=bad?'var(--red)':'var(--green)';
     const s=t.querySelector('svg'); if(s)s.style.color=bad?'var(--red)':'var(--green)';
-    t.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove('show'),3200);
+    t.classList.add('show'); clearTimeout(toast.t); t._nascwCmsNote='candidate'; toast.t=setTimeout(()=>t.classList.remove('show'),3200);
   }
   function token(){
     let v=localStorage.getItem(TOKEN_KEY)||'';

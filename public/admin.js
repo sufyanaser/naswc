@@ -801,7 +801,7 @@ function switchTo(id){
 
 /* ---------- LIVE PREVIEW ---------- */
 const PV_MAP={brand:'brand',hero:'hero',pain:'pain',ba:'ba',services:'services',offers:'offers',proof:'proof',team:'team',process:'process',why:'why',start:'start',faq:'faq',contact:'contact',footer:'footer'};
-let PV_T=null,PV_DESK=false;
+let PV_T=null,PV_DESK=true;
 function pvFrame(){return document.getElementById('pv-frame');}
 function pushPreview(){
   const f=pvFrame(); if(!f||!f.contentWindow)return;
@@ -832,6 +832,7 @@ function initPreview(){
   on('pv-reload',()=>updatePreview(CUR));
   on('pv-open',()=>window.open('/index.html?preview='+(PV_MAP[CUR]||'hero'),'_blank'));
   on('pv-dev',e=>{PV_DESK=!PV_DESK;e.currentTarget.classList.toggle('on',PV_DESK);pvScale();});
+  const dvb=document.getElementById('pv-dev'); if(dvb&&PV_DESK)dvb.classList.add('on');
   on('pv-close',()=>{document.body.classList.toggle('pv-off');setTimeout(pvScale,60);});
   window.addEventListener('resize',pvScale);
   document.addEventListener('input',schedulePreview,true);

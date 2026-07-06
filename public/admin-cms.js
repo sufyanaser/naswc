@@ -1,1 +1,4 @@
-console.log('cms active');
+function nascwCmsBoot(){
+  console.log('cms boot');
+}
+nascwCmsBoot();

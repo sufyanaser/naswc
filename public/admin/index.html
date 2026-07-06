@@ -15,7 +15,7 @@
   --fg:#EAF1FB;--fg-2:#94A7C2;--fg-3:#5E7290;
   --cyan:#00D4FF;--violet:#7C3AED;
   --green:#22C98A;--amber:#F5A524;--red:#EF4D4D;
-  --r:12px;--topbar-h:58px;--sidebar-w:212px;--pv-w:400px;
+  --r:12px;--topbar-h:58px;--sidebar-w:236px;--pv-w:560px;
   --mono:'IBM Plex Mono',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -48,9 +48,16 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 .tbtn.test{background:rgba(124,58,237,.1);color:#a78bfa;border-color:rgba(124,58,237,.25)}.tbtn.test:hover{background:rgba(124,58,237,.18)}
 
 /* ── Layout: sidebar | editor | preview ── */
-.layout{display:grid;grid-template-columns:var(--sidebar-w) minmax(0,1fr) var(--pv-w);min-height:calc(100vh - var(--topbar-h));margin-top:var(--topbar-h)}
-body.pv-off .layout{grid-template-columns:var(--sidebar-w) minmax(0,1fr) 0}
-body.pv-off .pv-panel{display:none}
+.layout{display:grid;grid-template-columns:var(--sidebar-w) minmax(0,1fr) 6px var(--pv-w);min-height:calc(100vh - var(--topbar-h));margin-top:var(--topbar-h)}
+body.pv-off .layout{grid-template-columns:var(--sidebar-w) minmax(0,1fr) 0 0}
+body.pv-off .pv-panel,body.pv-off .pv-divider{display:none}
+.pv-divider{position:sticky;top:var(--topbar-h);height:calc(100vh - var(--topbar-h));background:var(--line-soft);cursor:col-resize;z-index:60;transition:background .15s}
+.pv-divider::after{content:"";position:absolute;inset:0;left:-5px;right:-5px}
+.pv-divider:hover,body.pv-dragging .pv-divider{background:var(--cyan)}
+.pv-divider .grip{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3px;height:36px;border-radius:3px;background:var(--fg-3);opacity:.5;pointer-events:none}
+.pv-divider:hover .grip,body.pv-dragging .grip{background:#041019;opacity:.9}
+body.pv-dragging{user-select:none;cursor:col-resize}
+body.pv-dragging #pv-frame{pointer-events:none}
 
 /* ── Sidebar ── */
 .side{position:sticky;top:var(--topbar-h);height:calc(100vh - var(--topbar-h));overflow-y:auto;overflow-x:hidden;background:var(--panel);border-left:1px solid var(--line-soft);padding:12px 8px 40px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
@@ -211,12 +218,9 @@ hr{border:none;border-top:1px solid var(--line-soft);margin:8px 0}
 .gate-note{font-size:11px;color:var(--fg-3);margin-top:14px;line-height:1.6}
 
 /* Responsive */
-@media(max-width:1250px){
-  :root{--pv-w:340px}
-}
 @media(max-width:1080px){
   .layout{grid-template-columns:var(--sidebar-w) minmax(0,1fr)}
-  .pv-panel{display:none}
+  .pv-panel,.pv-divider{display:none}
 }
 @media(max-width:820px){
   .layout{grid-template-columns:1fr}
@@ -276,6 +280,7 @@ hr{border:none;border-top:1px solid var(--line-soft);margin:8px 0}
   <div class="layout">
     <nav class="side" id="side"></nav>
     <main class="main" id="main"></main>
+    <div class="pv-divider" id="pv-divider" title="اسحب لتغيير عرض المعاينة"><span class="grip"></span></div>
     <aside class="pv-panel" id="pv-panel">
       <div class="pv-head">
         <span class="pv-live">LIVE</span>
@@ -308,6 +313,43 @@ hr{border:none;border-top:1px solid var(--line-soft);margin:8px 0}
 </div>
 <input type="file" id="file-import" accept="application/json" style="display:none">
 
+<script>
+(function(){
+  const KEY='nascw_pv_w', root=document.documentElement;
+  const saved=parseInt(localStorage.getItem(KEY)||'',10);
+  if(saved>=320) root.style.setProperty('--pv-w',saved+'px');
+  document.addEventListener('DOMContentLoaded',()=>{
+    const div=document.getElementById('pv-divider'); if(!div) return;
+    let drag=false;
+    const apply=x=>{
+      const w=Math.round(Math.min(Math.max(x,320),window.innerWidth*0.62));
+      root.style.setProperty('--pv-w',w+'px');
+      return w;
+    };
+    div.addEventListener('pointerdown',e=>{
+      drag=true; div.setPointerCapture(e.pointerId);
+      document.body.classList.add('pv-dragging'); e.preventDefault();
+    });
+    div.addEventListener('pointermove',e=>{
+      if(!drag) return;
+      apply(e.clientX);                       /* RTL: preview pane = left edge → divider */
+      window.dispatchEvent(new Event('resize'));
+    });
+    const end=e=>{
+      if(!drag) return; drag=false;
+      document.body.classList.remove('pv-dragging');
+      const w=apply(e.clientX); localStorage.setItem(KEY,w);
+      window.dispatchEvent(new Event('resize'));
+    };
+    div.addEventListener('pointerup',end);
+    div.addEventListener('pointercancel',end);
+    div.addEventListener('dblclick',()=>{     /* reset */
+      root.style.setProperty('--pv-w','560px'); localStorage.removeItem(KEY);
+      window.dispatchEvent(new Event('resize'));
+    });
+  });
+})();
+</script>
 <script src="/content-default.js"></script>
 <script src="/admin.js"></script>
 <script src="/admin-upload-r2.js"></script>

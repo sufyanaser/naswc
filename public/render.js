@@ -484,10 +484,14 @@ async function mount(){
     });
     return;
   }
-  document.getElementById('app').innerHTML=[
-    heroHTML(c),painHTML(c),baHTML(c),servicesHTML(c),offerHTML(c),
-    proofHTML(c),teamHTML(c),processHTML(c),whyHTML(c),startHTML(c),faqHTML(c),footerHTML(c)
-  ].join('');
-  bindGlobalCTAs(c); bindForm(c); LB.init(); bindProofGalleries(c); reveal(); initHeroFlow();
+  const SEC_FNS={hero:heroHTML,pain:painHTML,ba:baHTML,services:servicesHTML,offers:offerHTML,proof:proofHTML,team:teamHTML,process:processHTML,why:whyHTML,start:startHTML,faq:faqHTML};
+  const DEF_ORDER=['hero','pain','ba','services','offers','proof','team','process','why','start','faq'];
+  const L=c.layout||{};
+  let order=(Array.isArray(L.order)&&L.order.length?L.order:DEF_ORDER).filter(id=>SEC_FNS[id]);
+  DEF_ORDER.forEach(id=>{if(!order.includes(id))order.push(id);});
+  const hidden=new Set(Array.isArray(L.hidden)?L.hidden:[]);
+  document.getElementById('app').innerHTML=
+    order.filter(id=>!hidden.has(id)).map(id=>SEC_FNS[id](c)).join('')+footerHTML(c);
+  bindGlobalCTAs(c); bindForm(c); LB.init(); bindProofGalleries(c); reveal(); try{initHeroFlow();}catch(e){}
 }
 mount();

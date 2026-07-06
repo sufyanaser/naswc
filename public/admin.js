@@ -16,6 +16,31 @@ const svg=(p,sw=2)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const MARK_PREVIEW='<svg viewBox="0 0 100 100" width="48" height="48" style="flex:none"><defs><linearGradient id="amk" x1="0.12" y1="0.1" x2="0.9" y2="0.92"><stop offset="0" stop-color="#00D4FF"/><stop offset="1" stop-color="#7C3AED"/></linearGradient></defs><path d="M 66.8 74.2 A 29.5 29.5 0 1 1 66.8 25.8" fill="none" stroke="url(#amk)" stroke-width="9.2" stroke-linecap="round"/><rect x="44.2" y="44.2" width="11.6" height="11.6" rx="3" fill="#00D4FF"/><rect x="63.5" y="46" width="8" height="8" rx="2.1" fill="#00D4FF" opacity=".92" transform="rotate(10 67.5 50)"/><rect x="73.2" y="45.4" width="6" height="6" rx="1.6" fill="#5BBEF0" opacity=".62" transform="rotate(18 76 48)"/><rect x="81" y="44" width="4.4" height="4.4" rx="1.2" fill="#7C3AED" opacity=".38" transform="rotate(26 83 46)"/></svg>';
 const TRASH=svg('<path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/>');
 const UP=svg('<path d="M18 15l-6-6-6 6"/>'), DN=svg('<path d="M6 9l6 6 6-6"/>');
+const EYE=svg('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>');
+const EYE_OFF=svg('<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M14.12 14.12a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>');
+const LAYOUT_IDS=['hero','pain','ba','services','offers','proof','team','process','why','start','faq'];
+function layoutCfg(){
+  C.layout=C.layout||{};
+  if(!Array.isArray(C.layout.order)||!C.layout.order.length) C.layout.order=[...LAYOUT_IDS];
+  C.layout.order=C.layout.order.filter(id=>LAYOUT_IDS.includes(id));
+  LAYOUT_IDS.forEach(id=>{if(!C.layout.order.includes(id))C.layout.order.push(id);});
+  if(!Array.isArray(C.layout.hidden)) C.layout.hidden=[];
+  return C.layout;
+}
+function toggleSection(id){
+  const L=layoutCfg();
+  const i=L.hidden.indexOf(id);
+  if(i>=0){L.hidden.splice(i,1);toast('تم إظهار القسم في الموقع ✓');}
+  else{L.hidden.push(id);toast('تم إخفاء القسم — لن يظهر بالموقع حتى تعيد إظهاره');}
+  save(true); buildSide();
+}
+function moveSection(id,dir){
+  const L=layoutCfg();
+  const i=L.order.indexOf(id),j=i+dir;
+  if(i<0||j<0||j>=L.order.length)return;
+  [L.order[i],L.order[j]]=[L.order[j],L.order[i]];
+  save(true); buildSide();
+}
 
 const SECTIONS=[
   {id:'brand',label:'الشعار والهوية',icon:'<path d="M20.6 13.4L13.4 20.6a2 2 0 01-2.8 0l-7.2-7.2a2 2 0 010-2.8L10.6 3.4a2 2 0 011.4-.6h7a2 2 0 012 2v7a2 2 0 01-.6 1.4z"/><circle cx="7.5" cy="7.5" r="1.5"/>'},
@@ -733,14 +758,27 @@ const SEC_DESC={
 };
 function buildSide(){
   const side=$('#side'); side.innerHTML='';
+  const L=C?layoutCfg():null;
   SIDE_GROUPS.forEach((g,gi)=>{
     const grp=ce('div',{className:'side-group'});
     grp.appendChild(ce('span',{className:'side-group-label',textContent:g.label}));
-    g.ids.forEach(id=>{
+    const isContent=L&&g.ids.includes('hero');
+    const ids=isContent?L.order:g.ids;
+    ids.forEach((id,idx)=>{
       const s=SECTIONS.find(s=>s.id===id); if(!s) return;
-      const a=ce('a',{className:s.id===CUR?'active':''});
+      const hid=isContent&&L.hidden.includes(id);
+      const a=ce('a',{className:(s.id===CUR?'active':'')+(hid?' sec-hidden':'')});
       a.innerHTML=svg(s.icon)+`<span>${s.label}</span>`;
-      a.onclick=()=>switchTo(s.id); grp.appendChild(a);
+      if(isContent){
+        const ctl=ce('span',{className:'side-ctl'});
+        ctl.innerHTML=`<button class="sctl" data-eye title="${hid?'إظهار القسم':'إخفاء القسم'}">${hid?EYE_OFF:EYE}</button><button class="sctl" data-up title="تحريك لأعلى" ${idx===0?'disabled':''}>${UP}</button><button class="sctl" data-dn title="تحريك لأسفل" ${idx===ids.length-1?'disabled':''}>${DN}</button>`;
+        ctl.querySelector('[data-eye]').onclick=e=>{e.stopPropagation();toggleSection(id);};
+        ctl.querySelector('[data-up]').onclick=e=>{e.stopPropagation();moveSection(id,-1);};
+        ctl.querySelector('[data-dn]').onclick=e=>{e.stopPropagation();moveSection(id,1);};
+        a.appendChild(ctl);
+      }
+      a.onclick=()=>switchTo(s.id);
+      grp.appendChild(a);
     });
     side.appendChild(grp);
     if(gi<SIDE_GROUPS.length-1) side.appendChild(ce('div',{className:'side-divider'}));

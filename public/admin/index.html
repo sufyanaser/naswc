@@ -64,6 +64,14 @@ body.pv-off .pv-panel{display:none}
 .side a svg{width:14px;height:14px;flex:none;opacity:.65}
 .side a.active svg{opacity:1}
 .side-divider{height:1px;background:var(--line-soft);margin:6px 4px}
+.side a .side-ctl{display:none;align-items:center;gap:2px;margin-inline-start:auto;flex:none}
+.side a:hover .side-ctl{display:inline-flex}
+.sctl{width:19px;height:19px;border-radius:5px;border:1px solid var(--line);background:var(--panel-3);color:var(--fg-3);cursor:pointer;display:grid;place-items:center;padding:0;transition:.12s}
+.sctl:hover{border-color:var(--cyan);color:var(--cyan)}
+.sctl[disabled]{opacity:.25;pointer-events:none}
+.sctl svg{width:10.5px;height:10.5px}
+.side a.sec-hidden{opacity:.45}
+.side a.sec-hidden>span{text-decoration:line-through;text-decoration-color:var(--fg-3)}
 
 /* ── Editor ── */
 .main{min-width:0;padding:18px 18px 80px;background:var(--bg-2);overflow-y:auto}

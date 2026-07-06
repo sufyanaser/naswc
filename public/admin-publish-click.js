@@ -34,20 +34,80 @@
   let n=0,t=setInterval(()=>{bind();if(++n>30)clearInterval(t)},250);
 })();
 
+function nascwCmsToast(msg){
+  var t=document.querySelector('#toast'),m=document.querySelector('#toast-msg');
+  if(!t||!m)return console.log(msg);
+  m.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(nascwCmsToast.t);
+  nascwCmsToast.t=setTimeout(function(){t.classList.remove('show')},2600);
+}
+function nascwCmsSection(){
+  try{return typeof CUR!=='undefined'&&CUR?CUR:'hero'}catch(e){return'hero'}
+}
+function nascwCmsContent(){
+  try{
+    if(typeof C==='undefined'||!C)return null;
+    if(!C.customBlocks)C.customBlocks={};
+    return C;
+  }catch(e){return null}
+}
+function nascwCmsBlock(type){
+  var id='cb_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);
+  var b={id:id,type:type,visible:true,order:0,stylePreset:'default',hoverPreset:'none',data:{}};
+  if(type==='text')b.data={dir:'rtl',text:'نص جديد'};
+  if(type==='divider')b.data={preset:'thin'};
+  if(type==='image')b.data={url:'',alt:'',caption:'',ratio:'16x9'};
+  if(type==='callout')b.data={title:'ملاحظة',body:'نص الملاحظة'};
+  return b;
+}
+function nascwCmsAdd(type){
+  var c=nascwCmsContent();
+  if(!c){nascwCmsToast('المحتوى غير جاهز بعد');return;}
+  var sec=nascwCmsSection();
+  if(!Array.isArray(c.customBlocks[sec]))c.customBlocks[sec]=[];
+  var b=nascwCmsBlock(type);
+  b.order=c.customBlocks[sec].length;
+  c.customBlocks[sec].push(b);
+  try{if(typeof save==='function')save(true)}catch(e){}
+  nascwCmsDrawCount();
+  nascwCmsToast('تمت إضافة بلوك إلى '+sec);
+}
+function nascwCmsDrawCount(){
+  var main=document.getElementById('main');
+  if(!main)return;
+  var old=document.getElementById('cms-block-summary');
+  if(old)old.remove();
+  var c=nascwCmsContent();
+  if(!c)return;
+  var sec=nascwCmsSection();
+  var count=Array.isArray(c.customBlocks[sec])?c.customBlocks[sec].length:0;
+  var box=document.createElement('div');
+  box.id='cms-block-summary';
+  box.style.cssText='grid-column:1/-1;margin-top:12px;border:1px solid rgba(0,212,255,.22);border-radius:12px;padding:12px;background:rgba(0,212,255,.045);color:var(--fg-2);font-size:13px';
+  box.textContent='Custom Blocks foundation — '+sec+' — عدد البلوكات: '+count;
+  var card=main.querySelector('.card');
+  if(card)card.after(box);else main.appendChild(box);
+}
 function nascwCmsToolbarLite(){
   if(document.getElementById('cms-tools'))return;
   var root=document.getElementById('adminroot')||document.body;
   var box=document.createElement('div');
   box.id='cms-tools';
   box.style.cssText='position:fixed;left:12px;top:72px;z-index:180;width:54px;padding:8px;border:1px solid var(--line);border-radius:16px;background:rgba(15,26,46,.94);display:flex;flex-direction:column;gap:8px';
-  ['T','—','▧','!'].forEach(function(label){
+  [['text','T'],['divider','—'],['image','▧'],['callout','!']].forEach(function(pair){
     var b=document.createElement('button');
     b.type='button';
-    b.textContent=label;
+    b.textContent=pair[1];
+    b.title='Add '+pair[0]+' block';
     b.style.cssText='width:38px;height:38px;border-radius:11px;border:1px solid var(--line-soft);background:var(--panel-3);color:var(--fg-2);font-weight:800;cursor:pointer';
-    b.onclick=function(){alert('Custom Blocks foundation: '+label);};
+    b.onclick=function(){nascwCmsAdd(pair[0])};
     box.appendChild(b);
   });
   root.appendChild(box);
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nascwCmsToolbarLite,{once:true});else nascwCmsToolbarLite();
+function nascwCmsBoot(){
+  nascwCmsToolbarLite();
+  setInterval(function(){nascwCmsToolbarLite();nascwCmsDrawCount()},1400);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nascwCmsBoot,{once:true});else nascwCmsBoot();

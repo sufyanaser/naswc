@@ -25,7 +25,7 @@ export default {
     const type = response.headers.get('content-type') || '';
     if (!type.includes('text/html') || response.status !== 200) return response;
 
-    const isAdmin = url.pathname === '/admin' || url.pathname === '/admin.html';
+    const isAdmin = url.pathname === '/admin' || url.pathname === '/admin.html' || url.pathname.startsWith('/admin/');
     if (isAdmin) return response;
 
     return new HTMLRewriter()

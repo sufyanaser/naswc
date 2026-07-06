@@ -457,8 +457,33 @@ function reveal(){
 
   ScrollTrigger.refresh();
 }
+/* ---------- SECTION PREVIEW MODE (admin live preview) ---------- */
+const PV_SEC=new URLSearchParams(location.search).get('preview');
+function previewRender(c){
+  const map={hero:heroHTML,pain:painHTML,ba:baHTML,services:servicesHTML,offers:offerHTML,proof:proofHTML,team:teamHTML,process:processHTML,why:whyHTML,start:startHTML,faq:faqHTML,footer:footerHTML,brand:heroHTML,contact:footerHTML};
+  const fn=map[PV_SEC]||heroHTML;
+  document.getElementById('app').innerHTML=fn(c);
+  const brand=document.getElementById('nav-brand'); if(brand) brand.innerHTML=brandInner(c);
+  applyFavicon(c);
+  try{ LB.init(); bindProofGalleries(c); }catch(e){}
+}
 async function mount(){
   const c=await loadContent(); CONTENT=c;
+  if(PV_SEC){
+    document.documentElement.classList.add('nascw-pv');
+    const st=document.createElement('style');
+    st.textContent='.nascw-pv .rv{opacity:1!important;transform:none!important;transition:none!important}'
+      +(PV_SEC==='brand'?'':'.nascw-pv header,.nascw-pv nav{display:none!important}')
+      +'.nascw-pv #sticky-wa,.nascw-pv .sticky-wa,.nascw-pv [id*=sticky]{display:none!important}'
+      +'.nascw-pv body{overflow-x:hidden}';
+    document.head.appendChild(st);
+    previewRender(c);
+    window.addEventListener('message',e=>{
+      const d=e.data;
+      if(d&&d.type==='nascw-preview-content'&&d.content){ CONTENT=d.content; previewRender(d.content); }
+    });
+    return;
+  }
   document.getElementById('app').innerHTML=[
     heroHTML(c),painHTML(c),baHTML(c),servicesHTML(c),offerHTML(c),
     proofHTML(c),teamHTML(c),processHTML(c),whyHTML(c),startHTML(c),faqHTML(c),footerHTML(c)

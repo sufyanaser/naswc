@@ -95,10 +95,17 @@
     }, true);
   }
 
+  function loadPartnersEditor() {
+    if (window.__nascwPartnersEditorRequested) return;
+    window.__nascwPartnersEditorRequested = true;
+    import('/admin-partners-force.js?v=r2pf2').catch(error => console.error(error));
+  }
+
   function boot() {
     wrapSave();
     wrapUploader();
     installUiListeners();
+    loadPartnersEditor();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
@@ -108,6 +115,7 @@
   const timer = setInterval(() => {
     wrapSave();
     wrapUploader();
+    loadPartnersEditor();
     tries += 1;
     if (tries > 20 || (STATE.saveWrapped && window.fileToCompressedDataURL && window.fileToCompressedDataURL.__nascwAutosaveWrapped)) clearInterval(timer);
   }, 250);

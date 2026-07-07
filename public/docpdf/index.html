@@ -6,11 +6,13 @@
   <title>NAS Document Studio — docpdf</title>
   <meta name="robots" content="noindex" />
   <style>
-    *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;background:#060a12;color:#e8f3fb;font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;overflow:hidden}
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;background:#060a12;color:#e8f3fb;font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;overflow:hidden}
     .shell{position:fixed;inset:0;display:grid;grid-template-rows:42px 1fr;background:#060a12}
     .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 14px;border-bottom:1px solid rgba(0,212,255,.16);background:linear-gradient(180deg,#0d1726,#09101b);font-size:12px;color:#7f93a9}
-    .brand{display:flex;align-items:center;gap:8px;color:#e8f3fb;font-weight:800}.dot{width:18px;height:18px;border-radius:50%;background:conic-gradient(from 20deg,transparent 0 18%,#00d4ff 19% 27%,transparent 28% 43%,#00d4ff 44% 53%,transparent 54%);box-shadow:0 0 16px rgba(0,212,255,.35)}
-    .bar a{color:#00d4ff;text-decoration:none}.status{opacity:.8}iframe{display:block;width:100%;height:100%;border:0;background:#060a12}.fallback{padding:24px;color:#e8f3fb;font-size:14px}
+    .brand{display:flex;align-items:center;gap:8px;color:#e8f3fb;font-weight:800}
+    .dot{width:18px;height:18px;border-radius:50%;background:conic-gradient(from 20deg,transparent 0 18%,#00d4ff 19% 27%,transparent 28% 43%,#00d4ff 44% 53%,transparent 54%);box-shadow:0 0 16px rgba(0,212,255,.35)}
+    .bar a{color:#00d4ff;text-decoration:none}.status{opacity:.86}iframe{display:block;width:100%;height:100%;border:0;background:#060a12}.fallback{padding:24px;color:#e8f3fb;font-size:14px;line-height:1.8}
   </style>
 </head>
 <body>
@@ -19,25 +21,19 @@
       <div class="brand"><span class="dot"></span><span>NAS Document Studio</span></div>
       <div class="status" id="status">Loading embedded app…</div>
     </div>
-    <iframe id="app" title="NAS Document Studio" sandbox="allow-scripts allow-downloads allow-forms allow-modals allow-popups"></iframe>
+    <iframe id="app" title="NAS Document Studio" sandbox="allow-scripts allow-same-origin allow-downloads allow-forms allow-modals allow-popups"></iframe>
   </div>
   <script>
     const statusEl = document.getElementById('status');
     const frame = document.getElementById('app');
     const url = 'https://raw.githubusercontent.com/sufyanaser/NAS_docstudio/main/index.html?ts=' + Date.now();
+
     fetch(url, { cache: 'no-store' })
       .then(r => {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.text();
       })
       .then(html => {
-        html = html.replace("function logo(){return{enabled:true,src:'',size:11,pos:'right',text:'CodeWorks',showText:true}}", "function logo(){return{enabled:true,src:'',size:18,pos:'right',text:'',showText:false}}");
-        html = html.replace("function head(p){let h=p.header;return`<div class=\"head ${h.enabled?'':'hide'}\"><div class=\"hl small\">${esc(h.left)}</div><div class=\"hc small\">${esc(h.center||state.meta.title)}</div><div class=\"hr small\">${esc(h.right)}</div>${logoHtml(h.logo)}</div>`}", "function head(p){let h=p.header;return`<div class=\"head ${h.enabled?'':'hide'} ${h.leftVisible===false?'hideHL':''} ${h.centerVisible===false?'hideHC':''} ${h.rightVisible===false?'hideHR':''} ${h.logoVisible===false?'hideLogo':''}\"><div class=\"hl small\">${esc(h.left)}</div><div class=\"hc small\">${esc(h.center||state.meta.title)}</div><div class=\"hr small\">${esc(h.right)}</div>${logoHtml(h.logo)}</div>`}");
-        html = html.replace("function foot(p,i,total){let f=p.footer,rep=s=>esc((s||'').replace('{page}',i+1).replace('{total}',total));return`<div class=\"foot ${f.enabled?'':'hide'}\"><span>${rep(f.right)}</span><span>${rep(f.center)}</span><span class=\"mono\">${rep(f.left)}</span></div>`}", "function foot(p,i,total){let f=p.footer,rep=s=>esc((s||'').replace('{page}',i+1).replace('{total}',total));return`<div class=\"foot ${f.enabled?'':'hide'} ${f.leftVisible===false?'hideFL':''} ${f.centerVisible===false?'hideFC':''} ${f.rightVisible===false?'hideFR':''}\"><span>${rep(f.right)}</span><span>${rep(f.center)}</span><span class=\"mono\">${rep(f.left)}</span></div>`}");
-        html = html.replace("<input id=\"logoFile\" type=\"file\" hidden accept=\"image/png,image/jpeg,image/webp,image/svg+xml\">", "<input id=\"logoFile\" type=\"file\" hidden accept=\"image/png,image/jpeg,image/webp,image/svg+xml\"><div class=\"hint\">ارفع شعارك الحقيقي. النص بجانب الشعار مخفي افتراضياً ويمكن تفعيله فقط عند الحاجة.</div>");
-        html = html.replace("<input id=\"logoText\" class=\"field\" placeholder=\"نص الشعار\"><h3>Header</h3>", "<input id=\"logoText\" class=\"field\" placeholder=\"نص الشعار الاختياري\"><div class=\"row\"><button class=\"btn\" id=\"forceLogoTextOff\">إخفاء نص الشعار</button><button class=\"btn\" id=\"forceLogoOnlyAll\">شعار فقط للكل</button></div><h3>Header Pro</h3><div class=\"row\"><label class=\"small\">ارتفاع الهيدر mm<input id=\"headHeight\" type=\"range\" min=\"0\" max=\"32\" class=\"field\"></label><label class=\"small\">ارتفاع الفوتر mm<input id=\"footHeight\" type=\"range\" min=\"0\" max=\"24\" class=\"field\"></label></div><div class=\"grid2\"><button class=\"tool\" id=\"togHL\">هيدر يسار</button><button class=\"tool\" id=\"togHC\">هيدر وسط</button><button class=\"tool\" id=\"togHR\">هيدر يمين</button><button class=\"tool\" id=\"togLogoSlot\">منطقة الشعار</button></div><h3>Header</h3>");
-        const patch = `<style>.head.hideHL .hl,.head.hideHC .hc,.head.hideHR .hr{visibility:hidden}.head.hideLogo .logoBox{display:none}.foot.hideFL span:nth-child(3),.foot.hideFC span:nth-child(2),.foot.hideFR span:nth-child(1){visibility:hidden}.logoBox{min-width:0}.logoText:empty{display:none!important}.tool.active-pro{border-color:var(--c);color:var(--c);background:rgba(0,212,255,.08)}</style><script>(function(){function p(){return state.pages[selPage]}function syncPro(){try{let x=p();let set=(id,on)=>{let e=document.getElementById(id);if(e)e.classList.toggle('active-pro',!!on)};let hh=document.getElementById('headHeight'),fh=document.getElementById('footHeight');if(hh)hh.value=x.header.h||0;if(fh)fh.value=x.footer.h||0;set('togHL',x.header.leftVisible!==false);set('togHC',x.header.centerVisible!==false);set('togHR',x.header.rightVisible!==false);set('togLogoSlot',x.header.logoVisible!==false)}catch(e){}}function rer(){render();setTimeout(syncPro,0)}function bind(id,fn){let e=document.getElementById(id);if(e)e.addEventListener('click',fn)}setTimeout(function(){bind('forceLogoTextOff',function(){p().header.logo.showText=false;p().header.logo.text='';rer()});bind('forceLogoOnlyAll',function(){let l=JSON.parse(JSON.stringify(p().header.logo));l.showText=false;l.text='';state.pages.forEach(pg=>{pg.header.logo=JSON.parse(JSON.stringify(l))});rer()});bind('togHL',function(){let h=p().header;h.leftVisible=h.leftVisible===false;rer()});bind('togHC',function(){let h=p().header;h.centerVisible=h.centerVisible===false;rer()});bind('togHR',function(){let h=p().header;h.rightVisible=h.rightVisible===false;rer()});bind('togLogoSlot',function(){let h=p().header;h.logoVisible=h.logoVisible===false;rer()});let hh=document.getElementById('headHeight'),fh=document.getElementById('footHeight');if(hh)hh.addEventListener('input',e=>{p().header.h=+e.target.value;rer()});if(fh)fh.addEventListener('input',e=>{p().footer.h=+e.target.value;rer()});document.addEventListener('click',()=>setTimeout(syncPro,30));syncPro()},120)})();<\/script>`;
-        html = html.replace('</body>', patch + '</body>');
         frame.srcdoc = html;
         statusEl.innerHTML = 'Hosted at <strong>nascw.net/docpdf</strong> · Live source: <a href="https://github.com/sufyanaser/NAS_docstudio" target="_blank" rel="noreferrer">NAS_docstudio</a>';
       })

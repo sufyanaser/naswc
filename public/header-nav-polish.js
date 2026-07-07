@@ -13,6 +13,7 @@
     .nas-head-links a{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:8px 14px;border-radius:11px;color:var(--fg-2);font-size:13.5px;font-weight:700;white-space:nowrap;transition:.2s}
     .nas-head-links a:hover{background:rgba(0,212,255,.12);color:var(--cyan);box-shadow:inset 0 0 0 1px rgba(0,212,255,.18)}
     .nas-head-links a.primary{background:rgba(0,212,255,.16);color:var(--cyan);box-shadow:inset 0 0 0 1px rgba(0,212,255,.28)}
+    @media(max-width:1100px){.nas-head-links a{font-size:12.5px;padding:8px 10px}.nas-head-links{gap:5px}}
     @media(max-width:980px){.nav{min-height:70px}.nav-in{height:70px}.nas-head-links{display:none}.brand svg{width:44px!important;height:44px!important}.brand .logo-img{height:44px!important;max-width:220px!important}.brand span,.brand b{font-size:18px}}
     @media(max-width:520px){.brand .logo-img{height:38px!important;max-width:170px!important}.brand svg{width:38px!important;height:38px!important}.nav-in{gap:10px}.nav-cta{font-size:13px}}
   `;
@@ -34,6 +35,7 @@
     links.className = "nas-head-links";
     links.innerHTML = `
       <a href="#services" class="primary">الخدمات</a>
+      <a href="#partners">الشركاء الاستراتيجيون</a>
       <a href="#proof">الأعمال</a>
       <a href="#process">طريقة العمل</a>
       <a href="#why">لماذا نحن</a>

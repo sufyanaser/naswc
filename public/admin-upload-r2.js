@@ -3,7 +3,7 @@
 
   const STORE_KEY = "nascw_content_v1";
   const TOKEN_KEY = "nascwAdminUploadToken";
-  const STATE = { timer: null, installed: false, saveWrapped: false };
+  const STATE = { timer: null, installed: false, saveWrapped: false, uploadWrapped: false };
 
   function show(msg, error) {
     const toast = document.querySelector('#toast');
@@ -57,12 +57,15 @@
     STATE.saveWrapped = true;
   }
 
-  function scheduleSave(reason, delay = 180) {
+  function scheduleSave(reason, delay = 520) {
     clearTimeout(STATE.timer);
     STATE.timer = setTimeout(() => {
       wrapSave();
       if (!canSave()) return;
-      try { window.save(true); }
+      try {
+        const ok = window.save(true);
+        if (ok) setTimeout(() => publishContent(true).catch(error => show(error.message, true)), 160);
+      }
       catch (error) { show('فشل الحفظ المحلي: ' + error.message, true); }
     }, delay);
   }
@@ -74,7 +77,7 @@
       try {
         const result = await fn.apply(this, args);
         if (!String(result || '').startsWith('/uploads/')) show('تحذير: الصورة لم ترجع كرابط /uploads', true);
-        scheduleSave("upload-complete", 0);
+        scheduleSave("upload-complete", 720);
         return result;
       } catch (error) {
         show(error.message || 'فشل رفع الصورة', true);
@@ -88,17 +91,22 @@
   function installUiListeners() {
     if (STATE.installed) return;
     STATE.installed = true;
+    document.addEventListener("change", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLInputElement)) return;
+      if (target.type === "file") scheduleSave("file-input-change", 1200);
+    }, true);
     document.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
-      if (target.closest(".img-cell button") || target.closest(".url-row button") || target.closest(".mini.del")) scheduleSave("image-ui-click", 250);
+      if (target.closest(".img-cell button") || target.closest(".url-row button") || target.closest(".mini.del")) scheduleSave("image-ui-click", 450);
     }, true);
   }
 
   function loadPartnersEditor() {
     if (window.__nascwPartnersEditorRequested) return;
     window.__nascwPartnersEditorRequested = true;
-    import('/admin-partners-force.js?v=r2pf2').catch(error => console.error(error));
+    import('/admin-partners-force.js?v=r2pf3').catch(error => console.error(error));
   }
 
   function boot() {
@@ -117,6 +125,6 @@
     wrapUploader();
     loadPartnersEditor();
     tries += 1;
-    if (tries > 20 || (STATE.saveWrapped && window.fileToCompressedDataURL && window.fileToCompressedDataURL.__nascwAutosaveWrapped)) clearInterval(timer);
+    if (tries > 40 || (STATE.saveWrapped && window.fileToCompressedDataURL && window.fileToCompressedDataURL.__nascwAutosaveWrapped)) clearInterval(timer);
   }, 250);
 })();

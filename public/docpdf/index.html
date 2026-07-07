@@ -19,28 +19,22 @@
   <div class="shell">
     <div class="bar">
       <div class="brand"><span class="dot"></span><span>NAS Document Studio</span></div>
-      <div class="status" id="status">Loading embedded app…</div>
+      <div class="status" id="status">Live source: NAS_docstudio</div>
     </div>
-    <iframe id="app" title="NAS Document Studio" sandbox="allow-scripts allow-same-origin allow-downloads allow-forms allow-modals allow-popups"></iframe>
+    <iframe id="app" title="NAS Document Studio"></iframe>
   </div>
   <script>
-    const statusEl = document.getElementById('status');
     const frame = document.getElementById('app');
-    const url = 'https://raw.githubusercontent.com/sufyanaser/NAS_docstudio/main/index.html?ts=' + Date.now();
-
-    fetch(url, { cache: 'no-store' })
-      .then(r => {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.text();
-      })
-      .then(html => {
-        frame.srcdoc = html;
-        statusEl.innerHTML = 'Hosted at <strong>nascw.net/docpdf</strong> · Live source: <a href="https://github.com/sufyanaser/NAS_docstudio" target="_blank" rel="noreferrer">NAS_docstudio</a>';
-      })
-      .catch(err => {
-        statusEl.textContent = 'Load failed';
-        frame.srcdoc = '<div class="fallback" dir="rtl">تعذر تحميل NAS Document Studio. أعد تحديث الصفحة.<br><br>' + String(err.message) + '</div>';
-      });
+    const sources = [
+      'https://raw.githack.com/sufyanaser/NAS_docstudio/main/index.html?v=' + Date.now(),
+      'https://cdn.jsdelivr.net/gh/sufyanaser/NAS_docstudio@main/index.html?v=' + Date.now()
+    ];
+    let sourceIndex = 0;
+    frame.src = sources[sourceIndex];
+    frame.addEventListener('error', function(){
+      sourceIndex++;
+      if (sources[sourceIndex]) frame.src = sources[sourceIndex];
+    });
   </script>
 </body>
 </html>

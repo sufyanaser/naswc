@@ -47,11 +47,17 @@ function nascwCustomBlocksRender(content){
     target.appendChild(wrap);
   });
 }
+function nascwFounderPolish(){
+  var bio=document.querySelector('.founder .founder-txt p');
+  if(bio){
+    bio.textContent='مهندس أنظمة وبرمجيات بخبرة تتجاوز 15 سنة في بناء وتشغيل أنظمة البث، الأتمتة، والواجهات التشغيلية. أسّست محطة إذاعية كاملة من الصفر، وعملت في بيئات لا تتحمّل التوقف أو الأخطاء. في NAS CodeWorks أوظّف هذه الخبرة لبناء برامج Desktop عملية للشركات المحلية: واضحة للموظف، ثابتة في التشغيل، ومصممة على طريقة العمل الفعلية داخل المخزن والمحاسبة والأرشيف.';
+  }
+}
 function nascwCustomBlocksStyle(){
   if(document.getElementById('nascw-custom-blocks-style'))return;
   var style=document.createElement('style');
   style.id='nascw-custom-blocks-style';
-  style.textContent='.nascw-custom-blocks{margin:28px auto 0;max-width:var(--maxw);padding:0 20px}.ncb-list{display:grid;gap:14px}.ncb{border:1px solid var(--line-soft);border-radius:var(--r);background:var(--panel);overflow:hidden;transition:.22s}.ncb.highlighted{border-color:var(--cyan);background:linear-gradient(145deg,rgba(0,212,255,.08),rgba(124,58,237,.06))}.ncb.glass{background:rgba(15,26,46,.58);backdrop-filter:blur(12px)}.ncb.soft-glow:hover{box-shadow:0 18px 46px -28px rgba(0,212,255,.7)}.ncb.border-highlight:hover{border-color:var(--cyan)}.ncb.slight-lift:hover{transform:translateY(-3px)}.ncb-text{padding:22px}.ncb-text p{color:var(--fg-2);margin:0}.ncb-divider{border:0;margin:10px 0;height:1px;background:var(--line)}.ncb-divider.accent{height:2px;background:linear-gradient(90deg,var(--cyan),var(--violet))}.ncb-divider.dotted{background:none;border-top:1px dashed var(--line)}.ncb-callout{padding:20px;border-inline-start:3px solid var(--cyan)}.ncb-callout p{color:var(--fg-2)}.ncb-image{padding:14px}.ncb-image img{width:100%;border:1px solid var(--line-soft);border-radius:14px;object-fit:cover}.ncb-image.ratio-16x9 img{aspect-ratio:16/9}.ncb-image.ratio-4x3 img{aspect-ratio:4/3}.ncb-image.ratio-1x1 img{aspect-ratio:1/1}.ncb-image figcaption{font-size:13px;color:var(--fg-3);margin-top:8px}';
+  style.textContent='.nascw-custom-blocks{margin:28px auto 0;max-width:var(--maxw);padding:0 20px}.ncb-list{display:grid;gap:14px}.ncb{border:1px solid var(--line-soft);border-radius:var(--r);background:var(--panel);overflow:hidden;transition:.22s}.ncb.highlighted{border-color:var(--cyan);background:linear-gradient(145deg,rgba(0,212,255,.08),rgba(124,58,237,.06))}.ncb.glass{background:rgba(15,26,46,.58);backdrop-filter:blur(12px)}.ncb.soft-glow:hover{box-shadow:0 18px 46px -28px rgba(0,212,255,.7)}.ncb.border-highlight:hover{border-color:var(--cyan)}.ncb.slight-lift:hover{transform:translateY(-3px)}.ncb-text{padding:22px}.ncb-text p{color:var(--fg-2);margin:0}.ncb-divider{border:0;margin:10px 0;height:1px;background:var(--line)}.ncb-divider.accent{height:2px;background:linear-gradient(90deg,var(--cyan),var(--violet))}.ncb-divider.dotted{background:none;border-top:1px dashed var(--line)}.ncb-callout{padding:20px;border-inline-start:3px solid var(--cyan)}.ncb-callout p{color:var(--fg-2)}.ncb-image{padding:14px}.ncb-image img{width:100%;border:1px solid var(--line-soft);border-radius:14px;object-fit:cover}.ncb-image.ratio-16x9 img{aspect-ratio:16/9}.ncb-image.ratio-4x3 img{aspect-ratio:4/3}.ncb-image.ratio-1x1 img{aspect-ratio:1/1}.ncb-image figcaption{font-size:13px;color:var(--fg-3);margin-top:8px}.founder{gap:30px;align-items:flex-start}.founder-av{width:126px!important;height:126px!important;border-radius:26px!important;box-shadow:0 18px 42px -14px rgba(0,212,255,.62)!important}.founder-av img{width:100%;height:100%;object-fit:cover;object-position:center top}.founder-txt p{font-size:15px!important;line-height:1.9!important;max-width:820px}@media(max-width:720px){.founder{justify-content:center;text-align:center}.founder-av{width:112px!important;height:112px!important}.founder-stats{justify-content:center}}';
   document.head.appendChild(style);
 }
 (function(){
@@ -59,11 +65,12 @@ function nascwCustomBlocksStyle(){
   var latest=null;
   window.addEventListener('message',function(event){
     var data=event.data||{};
-    if(data.type==='nascw-preview-content'&&data.content){latest=data.content;setTimeout(function(){nascwCustomBlocksRender(latest)},60)}
+    if(data.type==='nascw-preview-content'&&data.content){latest=data.content;setTimeout(function(){nascwCustomBlocksRender(latest);nascwFounderPolish()},60)}
   });
   var tries=0;
   var timer=setInterval(function(){
     tries++;
+    nascwFounderPolish();
     if(latest){nascwCustomBlocksRender(latest);return}
     try{
       var raw=localStorage.getItem('nascw_content_v1');

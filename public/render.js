@@ -1,1 +1,1 @@
-import('/render-core.js').then(function(){return import('/custom-blocks-render.js')}).then(function(){return import('/slideshow-polish.js')}).then(function(){return import('/founder-copy-fix.js')}).catch(function(error){console.error(error)});
+import('/render-core.js').then(function(){return import('/custom-blocks-render.js')}).then(function(){return import('/slideshow-polish.js')}).then(function(){return import('/founder-copy-fix.js')}).then(function(){return import('/header-nav-polish.js')}).catch(function(error){console.error(error)});

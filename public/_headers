@@ -6,3 +6,12 @@
 
 /admin-upload-r2.js
   Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+
+/docpdf
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+
+/docpdf/
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+
+/docpdf/*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0

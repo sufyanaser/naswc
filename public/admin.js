@@ -760,7 +760,8 @@ function buildSide(){
   const side=$('#side'); side.innerHTML='';
   const L=C?layoutCfg():null;
   SIDE_GROUPS.forEach((g,gi)=>{
-    const grp=ce('div',{className:'side-group'});
+    const grp=ce('details',{className:'side-group'});
+    grp.open=true;
     grp.appendChild(ce('span',{className:'side-group-label',textContent:g.label}));
     const isContent=L&&g.ids.includes('hero');
     const ids=isContent?L.order:g.ids;

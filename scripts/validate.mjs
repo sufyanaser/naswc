@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 
 const required = [
-  'public/index.html', 'public/site.css', 'public/studio-v5.css', 'public/site.js',
+  'public/index.html', 'public/site.css', 'public/studio-v5.css', 'public/nexacore-v6.css', 'public/site.js',
   'public/admin/index.html', 'public/admin.js', 'public/admin-uiux.css', 'public/admin-uiux.js',
   'public/admin-upload-r2.js', 'public/admin-publish-click.js', 'public/admin-partners-force.js',
   'public/docpdf/index.html', 'docs/UI_UX_AUDIT.md'
@@ -14,6 +14,7 @@ const html = fs.readFileSync('public/index.html', 'utf8');
 const css = fs.readFileSync('public/site.css', 'utf8');
 const js = fs.readFileSync('public/site.js', 'utf8');
 const studioCss = fs.readFileSync('public/studio-v5.css', 'utf8');
+const nexacoreCss = fs.readFileSync('public/nexacore-v6.css', 'utf8');
 const adminHtml = fs.readFileSync('public/admin/index.html', 'utf8');
 const adminJs = fs.readFileSync('public/admin.js', 'utf8');
 const adminUxJs = fs.readFileSync('public/admin-uiux.js', 'utf8');
@@ -46,6 +47,8 @@ const checks = [
   ['work section', /id="work"/i.test(html)],
   ['contact section', /id="contact"/i.test(html)],
   ['studio stylesheet', /href="\/studio-v5\.css(?:\?[^\"]*)?"/i.test(html) && studioCss.length > 10000],
+  ['v6 visual language', /href="\/nexacore-v6\.css(?:\?[^\"]*)?"/i.test(html) && nexacoreCss.length > 15000],
+  ['v6 luminous hero', /class="hero-rays"/.test(html) && /\.hero-rays/.test(nexacoreCss)],
   ['interactive capabilities', /class="[^"]*capability-console[^"]*"/i.test(html) && /selectCapability/.test(js)],
   ['currency toggle', /data-currency="IQD"/i.test(html) && /data-currency="USD"/i.test(html)],
   ['new whatsapp number', /9647804228066/.test(html) && !/9647708111744/.test(html)],

@@ -99,37 +99,75 @@
     if (!window.gsap || !window.ScrollTrigger || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.from('.hero-copy > *', {
-      y: 28,
-      opacity: 0,
-      duration: .9,
-      stagger: .08,
-      ease: 'power3.out'
-    });
-
-    gsap.from('.hero-console', {
-      x: -40,
-      opacity: 0,
-      duration: 1,
-      delay: .18,
-      ease: 'power3.out'
-    });
+    const intro = gsap.timeline({ defaults: { ease: 'power4.out' } });
+    intro
+      .from('.topbar .nav-wrap', { y: -34, opacity: 0, duration: .8 })
+      .from('.hero .eyebrow', { y: 18, opacity: 0, duration: .55 }, '-=.35')
+      .from('.hero h1 span', { y: 52, opacity: 0, duration: .9, stagger: .1 }, '-=.28')
+      .from('.hero-lead', { y: 26, opacity: 0, duration: .7 }, '-=.52')
+      .from('.hero-actions > *', { y: 18, opacity: 0, duration: .55, stagger: .08 }, '-=.4')
+      .from('.hero-meta', { y: 24, opacity: 0, duration: .65 }, '-=.35')
+      .from('.hero-rays i', { scaleY: .18, opacity: 0, duration: 1.15, stagger: .045 }, '-=1.05');
 
     gsap.utils.toArray('.reveal').forEach((el) => {
       if (el.closest('.hero')) return;
       gsap.from(el, {
-        y: 34,
+        y: 46,
         opacity: 0,
-        duration: .85,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+        duration: .95,
+        ease: 'power4.out',
+        scrollTrigger: { trigger: el, start: 'top 90%', once: true }
       });
     });
 
-    gsap.to('.hero-console', {
-      y: -26,
+    gsap.to('.hero-rays', {
+      yPercent: -18,
+      scale: 1.06,
       ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.1 }
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.2 }
+    });
+
+    gsap.to('.hero-copy', {
+      y: -48,
+      opacity: .15,
+      ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: '55% center', end: 'bottom top', scrub: 1 }
+    });
+
+    gsap.from('.capability-row', {
+      y: 90,
+      opacity: 0,
+      duration: 1,
+      stagger: .09,
+      ease: 'power4.out',
+      scrollTrigger: { trigger: '.capability-index', start: 'top 86%', once: true }
+    });
+
+    gsap.from('.price-card', {
+      y: 70,
+      opacity: 0,
+      duration: .9,
+      stagger: .08,
+      ease: 'power4.out',
+      scrollTrigger: { trigger: '.pricing-grid', start: 'top 88%', once: true }
+    });
+
+    gsap.from('.process-line article', {
+      y: 55,
+      opacity: 0,
+      duration: .8,
+      stagger: .09,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '.process-line', start: 'top 88%', once: true }
+    });
+
+    gsap.from('.tech-cloud > span', {
+      scale: .92,
+      opacity: 0,
+      duration: .55,
+      stagger: .035,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '.tech-cloud', start: 'top 88%', once: true }
     });
   });
 })();

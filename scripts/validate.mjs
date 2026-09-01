@@ -8,6 +8,7 @@ for (const file of required) {
 const html = fs.readFileSync('public/index.html', 'utf8');
 const css = fs.readFileSync('public/site.css', 'utf8');
 const js = fs.readFileSync('public/site.js', 'utf8');
+const premiumCss = fs.readFileSync('public/premium-v3.css', 'utf8');
 
 const checks = [
   ['html lang', /<html[^>]*lang="ar"/i.test(html)],
@@ -19,6 +20,11 @@ const checks = [
   ['systems section', /id="systems"/i.test(html)],
   ['work section', /id="work"/i.test(html)],
   ['contact section', /id="contact"/i.test(html)],
+  ['premium stylesheet', /href="\/premium-v3\.css"/i.test(html) && premiumCss.length > 10000],
+  ['currency toggle', /data-currency="IQD"/i.test(html) && /data-currency="USD"/i.test(html)],
+  ['new whatsapp number', /9647804228066/.test(html) && !/9647708111744/.test(html)],
+  ['mobile app dock', /class="mobile-app-dock"/i.test(html)],
+  ['currency behavior', /price-card\[data-iqd\]\[data-usd\]/.test(js)],
   ['css content', css.length > 10000],
   ['js content', js.length > 500]
 ];

@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 const required = [
   'public/index.html', 'public/site.css', 'public/studio-v5.css', 'public/nexacore-v6.css', 'public/site.js',
+  'public/vendor/gsap.min.js', 'public/vendor/ScrollTrigger.min.js',
   'public/admin/index.html', 'public/admin.js', 'public/admin-uiux.css', 'public/admin-uiux.js',
   'public/admin-upload-r2.js', 'public/admin-publish-click.js', 'public/admin-partners-force.js',
   'public/docpdf/index.html', 'docs/UI_UX_AUDIT.md'
@@ -49,6 +50,7 @@ const checks = [
   ['studio stylesheet', /href="\/studio-v5\.css(?:\?[^\"]*)?"/i.test(html) && studioCss.length > 10000],
   ['v6 visual language', /href="\/nexacore-v6\.css(?:\?[^\"]*)?"/i.test(html) && nexacoreCss.length > 15000],
   ['v6 luminous hero', /class="hero-rays"/.test(html) && /\.hero-rays/.test(nexacoreCss)],
+  ['self-hosted gsap', /src="\/vendor\/gsap\.min\.js/.test(html) && /src="\/vendor\/ScrollTrigger\.min\.js/.test(html)],
   ['interactive capabilities', /class="[^"]*capability-console[^"]*"/i.test(html) && /selectCapability/.test(js)],
   ['currency toggle', /data-currency="IQD"/i.test(html) && /data-currency="USD"/i.test(html)],
   ['new whatsapp number', /9647804228066/.test(html) && !/9647708111744/.test(html)],

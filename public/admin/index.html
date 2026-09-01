@@ -234,19 +234,26 @@ hr{border:none;border-top:1px solid var(--line-soft);margin:8px 0}
   .field-row,.grid2,.grid3{grid-template-columns:1fr}
 }
 </style>
-<link rel="stylesheet" href="/admin-uiux.css?v=20260901-1">
+<link rel="stylesheet" href="/admin-uiux.css?v=20260901-2">
 </head>
 <body>
 
 <div class="gate" id="gate">
   <div class="gate-card">
-    <div class="gmk"></div>
-    <h1>لوحة تحكم NAS CodeWorks</h1>
-    <p>أدخل رمز الدخول للمتابعة</p>
+    <div class="gate-brand" aria-hidden="true">
+      <div class="gmk"></div>
+      <div class="gate-wordmark"><b>NAS</b><span>CodeWorks</span></div>
+    </div>
+    <div class="gate-eyebrow">CONTROL CENTER</div>
+    <h1>لوحة إدارة المحتوى</h1>
+    <p>سجّل الدخول لإدارة الموقع والنشر والمعاينة.</p>
     <div class="gate-err" id="gate-err"></div>
-    <input type="password" id="gate-pass" placeholder="••••••" autocomplete="current-password">
-    <button id="gate-go">دخول</button>
-    <div class="gate-note">رمز الدخول يُحفظ بالمتصفح فقط — للحماية الفعلية يلزم Backend.</div>
+    <label class="gate-field" for="gate-pass">
+      <span>رمز الدخول</span>
+      <input type="password" id="gate-pass" placeholder="أدخل الرمز" autocomplete="current-password">
+    </label>
+    <button id="gate-go"><span>دخول إلى اللوحة</span><span class="gate-arrow" aria-hidden="true">←</span></button>
+    <div class="gate-note"><span class="gate-lock" aria-hidden="true">◆</span><span>وصول مخصص لإدارة NAS CodeWorks</span></div>
   </div>
 </div>
 

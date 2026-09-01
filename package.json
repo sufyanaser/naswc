@@ -1,0 +1,9 @@
+{
+  "name": "nas-codeworks-site",
+  "private": true,
+  "version": "2.0.0",
+  "scripts": {
+    "lint": "node scripts/validate.mjs",
+    "build": "node scripts/build.mjs"
+  }
+}

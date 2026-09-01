@@ -1,55 +1,267 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>NAS CodeWorks</title>
-<meta name="description" content="NAS CodeWorks — أدوات تشغيلية مخصصة للشركات العراقية." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<style>
-:root{--bg:#05070d;--fg:#f6f8ff;--muted:#9aa4b5;--line:rgba(255,255,255,.1);--glass:rgba(255,255,255,.06);--purple:#8b5cf6;--pink:#f472b6;--blue:#38bdf8;--green:#34d399;--orange:#f59e0b}
-*{box-sizing:border-box;margin:0;padding:0}html,body{min-height:100%;background:var(--bg);color:var(--fg);font-family:Inter,'IBM Plex Sans Arabic',system-ui,sans-serif;overflow-x:hidden}body{direction:ltr}a{text-decoration:none;color:inherit}button{font:inherit}
-.page{min-height:100vh;position:relative;overflow:hidden;background:radial-gradient(900px 460px at 50% 0%,rgba(147,51,234,.45),transparent 58%),radial-gradient(900px 520px at 14% 24%,rgba(56,189,248,.16),transparent 62%),radial-gradient(720px 520px at 88% 22%,rgba(244,114,182,.15),transparent 55%),linear-gradient(180deg,#090b12 0%,#06070c 52%,#030409 100%)}
-.page:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.65),transparent 78%);pointer-events:none}.page:after{content:"";position:absolute;left:50%;top:-150px;width:760px;height:760px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,.32),rgba(99,102,241,.12) 34%,transparent 68%);filter:blur(8px);pointer-events:none}
-.nav{position:relative;z-index:4;height:78px;display:flex;align-items:center;justify-content:center;padding:18px 28px}.nav-inner{width:min(1180px,100%);height:50px;display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(255,255,255,.08);background:rgba(8,10,18,.38);backdrop-filter:blur(20px);border-radius:999px;padding:0 9px 0 18px;box-shadow:0 12px 60px rgba(0,0,0,.26)}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px}.logo-mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--purple),var(--pink));display:grid;place-items:center;box-shadow:0 0 22px rgba(168,85,247,.45)}.logo-mark svg{width:20px;height:20px}.links{display:flex;gap:28px;color:#cdd3e1;font-size:14px;font-weight:500}.links a{opacity:.82}.links a:hover{opacity:1;color:white}.nav-actions{display:flex;align-items:center;gap:10px}.signin{color:#d9deea;font-size:14px}.get{background:white;color:#070812;border-radius:999px;padding:10px 17px;font-size:14px;font-weight:700;box-shadow:0 8px 24px rgba(255,255,255,.18)}
-.hero{position:relative;z-index:3;text-align:center;padding:72px 20px 34px}.badge{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.055);backdrop-filter:blur(18px);border-radius:999px;padding:8px 14px;color:#d8deec;font-size:13px;margin-bottom:28px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}.badge-dot{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);box-shadow:0 0 20px rgba(96,165,250,.55)}
-h1{font-size:clamp(50px,9vw,118px);line-height:.92;letter-spacing:-6px;font-weight:800;margin:0 auto 24px;max-width:1060px;text-shadow:0 10px 70px rgba(139,92,246,.32)}.grad{display:block;background:linear-gradient(90deg,#fff 6%,#dbeafe 34%,#b794f6 60%,#f0abfc 82%,#fff 96%);-webkit-background-clip:text;background-clip:text;color:transparent}.sub{max-width:760px;margin:0 auto;color:#b8c0d1;font-size:clamp(17px,2.2vw,22px);line-height:1.65}.cta-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:34px;flex-wrap:wrap}.primary{border:0;background:white;color:#06070d;padding:15px 22px;border-radius:999px;font-weight:800;font-size:15px;box-shadow:0 20px 50px rgba(255,255,255,.18)}.secondary{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:white;padding:14px 20px;border-radius:999px;font-weight:700;font-size:15px;backdrop-filter:blur(18px)}
-.showcase{position:relative;z-index:2;width:min(1120px,92vw);height:430px;margin:36px auto 0;perspective:1400px}.mock{position:absolute;inset:0;border-radius:34px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(24,28,42,.92),rgba(12,15,26,.95));box-shadow:0 50px 140px rgba(0,0,0,.62),0 0 90px rgba(139,92,246,.18);overflow:hidden;transform:rotateX(8deg);transform-origin:top center}.mock:before{content:"";position:absolute;inset:0;background:radial-gradient(740px 240px at 50% 0%,rgba(255,255,255,.13),transparent 55%);pointer-events:none}.topline{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035)}.dots{display:flex;gap:8px}.dots i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.dots i:nth-child(2){background:#ffbd2e}.dots i:nth-child(3){background:#28c840}.prompt{display:flex;align-items:center;gap:10px;color:#cdd3e1;font-size:13px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.22);border-radius:999px;padding:8px 14px}.spark{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#f472b6)}.body{display:grid;grid-template-columns:250px 1fr 260px;gap:18px;padding:22px;height:376px}.side,.right,.center{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);border-radius:22px;overflow:hidden}.side{padding:16px}.mini-title{font-size:12px;color:#9aa4b5;margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em}.item{height:52px;border-radius:14px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.07);margin-bottom:10px;padding:10px;display:flex;align-items:center;gap:10px}.ic{width:30px;height:30px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#38bdf8)}.txt{flex:1}.txt b{display:block;height:8px;width:80%;background:#dbe2f1;border-radius:9px;opacity:.75}.txt span{display:block;height:7px;width:52%;background:#6f7a8e;border-radius:9px;margin-top:7px;opacity:.55}.center{position:relative;padding:20px}.canvas-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:34px 34px;opacity:.6}.screen-card{position:relative;z-index:2;height:100%;border-radius:20px;background:linear-gradient(145deg,rgba(15,23,42,.9),rgba(17,24,39,.62));border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;overflow:hidden}.orb{width:210px;height:210px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#fff,rgba(96,165,250,.9) 16%,rgba(139,92,246,.7) 43%,rgba(244,114,182,.26) 65%,transparent 72%);filter:drop-shadow(0 0 60px rgba(139,92,246,.5));position:relative}.orb:before,.orb:after{content:"";position:absolute;inset:-28px;border-radius:50%;border:1px solid rgba(255,255,255,.16)}.orb:after{inset:-58px;opacity:.55}.floating{position:absolute;z-index:3;border:1px solid rgba(255,255,255,.13);background:rgba(8,12,22,.72);backdrop-filter:blur(18px);border-radius:18px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.28)}.f1{left:28px;top:28px;width:165px}.f2{right:28px;bottom:28px;width:180px}.bar{height:8px;background:rgba(255,255,255,.75);border-radius:9px;margin-bottom:8px}.bar:nth-child(2){width:70%;opacity:.5}.bar:nth-child(3){width:52%;opacity:.35}.right{padding:16px}.metric{height:84px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);margin-bottom:12px;padding:14px}.metric small{color:#9aa4b5}.metric strong{display:block;font-size:28px;margin-top:6px}.wave{height:64px;border-radius:16px;background:linear-gradient(90deg,rgba(56,189,248,.18),rgba(244,114,182,.2));position:relative;overflow:hidden}.wave:after{content:"";position:absolute;inset:16px 10px;background:repeating-linear-gradient(90deg,transparent 0 10px,rgba(255,255,255,.45) 10px 12px);mask-image:linear-gradient(90deg,transparent,#000,transparent)}
-.glow-card{position:absolute;z-index:4;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);backdrop-filter:blur(18px);border-radius:22px;box-shadow:0 22px 70px rgba(0,0,0,.34)}.left-card{left:-34px;top:82px;width:210px;padding:16px}.right-card{right:-36px;top:112px;width:210px;padding:16px}.card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#38bdf8,#8b5cf6)}.card-head b{font-size:13px}.chip{display:inline-flex;margin-top:12px;background:rgba(52,211,153,.16);color:#8ff3c4;border:1px solid rgba(52,211,153,.22);padding:6px 9px;border-radius:999px;font-size:12px;font-weight:700}
-.logos{position:relative;z-index:2;width:min(900px,90vw);margin:40px auto 0;display:flex;justify-content:center;gap:34px;color:#7f899b;font-weight:700;opacity:.72;flex-wrap:wrap}.logos span{font-size:14px}.bottom-fade{height:120px}
-@media(max-width:900px){.links{display:none}h1{letter-spacing:-3px}.showcase{height:auto}.mock{position:relative;height:auto;transform:none}.body{grid-template-columns:1fr;height:auto}.left-card,.right-card{display:none}.right{display:none}.nav-inner{padding-left:14px}.hero{padding-top:46px}}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NAS CodeWorks — Software, AI, Automation & Digital Platforms</title>
+  <meta name="description" content="NAS CodeWorks تطوّر مواقع ومنصات وأنظمة أعمال وحلول ذكاء اصطناعي وأتمتة وأنظمة إعلام وبث رقمي للشركات والمؤسسات." />
+  <meta name="theme-color" content="#060816" />
+  <meta property="og:title" content="NAS CodeWorks" />
+  <meta property="og:description" content="Software • Websites • Automation • AI • Media Technology" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nascw.net/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/site.css" />
 </head>
 <body>
-<div class="page">
-  <nav class="nav"><div class="nav-inner">
-    <a class="logo" href="#"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M6 12a6 6 0 1112 0c0 3-2.5 5.5-6 8-3.5-2.5-6-5-6-8z" stroke="white" stroke-width="2"/><path d="M12 7v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></span><span>NAS CodeWorks</span></a>
-    <div class="links"><a href="#">Services</a><a href="#">How it works</a><a href="#">Examples</a><a href="#">Pricing</a><a href="#">Contact</a></div>
-    <div class="nav-actions"><a class="signin" href="#">Sign in</a><a class="get" href="https://wa.me/9647708111744" target="_blank" rel="noopener">Get Started</a></div>
-  </div></nav>
-  <main class="hero">
-    <div class="badge"><span class="badge-dot"></span><span>NAS CodeWorks for internal operations</span></div>
-    <h1><span class="grad">Your AI Software</span><span class="grad">Engineer.</span></h1>
-    <p class="sub">Create internal operational tools, archive systems, reports, and workflow apps through clear Arabic-first execution built around your company process.</p>
-    <div class="cta-row"><a class="primary" href="https://wa.me/9647708111744" target="_blank" rel="noopener">Start building</a><a class="secondary" href="#">Watch demo</a></div>
-  </main>
-  <section class="showcase" aria-label="Product preview">
-    <div class="glow-card left-card"><div class="card-head"><span class="avatar"></span><b>New request</b></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><span class="chip">Ready</span></div>
-    <div class="glow-card right-card"><div class="card-head"><span class="avatar"></span><b>Workflow status</b></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><span class="chip">Live</span></div>
-    <div class="mock">
-      <div class="topline"><div class="dots"><i></i><i></i><i></i></div><div class="prompt"><span class="spark"></span><span>Build an internal dashboard for warehouse invoices</span></div><div></div></div>
-      <div class="body">
-        <aside class="side"><div class="mini-title">Project files</div><div class="item"><span class="ic"></span><span class="txt"><b></b><span></span></span></div><div class="item"><span class="ic"></span><span class="txt"><b></b><span></span></span></div><div class="item"><span class="ic"></span><span class="txt"><b></b><span></span></span></div><div class="item"><span class="ic"></span><span class="txt"><b></b><span></span></span></div></aside>
-        <div class="center"><div class="canvas-grid"></div><div class="screen-card"><div class="floating f1"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div><div class="orb"></div><div class="floating f2"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div></div>
-        <aside class="right"><div class="mini-title">System</div><div class="metric"><small>Completion</small><strong>92%</strong></div><div class="metric"><small>Tasks</small><strong>18</strong></div><div class="wave"></div></aside>
+  <div class="page-shell">
+    <header class="topbar" id="topbar">
+      <div class="container nav-wrap">
+        <a class="brand" href="#top" aria-label="NAS CodeWorks">
+          <span class="brand-mark" aria-hidden="true">N</span>
+          <span class="brand-copy"><strong>NAS CodeWorks</strong><small>BUILD • AUTOMATE • SCALE</small></span>
+        </a>
+
+        <nav class="nav-links" aria-label="التنقل الرئيسي">
+          <a href="#services">الخدمات</a>
+          <a href="#websites">المواقع</a>
+          <a href="#systems">الأنظمة</a>
+          <a href="#work">الأعمال</a>
+          <a href="#process">آلية العمل</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a class="ghost-btn" href="#contact">ناقش مشروعك</a>
+          <button class="menu-btn" id="menuBtn" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+        </div>
       </div>
-    </div>
-  </section>
-  <div class="logos"><span>Desktop Apps</span><span>Archive Systems</span><span>Reports</span><span>Automation</span><span>Arabic UI</span></div>
-  <div class="bottom-fade"></div>
-</div>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="#services">الخدمات</a>
+        <a href="#websites">المواقع</a>
+        <a href="#systems">الأنظمة</a>
+        <a href="#work">الأعمال</a>
+        <a href="#process">آلية العمل</a>
+        <a href="#contact">ابدأ مشروعك</a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero section-pad">
+        <div class="hero-grid-bg" aria-hidden="true"></div>
+        <div class="hero-orb hero-orb-a" aria-hidden="true"></div>
+        <div class="hero-orb hero-orb-b" aria-hidden="true"></div>
+
+        <div class="container hero-layout">
+          <div class="hero-copy reveal">
+            <div class="eyebrow"><span class="dot"></span> NAS CODEWORKS / DIGITAL PRODUCT STUDIO</div>
+            <h1>نبني الأنظمة الرقمية<br><span>التي تشغّل العمل فعلياً.</span></h1>
+            <p class="hero-lead">من المواقع والمنصات إلى الأتمتة والذكاء الاصطناعي وأنظمة البث والإعلام الرقمي — نصمم ونطوّر حلولاً مخصّصة تربط التقنية بسير العمل الحقيقي.</p>
+
+            <div class="hero-actions">
+              <a class="primary-btn" href="#contact">ابدأ مشروعك</a>
+              <a class="text-btn" href="#services">استكشف مجالات العمل <span>↙</span></a>
+            </div>
+
+            <div class="hero-meta">
+              <div><b>Arabic-first</b><span>تجارب عربية احترافية</span></div>
+              <div><b>GitHub-driven</b><span>تطوير موثق وقابل للتوسع</span></div>
+              <div><b>Cloud-ready</b><span>نشر سريع وآمن</span></div>
+            </div>
+          </div>
+
+          <div class="hero-console reveal" aria-label="عرض بصري لقدرات NAS CodeWorks">
+            <div class="console-window">
+              <div class="console-head">
+                <div class="window-dots"><i></i><i></i><i></i></div>
+                <span>nascw://build-system</span>
+                <span class="live-pill">LIVE</span>
+              </div>
+              <div class="console-body">
+                <aside class="console-rail">
+                  <button class="active">01</button><button>02</button><button>03</button><button>04</button>
+                </aside>
+                <div class="console-main">
+                  <div class="mini-label">CURRENT PIPELINE</div>
+                  <div class="pipeline-card">
+                    <div class="pipeline-row"><span>Input</span><b>Business requirement</b></div>
+                    <div class="pipeline-line"><i></i><i></i><i></i><i></i></div>
+                    <div class="pipeline-row"><span>System</span><b>Design → Build → Validate</b></div>
+                    <div class="signal-chart"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                    <div class="pipeline-row"><span>Output</span><b>Production-ready product</b></div>
+                  </div>
+
+                  <div class="console-cards">
+                    <div><small>Automation</small><strong>24/7</strong><span>workflow execution</span></div>
+                    <div><small>Deployment</small><strong>CI/CD</strong><span>controlled releases</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="floating-chip chip-one">AI + Automation</div>
+            <div class="floating-chip chip-two">Media Systems</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="trust-strip">
+        <div class="container trust-inner">
+          <span>SOFTWARE</span><i></i><span>WEB PLATFORMS</span><i></i><span>AI</span><i></i><span>AUTOMATION</span><i></i><span>BROADCAST TECH</span><i></i><span>CLOUD</span>
+        </div>
+      </section>
+
+      <section class="section-pad" id="services">
+        <div class="container">
+          <div class="section-head reveal">
+            <div><span class="kicker">01 / CAPABILITIES</span><h2>مجالات عمل NAS CodeWorks</h2></div>
+            <p>نركّز على المنتجات الرقمية التي تحل مشكلة تشغيلية واضحة، وتختصر الوقت، وتوحّد البيانات، وتبني أساساً قابلاً للتوسع.</p>
+          </div>
+
+          <div class="service-grid">
+            <article class="service-card featured reveal">
+              <span class="card-no">01</span>
+              <div class="service-icon">⌘</div>
+              <h3>الأنظمة والمنصات المخصّصة</h3>
+              <p>Dashboards، أنظمة إدارة داخلية، بوابات مؤسسات، CRM، أرشفة، تقارير، Workflow Apps، وصلاحيات متعددة.</p>
+              <ul><li>Business Systems</li><li>Dashboards</li><li>Portals & CRUD Apps</li></ul>
+            </article>
+
+            <article class="service-card reveal">
+              <span class="card-no">02</span><div class="service-icon">◫</div>
+              <h3>المواقع والمنصات الإلكترونية</h3>
+              <p>مواقع شركات، صفحات تسويقية، مواقع فعاليات، منصات محتوى، ومتاجر وتجارب ويب سريعة ومتجاوبة.</p>
+              <ul><li>Corporate Websites</li><li>Landing Pages</li><li>Web Platforms</li></ul>
+            </article>
+
+            <article class="service-card reveal">
+              <span class="card-no">03</span><div class="service-icon">✦</div>
+              <h3>الذكاء الاصطناعي التطبيقي</h3>
+              <p>مساعدات داخلية، تحليل وتصنيف محتوى، تلخيص، توصيات، أنظمة صوت وذكاء اصطناعي مرتبطة بسير العمل.</p>
+              <ul><li>AI Assistants</li><li>AI Audio</li><li>Decision Support</li></ul>
+            </article>
+
+            <article class="service-card reveal">
+              <span class="card-no">04</span><div class="service-icon">↻</div>
+              <h3>الأتمتة والتكاملات</h3>
+              <p>ربط الأنظمة وواجهات API، أتمتة المبيعات والتواصل، Webhooks، الإشعارات والعمليات المتكررة.</p>
+              <ul><li>Workflow Automation</li><li>API Integrations</li><li>WhatsApp Systems</li></ul>
+            </article>
+
+            <article class="service-card reveal">
+              <span class="card-no">05</span><div class="service-icon">◉</div>
+              <h3>تقنيات الإعلام والبث</h3>
+              <p>حلول للراديو والبث المباشر، إدارة الميتاداتا، أنظمة التحكم، واجهات الإنتاج، وتكاملات OBS والستوديو.</p>
+              <ul><li>Broadcast Systems</li><li>Streaming Tools</li><li>Metadata & Control</li></ul>
+            </article>
+
+            <article class="service-card reveal">
+              <span class="card-no">06</span><div class="service-icon">☁</div>
+              <h3>البنية السحابية والنشر</h3>
+              <p>Cloudflare، نشر التطبيقات، الحماية، الأداء، CI/CD، المراقبة وربط النطاقات والبنية التشغيلية.</p>
+              <ul><li>Cloudflare</li><li>CI/CD</li><li>Performance & Security</li></ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-pad section-dark" id="websites">
+        <div class="container split-intro reveal">
+          <div><span class="kicker">02 / WEBSITES</span><h2>الموقع ليس صفحة. هو نقطة دخول إلى مشروعك.</h2></div>
+          <div><p>نقدّم مساراً واضحاً من موقع تعريفي سريع إلى منصة أعمال كاملة، مع نطاق محدد لكل باقة حتى يبقى التنفيذ سريعاً ومضبوطاً.</p><a class="inline-link" href="#contact">اطلب تقديراً لمشروعك ↙</a></div>
+        </div>
+
+        <div class="container pricing-grid">
+          <article class="price-card reveal"><span class="price-tag">START</span><h3>NAS Start</h3><div class="price"><b>175K</b><span>د.ع</span></div><p>للأفراد والمشاريع الصغيرة وصفحات الهبوط.</p><ul><li>صفحة احترافية واحدة</li><li>Responsive</li><li>WhatsApp + Contact</li><li>SEO أساسي + SSL</li><li>تسليم سريع</li></ul><a href="#contact">ابدأ بهذه الباقة</a></article>
+          <article class="price-card popular reveal"><div class="popular-label">الأكثر طلباً</div><span class="price-tag">BUSINESS</span><h3>NAS Business</h3><div class="price"><b>350K</b><span>د.ع</span></div><p>للشركات التي تحتاج حضوراً احترافياً قابلاً للإدارة.</p><ul><li>حتى 5 صفحات</li><li>تصميم مخصص للهوية</li><li>إدارة محتوى</li><li>Analytics + SEO</li><li>تدريب وتسليم منظم</li></ul><a href="#contact">اختر Business</a></article>
+          <article class="price-card reveal"><span class="price-tag">PRO</span><h3>NAS Business Pro</h3><div class="price"><b>650K</b><span>د.ع</span></div><p>للمؤسسات والمشاريع التي تحتاج محتوى ووظائف أوسع.</p><ul><li>حتى 10 صفحات</li><li>CMS متقدم</li><li>نماذج ووظائف مخصصة</li><li>Technical SEO</li><li>Backup + Security</li></ul><a href="#contact">ناقش Pro</a></article>
+          <article class="price-card reveal"><span class="price-tag">PLATFORM</span><h3>NAS Platform</h3><div class="price"><b>1.2M+</b><span>د.ع</span></div><p>للمنصات والأنظمة التي تعتمد على بيانات ومستخدمين وصلاحيات.</p><ul><li>Authentication</li><li>Database</li><li>Dashboard</li><li>API & Integrations</li><li>تطوير مخصص</li></ul><a href="#contact">ناقش المنصة</a></article>
+        </div>
+      </section>
+
+      <section class="section-pad" id="systems">
+        <div class="container">
+          <div class="section-head reveal"><div><span class="kicker">03 / SYSTEMS</span><h2>من نموذج عمل يدوي إلى نظام تشغيلي.</h2></div><p>نحوّل خطوات العمل المتفرقة إلى نظام واحد: بيانات مركزية، صلاحيات، أتمتة، تقارير، وسجل واضح لكل إجراء.</p></div>
+          <div class="system-demo reveal">
+            <div class="system-side">
+              <span class="sys-label">OPERATION FLOW</span>
+              <h3>Input → Process → Decision → Action</h3>
+              <p>كل نظام يبدأ من سير العمل، لا من شكل الواجهة. نبني الهيكل أولاً ثم نختار التكنولوجيا التي تخدمه.</p>
+              <div class="stack-tags"><span>React</span><span>Node.js</span><span>PostgreSQL</span><span>REST API</span><span>Cloudflare</span></div>
+            </div>
+            <div class="flow-board">
+              <div class="flow-node"><small>01</small><b>Data Capture</b><span>Forms / APIs / Imports</span></div>
+              <div class="flow-link"></div>
+              <div class="flow-node"><small>02</small><b>Business Logic</b><span>Rules / Roles / Validation</span></div>
+              <div class="flow-link"></div>
+              <div class="flow-node"><small>03</small><b>Automation</b><span>Tasks / Alerts / AI</span></div>
+              <div class="flow-link"></div>
+              <div class="flow-node"><small>04</small><b>Reporting</b><span>Dashboards / Audit</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-pad work-section" id="work">
+        <div class="container">
+          <div class="section-head reveal"><div><span class="kicker">04 / SELECTED WORK</span><h2>نماذج من الأنظمة والمشاريع التي نطوّرها.</h2></div><p>المشاريع المعروضة هنا تمثل نوع المسائل التي نتعامل معها: تشغيل، بث، مبيعات، محتوى، وواجهات تحكم.</p></div>
+
+          <div class="work-grid">
+            <article class="work-card large reveal"><div class="work-visual broadcast"><span class="work-code">LIVE / 01</span><div class="visual-lines"></div></div><div class="work-copy"><span>BROADCAST SYSTEMS</span><h3>LiveStream Production Platform</h3><p>منصة تحكم للبث المباشر، تقسيمات شاشة، ترانزشن، Lower Thirds، وتكاملات إنتاجية مرتبطة بمصادر الفيديو وOBS.</p></div></article>
+            <article class="work-card reveal"><div class="work-visual crm"><span class="work-code">CRM / 02</span><div class="visual-grid"></div></div><div class="work-copy"><span>AUTOMATION</span><h3>WhatsApp CRM & Sales Automation</h3><p>Pipeline، Webhooks، Follow-up، AI recommendations، وسجل نشاط موحّد لفِرق المبيعات.</p></div></article>
+            <article class="work-card reveal"><div class="work-visual radio"><span class="work-code">RADIO / 03</span><div class="visual-wave"></div></div><div class="work-copy"><span>MEDIA TECHNOLOGY</span><h3>Radio & Metadata Systems</h3><p>أنظمة للبث الإذاعي، الميتاداتا، التحكم، الأتمتة، وتكامل المنصات الرقمية.</p></div></article>
+            <article class="work-card large reveal"><div class="work-visual docs"><span class="work-code">OPS / 04</span><div class="visual-docs"></div></div><div class="work-copy"><span>BUSINESS SOFTWARE</span><h3>Internal Operations & Document Systems</h3><p>أرشفة، نماذج، تقارير، صلاحيات، وإدارة عمليات مؤسسية قابلة للتدقيق والتوسع.</p></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-pad" id="process">
+        <div class="container">
+          <div class="section-head reveal"><div><span class="kicker">05 / DELIVERY</span><h2>آلية تنفيذ قصيرة، واضحة، وقابلة للتحقق.</h2></div><p>نقسّم المشروع إلى مراحل صغيرة، ونثبت كل مرحلة قبل إضافة تعقيد جديد.</p></div>
+          <div class="process-line">
+            <article class="reveal"><span>01</span><h3>فهم المشكلة</h3><p>نحدد المستخدمين، البيانات، وسير العمل الفعلي.</p></article>
+            <article class="reveal"><span>02</span><h3>تحديد النطاق</h3><p>MVP واضح، شاشات ووظائف ومخرجات قابلة للقياس.</p></article>
+            <article class="reveal"><span>03</span><h3>البناء</h3><p>تطوير مرحلي على GitHub مع بنية نظيفة ومكونات قابلة لإعادة الاستخدام.</p></article>
+            <article class="reveal"><span>04</span><h3>التحقق</h3><p>Lint / Build / Status / Logs قبل أي إصدار مؤثر.</p></article>
+            <article class="reveal"><span>05</span><h3>النشر</h3><p>Cloud deployment وربط النطاق والحماية والمراقبة.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-pad tech-section">
+        <div class="container tech-layout reveal">
+          <div><span class="kicker">06 / STACK</span><h2>تقنيات نستخدمها حسب احتياج النظام.</h2></div>
+          <div class="tech-cloud"><span>React</span><span>Next.js</span><span>Node.js</span><span>Electron</span><span>PostgreSQL</span><span>Redis</span><span>Cloudflare</span><span>Docker</span><span>GitHub Actions</span><span>OBS</span><span>WebSockets</span><span>OpenAI</span></div>
+        </div>
+      </section>
+
+      <section class="section-pad contact-section" id="contact">
+        <div class="container contact-card reveal">
+          <div>
+            <span class="kicker">START A PROJECT</span>
+            <h2>عندك فكرة، عملية يدوية، أو نظام يحتاج إعادة بناء؟</h2>
+            <p>أرسل وصفاً مختصراً للمشكلة والنتيجة المطلوبة. نبدأ بتحديد النطاق قبل كتابة أي كود.</p>
+          </div>
+          <div class="contact-actions">
+            <a class="primary-btn" href="https://wa.me/9647708111744?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D9%85%D9%86%D8%A7%D9%82%D8%B4%D8%A9%20%D9%85%D8%B4%D8%B1%D9%88%D8%B9%20%D9%85%D8%B9%20NAS%20CodeWorks" target="_blank" rel="noopener">تواصل عبر WhatsApp</a>
+            <a class="ghost-btn" href="mailto:info@nascw.net">info@nascw.net</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-grid">
+        <div class="brand"><span class="brand-mark">N</span><span class="brand-copy"><strong>NAS CodeWorks</strong><small>Software • AI • Automation • Media Tech</small></span></div>
+        <p>نبني منتجات رقمية قابلة للتشغيل، القياس، والتوسع.</p>
+        <div class="footer-links"><a href="#services">الخدمات</a><a href="#work">الأعمال</a><a href="#contact">تواصل</a></div>
+      </div>
+      <div class="container footer-bottom"><span>© 2026 NAS CodeWorks</span><span>nascw.net</span></div>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="/site.js" defer></script>
 </body>
 </html>

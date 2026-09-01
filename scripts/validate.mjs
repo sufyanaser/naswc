@@ -60,6 +60,7 @@ const checks = [
   ,['advanced blocks preserved', ['text','divider','image','callout'].every(type => fs.readFileSync('public/admin-publish-click.js','utf8').includes(`'${type}'`))]
   ,['upload api preserved', adminJs.includes('/api/upload-image') && uploadJs.includes('/api/content')]
   ,['document studio state preserved', docpdf.includes("S='nas_docpdf_clear_v4'")]
+  ,['gate controls preserved', ['gate-pass','gate-go','gate-err'].every(id => new RegExp(`id=["']${id}["']`).test(adminHtml))]
 ];
 const failed = checks.filter(([, ok]) => !ok);
 if (failed.length) throw new Error(`Validation failed: ${failed.map(([n]) => n).join(', ')}`);

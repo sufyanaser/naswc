@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 
-const required = ['public/index.html', 'public/site.css', 'public/site.js'];
+const required = ['public/index.html', 'public/site.css', 'public/studio-v5.css', 'public/site.js'];
 for (const file of required) {
   if (!fs.existsSync(file)) throw new Error(`Missing ${file}`);
 }
@@ -8,7 +8,7 @@ for (const file of required) {
 const html = fs.readFileSync('public/index.html', 'utf8');
 const css = fs.readFileSync('public/site.css', 'utf8');
 const js = fs.readFileSync('public/site.js', 'utf8');
-const premiumCss = fs.readFileSync('public/premium-v3.css', 'utf8');
+const studioCss = fs.readFileSync('public/studio-v5.css', 'utf8');
 
 const checks = [
   ['html lang', /<html[^>]*lang="ar"/i.test(html)],
@@ -20,7 +20,8 @@ const checks = [
   ['systems section', /id="systems"/i.test(html)],
   ['work section', /id="work"/i.test(html)],
   ['contact section', /id="contact"/i.test(html)],
-  ['premium stylesheet', /href="\/premium-v3\.css(?:\?[^\"]*)?"/i.test(html) && premiumCss.length > 10000],
+  ['studio stylesheet', /href="\/studio-v5\.css(?:\?[^\"]*)?"/i.test(html) && studioCss.length > 10000],
+  ['interactive capabilities', /class="[^"]*capability-console[^"]*"/i.test(html) && /selectCapability/.test(js)],
   ['currency toggle', /data-currency="IQD"/i.test(html) && /data-currency="USD"/i.test(html)],
   ['new whatsapp number', /9647804228066/.test(html) && !/9647708111744/.test(html)],
   ['mobile app dock', /class="mobile-app-dock"/i.test(html)],

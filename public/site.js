@@ -105,7 +105,7 @@
       .from('.hero .eyebrow', { y: 18, opacity: 0, duration: .55 }, '-=.35')
       .from('.hero h1 span', { y: 52, opacity: 0, duration: .9, stagger: .1 }, '-=.28')
       .from('.hero-lead', { y: 26, opacity: 0, duration: .7 }, '-=.52')
-      .from('.hero-actions > *', { y: 18, opacity: 0, duration: .55, stagger: .08 }, '-=.4')
+      .from('.hero-actions', { y: 18, opacity: 0, duration: .55 }, '-=.4')
       .from('.hero-meta', { y: 24, opacity: 0, duration: .65 }, '-=.35')
       .from('.hero-rays i', { scaleY: .18, opacity: 0, duration: 1.15, stagger: .045 }, '-=1.05');
 

@@ -22,19 +22,7 @@ export default {
     }
 
     const response = await env.ASSETS.fetch(request);
-    const type = response.headers.get('content-type') || '';
-    if (!type.includes('text/html') || response.status !== 200) return response;
-
-    const isAdmin = url.pathname === '/admin' || url.pathname === '/admin.html' || url.pathname.startsWith('/admin/');
-    if (isAdmin) return response;
-
-    return new HTMLRewriter()
-      .on('head', {
-        element(element) {
-          element.append('\n<link rel="stylesheet" href="/team-orbit.css" data-nas-team-orbit="base">\n<link rel="stylesheet" href="/team-orbit-polish.css" data-nas-team-orbit="polish">\n<link rel="stylesheet" href="/premium-team-services.css" data-nas-premium-team-services="true">\n<link rel="stylesheet" href="/layout-rhythm-pass.css" data-nas-layout-rhythm="true">\n<link rel="stylesheet" href="/hero-workflow.css" data-nas-hero-workflow="style">\n<script src="/hero-workflow.js" defer data-nas-hero-workflow="script"></script>\n<script src="/copy-tone-apply.js?v=copy-1" defer data-nas-copy-tone="true"></script>', { html: true });
-        }
-      })
-      .transform(response);
+    return response;
   }
 };
 

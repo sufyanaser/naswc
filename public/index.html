@@ -20,6 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/site.css" />
+  <link rel="stylesheet" href="/premium-v3.css" />
 </head>
 <body>
   <div class="page-shell">
@@ -62,7 +63,7 @@
         <div class="container hero-layout">
           <div class="hero-copy reveal">
             <div class="eyebrow"><span class="dot"></span> NAS CODEWORKS / DIGITAL PRODUCT STUDIO</div>
-            <h1>نبني الأنظمة الرقمية<br><span>التي تشغّل العمل فعلياً.</span></h1>
+            <h1><span class="hero-title-line">نبني الأنظمة الرقمية</span><span class="hero-title-accent">التي تشغّل العمل فعلياً.</span></h1>
             <p class="hero-lead">من المواقع والمنصات إلى الأتمتة والذكاء الاصطناعي وأنظمة البث والإعلام الرقمي — نصمم ونطوّر حلولاً مخصّصة تربط التقنية بسير العمل الحقيقي.</p>
 
             <div class="hero-actions">
@@ -120,7 +121,7 @@
       <section class="section-pad" id="services">
         <div class="container">
           <div class="section-head reveal">
-            <div><span class="kicker">01 / CAPABILITIES</span><h2>مجالات عمل NAS CodeWorks</h2></div>
+            <div class="section-title-card"><span class="kicker">01 / CAPABILITIES</span><h2>مجالات عمل NAS CodeWorks</h2><i aria-hidden="true">↙</i></div>
             <p>نركّز على المنتجات الرقمية التي تحل مشكلة تشغيلية واضحة، وتختصر الوقت، وتوحّد البيانات، وتبني أساساً قابلاً للتوسع.</p>
           </div>
 
@@ -173,21 +174,29 @@
 
       <section class="section-pad section-dark" id="websites">
         <div class="container split-intro reveal">
-          <div><span class="kicker">02 / WEBSITES</span><h2>الموقع ليس صفحة. هو نقطة دخول إلى مشروعك.</h2></div>
+          <div class="section-title-card"><span class="kicker">02 / WEBSITES</span><h2>الموقع ليس صفحة. هو نقطة دخول إلى مشروعك.</h2><i aria-hidden="true">↙</i></div>
           <div><p>نقدّم مساراً واضحاً من موقع تعريفي سريع إلى منصة أعمال كاملة، مع نطاق محدد لكل باقة حتى يبقى التنفيذ سريعاً ومضبوطاً.</p><a class="inline-link" href="#contact">اطلب تقديراً لمشروعك ↙</a></div>
         </div>
 
+        <div class="container currency-toolbar reveal" aria-label="اختيار عملة الأسعار">
+          <div class="currency-switch" role="group" aria-label="العملة">
+            <button type="button" class="active" data-currency="IQD" aria-pressed="true">IQD <span>د.ع</span></button>
+            <button type="button" data-currency="USD" aria-pressed="false">USD <span>$</span></button>
+          </div>
+          <p>اختر العملة لعرض جميع الباقات. أسعار الدولار تقريبية للعرض.</p>
+        </div>
+
         <div class="container pricing-grid">
-          <article class="price-card reveal"><span class="price-tag">START</span><h3>NAS Start</h3><div class="price"><b>175K</b><span>د.ع</span></div><p>للأفراد والمشاريع الصغيرة وصفحات الهبوط.</p><ul><li>صفحة احترافية واحدة</li><li>Responsive</li><li>WhatsApp + Contact</li><li>SEO أساسي + SSL</li><li>تسليم سريع</li></ul><a href="#contact">ابدأ بهذه الباقة</a></article>
-          <article class="price-card popular reveal"><div class="popular-label">الأكثر طلباً</div><span class="price-tag">BUSINESS</span><h3>NAS Business</h3><div class="price"><b>350K</b><span>د.ع</span></div><p>للشركات التي تحتاج حضوراً احترافياً قابلاً للإدارة.</p><ul><li>حتى 5 صفحات</li><li>تصميم مخصص للهوية</li><li>إدارة محتوى</li><li>Analytics + SEO</li><li>تدريب وتسليم منظم</li></ul><a href="#contact">اختر Business</a></article>
-          <article class="price-card reveal"><span class="price-tag">PRO</span><h3>NAS Business Pro</h3><div class="price"><b>650K</b><span>د.ع</span></div><p>للمؤسسات والمشاريع التي تحتاج محتوى ووظائف أوسع.</p><ul><li>حتى 10 صفحات</li><li>CMS متقدم</li><li>نماذج ووظائف مخصصة</li><li>Technical SEO</li><li>Backup + Security</li></ul><a href="#contact">ناقش Pro</a></article>
-          <article class="price-card reveal"><span class="price-tag">PLATFORM</span><h3>NAS Platform</h3><div class="price"><b>1.2M+</b><span>د.ع</span></div><p>للمنصات والأنظمة التي تعتمد على بيانات ومستخدمين وصلاحيات.</p><ul><li>Authentication</li><li>Database</li><li>Dashboard</li><li>API & Integrations</li><li>تطوير مخصص</li></ul><a href="#contact">ناقش المنصة</a></article>
+          <article class="price-card reveal" data-iqd="175K" data-usd="135"><span class="price-tag">START</span><h3>NAS Start</h3><div class="price"><b>175K</b><span>د.ع</span></div><p>للأفراد والمشاريع الصغيرة وصفحات الهبوط.</p><ul><li>صفحة احترافية واحدة</li><li>Responsive</li><li>WhatsApp + Contact</li><li>SEO أساسي + SSL</li><li>تسليم سريع</li></ul><a href="#contact">ابدأ بهذه الباقة</a></article>
+          <article class="price-card popular reveal" data-iqd="350K" data-usd="270"><div class="popular-label">الأكثر طلباً</div><span class="price-tag">BUSINESS</span><h3>NAS Business</h3><div class="price"><b>350K</b><span>د.ع</span></div><p>للشركات التي تحتاج حضوراً احترافياً قابلاً للإدارة.</p><ul><li>حتى 5 صفحات</li><li>تصميم مخصص للهوية</li><li>إدارة محتوى</li><li>Analytics + SEO</li><li>تدريب وتسليم منظم</li></ul><a href="#contact">اختر Business</a></article>
+          <article class="price-card reveal" data-iqd="650K" data-usd="500"><span class="price-tag">PRO</span><h3>NAS Business Pro</h3><div class="price"><b>650K</b><span>د.ع</span></div><p>للمؤسسات والمشاريع التي تحتاج محتوى ووظائف أوسع.</p><ul><li>حتى 10 صفحات</li><li>CMS متقدم</li><li>نماذج ووظائف مخصصة</li><li>Technical SEO</li><li>Backup + Security</li></ul><a href="#contact">ناقش Pro</a></article>
+          <article class="price-card reveal" data-iqd="1.2M+" data-usd="920+"><span class="price-tag">PLATFORM</span><h3>NAS Platform</h3><div class="price"><b>1.2M+</b><span>د.ع</span></div><p>للمنصات والأنظمة التي تعتمد على بيانات ومستخدمين وصلاحيات.</p><ul><li>Authentication</li><li>Database</li><li>Dashboard</li><li>API & Integrations</li><li>تطوير مخصص</li></ul><a href="#contact">ناقش المنصة</a></article>
         </div>
       </section>
 
       <section class="section-pad" id="systems">
         <div class="container">
-          <div class="section-head reveal"><div><span class="kicker">03 / SYSTEMS</span><h2>من نموذج عمل يدوي إلى نظام تشغيلي.</h2></div><p>نحوّل خطوات العمل المتفرقة إلى نظام واحد: بيانات مركزية، صلاحيات، أتمتة، تقارير، وسجل واضح لكل إجراء.</p></div>
+          <div class="section-head reveal"><div class="section-title-card"><span class="kicker">03 / SYSTEMS</span><h2>من نموذج عمل يدوي إلى نظام تشغيلي.</h2><i aria-hidden="true">↙</i></div><p>نحوّل خطوات العمل المتفرقة إلى نظام واحد: بيانات مركزية، صلاحيات، أتمتة، تقارير، وسجل واضح لكل إجراء.</p></div>
           <div class="system-demo reveal">
             <div class="system-side">
               <span class="sys-label">OPERATION FLOW</span>
@@ -210,34 +219,34 @@
 
       <section class="section-pad work-section" id="work">
         <div class="container">
-          <div class="section-head reveal"><div><span class="kicker">04 / SELECTED WORK</span><h2>نماذج من الأنظمة والمشاريع التي نطوّرها.</h2></div><p>المشاريع المعروضة هنا تمثل نوع المسائل التي نتعامل معها: تشغيل، بث، مبيعات، محتوى، وواجهات تحكم.</p></div>
+          <div class="section-head reveal"><div class="section-title-card"><span class="kicker">04 / SELECTED WORK</span><h2>نماذج من الأنظمة والمشاريع التي نطوّرها.</h2><i aria-hidden="true">↙</i></div><p>المشاريع المعروضة هنا تمثل نوع المسائل التي نتعامل معها: تشغيل، بث، مبيعات، محتوى، وواجهات تحكم.</p></div>
 
           <div class="work-grid">
-            <article class="work-card large reveal"><div class="work-visual broadcast"><span class="work-code">LIVE / 01</span><div class="visual-lines"></div></div><div class="work-copy"><span>BROADCAST SYSTEMS</span><h3>LiveStream Production Platform</h3><p>منصة تحكم للبث المباشر، تقسيمات شاشة، ترانزشن، Lower Thirds، وتكاملات إنتاجية مرتبطة بمصادر الفيديو وOBS.</p></div></article>
-            <article class="work-card reveal"><div class="work-visual crm"><span class="work-code">CRM / 02</span><div class="visual-grid"></div></div><div class="work-copy"><span>AUTOMATION</span><h3>WhatsApp CRM & Sales Automation</h3><p>Pipeline، Webhooks، Follow-up، AI recommendations، وسجل نشاط موحّد لفِرق المبيعات.</p></div></article>
-            <article class="work-card reveal"><div class="work-visual radio"><span class="work-code">RADIO / 03</span><div class="visual-wave"></div></div><div class="work-copy"><span>MEDIA TECHNOLOGY</span><h3>Radio & Metadata Systems</h3><p>أنظمة للبث الإذاعي، الميتاداتا، التحكم، الأتمتة، وتكامل المنصات الرقمية.</p></div></article>
-            <article class="work-card large reveal"><div class="work-visual docs"><span class="work-code">OPS / 04</span><div class="visual-docs"></div></div><div class="work-copy"><span>BUSINESS SOFTWARE</span><h3>Internal Operations & Document Systems</h3><p>أرشفة، نماذج، تقارير، صلاحيات، وإدارة عمليات مؤسسية قابلة للتدقيق والتوسع.</p></div></article>
+            <article class="work-card large reveal"><div class="work-visual broadcast"><span class="work-code">LIVE / 01</span><div class="product-shot studio-shot"><div class="shot-top"><i></i><i></i><i></i><b>LIVE CONTROL</b></div><div class="studio-preview"><span>PROGRAM</span><strong>ON AIR</strong></div><div class="studio-sources"><i></i><i></i><i></i><i></i></div><div class="studio-mixer"></div></div></div><div class="work-copy"><span>BROADCAST SYSTEMS</span><h3>LiveStream Production Platform</h3><p>منصة تحكم للبث المباشر، تقسيمات شاشة، ترانزشن، Lower Thirds، وتكاملات إنتاجية مرتبطة بمصادر الفيديو وOBS.</p></div></article>
+            <article class="work-card reveal"><div class="work-visual crm"><span class="work-code">CRM / 02</span><div class="product-shot crm-shot"><div class="shot-top"><i></i><i></i><i></i><b>SALES PIPELINE</b></div><div class="crm-stats"><span><b>128</b><small>LEADS</small></span><span><b>42%</b><small>CONVERSION</small></span></div><div class="crm-board"><i></i><i></i><i></i></div></div></div><div class="work-copy"><span>AUTOMATION</span><h3>WhatsApp CRM & Sales Automation</h3><p>Pipeline، Webhooks، Follow-up، AI recommendations، وسجل نشاط موحّد لفِرق المبيعات.</p></div></article>
+            <article class="work-card reveal"><div class="work-visual radio"><span class="work-code">RADIO / 03</span><div class="product-shot radio-shot"><div class="shot-top"><i></i><i></i><i></i><b>RADIO AUTOMATION</b></div><div class="now-playing"><small>NOW PLAYING</small><b>NAS FM 98.7</b><span>LIVE METADATA SYNC</span></div><div class="radio-bars">||||||||||||||||||||||||</div></div></div><div class="work-copy"><span>MEDIA TECHNOLOGY</span><h3>Radio & Metadata Systems</h3><p>أنظمة للبث الإذاعي، الميتاداتا، التحكم، الأتمتة، وتكامل المنصات الرقمية.</p></div></article>
+            <article class="work-card large reveal"><div class="work-visual docs"><span class="work-code">OPS / 04</span><div class="product-shot docs-shot"><div class="shot-top"><i></i><i></i><i></i><b>OPERATIONS HUB</b></div><div class="docs-nav"></div><div class="docs-list"><span></span><span></span><span></span><span></span></div><div class="docs-chart"></div></div></div><div class="work-copy"><span>BUSINESS SOFTWARE</span><h3>Internal Operations & Document Systems</h3><p>أرشفة، نماذج، تقارير، صلاحيات، وإدارة عمليات مؤسسية قابلة للتدقيق والتوسع.</p></div></article>
           </div>
         </div>
       </section>
 
       <section class="section-pad" id="process">
         <div class="container">
-          <div class="section-head reveal"><div><span class="kicker">05 / DELIVERY</span><h2>آلية تنفيذ قصيرة، واضحة، وقابلة للتحقق.</h2></div><p>نقسّم المشروع إلى مراحل صغيرة، ونثبت كل مرحلة قبل إضافة تعقيد جديد.</p></div>
-          <div class="process-line">
-            <article class="reveal"><span>01</span><h3>فهم المشكلة</h3><p>نحدد المستخدمين، البيانات، وسير العمل الفعلي.</p></article>
-            <article class="reveal"><span>02</span><h3>تحديد النطاق</h3><p>MVP واضح، شاشات ووظائف ومخرجات قابلة للقياس.</p></article>
-            <article class="reveal"><span>03</span><h3>البناء</h3><p>تطوير مرحلي على GitHub مع بنية نظيفة ومكونات قابلة لإعادة الاستخدام.</p></article>
-            <article class="reveal"><span>04</span><h3>التحقق</h3><p>Lint / Build / Status / Logs قبل أي إصدار مؤثر.</p></article>
-            <article class="reveal"><span>05</span><h3>النشر</h3><p>Cloud deployment وربط النطاق والحماية والمراقبة.</p></article>
+          <div class="section-head reveal"><div class="section-title-card"><span class="kicker">05 / DELIVERY</span><h2>آلية تنفيذ قصيرة، واضحة، وقابلة للتحقق.</h2><i aria-hidden="true">↙</i></div><p>نقسّم المشروع إلى مراحل صغيرة، ونثبت كل مرحلة قبل إضافة تعقيد جديد.</p></div>
+          <div class="process-line process-flow">
+            <article class="reveal"><span>01</span><div class="process-icon">◎</div><small>DISCOVER</small><h3>فهم المشكلة</h3><p>نحدد المستخدمين، البيانات، وسير العمل الفعلي.</p><b>مخرج المرحلة: خريطة تشغيل</b></article>
+            <article class="reveal"><span>02</span><div class="process-icon">◇</div><small>DEFINE</small><h3>تحديد النطاق</h3><p>MVP واضح، شاشات ووظائف ومخرجات قابلة للقياس.</p><b>مخرج المرحلة: نطاق معتمد</b></article>
+            <article class="reveal"><span>03</span><div class="process-icon">⌘</div><small>BUILD</small><h3>البناء</h3><p>تطوير مرحلي على GitHub بمكونات قابلة لإعادة الاستخدام.</p><b>مخرج المرحلة: نسخة تشغيلية</b></article>
+            <article class="reveal"><span>04</span><div class="process-icon">✓</div><small>VALIDATE</small><h3>التحقق</h3><p>Lint / Build / Status / Logs قبل أي إصدار مؤثر.</p><b>مخرج المرحلة: تقرير تحقق</b></article>
+            <article class="reveal"><span>05</span><div class="process-icon">↗</div><small>SHIP</small><h3>النشر</h3><p>Cloud deployment وربط النطاق والحماية والمراقبة.</p><b>مخرج المرحلة: نظام حي</b></article>
           </div>
         </div>
       </section>
 
       <section class="section-pad tech-section">
         <div class="container tech-layout reveal">
-          <div><span class="kicker">06 / STACK</span><h2>تقنيات نستخدمها حسب احتياج النظام.</h2></div>
-          <div class="tech-cloud"><span>React</span><span>Next.js</span><span>Node.js</span><span>Electron</span><span>PostgreSQL</span><span>Redis</span><span>Cloudflare</span><span>Docker</span><span>GitHub Actions</span><span>OBS</span><span>WebSockets</span><span>OpenAI</span></div>
+          <div class="section-title-card"><span class="kicker">06 / STACK</span><h2>تقنيات نستخدمها حسب احتياج النظام.</h2><i aria-hidden="true">↙</i></div>
+          <div class="tech-cloud tech-cards"><span><i>R</i><b>React</b><small>INTERFACES</small></span><span><i>N</i><b>Next.js</b><small>WEB APPS</small></span><span><i>JS</i><b>Node.js</b><small>BACKEND</small></span><span><i>E</i><b>Electron</b><small>DESKTOP</small></span><span><i>PG</i><b>PostgreSQL</b><small>DATA</small></span><span><i>RD</i><b>Redis</b><small>CACHE</small></span><span><i>CF</i><b>Cloudflare</b><small>EDGE</small></span><span><i>DK</i><b>Docker</b><small>RUNTIME</small></span><span><i>GH</i><b>GitHub Actions</b><small>CI / CD</small></span><span><i>OBS</i><b>OBS</b><small>BROADCAST</small></span><span><i>WS</i><b>WebSockets</b><small>REALTIME</small></span><span><i>AI</i><b>OpenAI</b><small>INTELLIGENCE</small></span></div>
         </div>
       </section>
 
@@ -249,7 +258,7 @@
             <p>أرسل وصفاً مختصراً للمشكلة والنتيجة المطلوبة. نبدأ بتحديد النطاق قبل كتابة أي كود.</p>
           </div>
           <div class="contact-actions">
-            <a class="primary-btn" href="https://wa.me/9647708111744?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D9%85%D9%86%D8%A7%D9%82%D8%B4%D8%A9%20%D9%85%D8%B4%D8%B1%D9%88%D8%B9%20%D9%85%D8%B9%20NAS%20CodeWorks" target="_blank" rel="noopener">تواصل عبر WhatsApp</a>
+            <a class="primary-btn" href="https://wa.me/9647804228066?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D9%85%D9%86%D8%A7%D9%82%D8%B4%D8%A9%20%D9%85%D8%B4%D8%B1%D9%88%D8%B9%20%D9%85%D8%B9%20NAS%20CodeWorks" target="_blank" rel="noopener">تواصل عبر WhatsApp <span dir="ltr">+964 780 422 8066</span></a>
             <a class="ghost-btn" href="mailto:info@nascw.net">info@nascw.net</a>
           </div>
         </div>
@@ -265,6 +274,14 @@
       <div class="container footer-bottom"><span>© 2026 NAS CodeWorks</span><span>nascw.net</span></div>
     </footer>
   </div>
+
+  <nav class="mobile-app-dock" aria-label="تنقل التطبيق">
+    <a href="#top"><span>⌂</span><small>الرئيسية</small></a>
+    <a href="#services"><span>◇</span><small>الخدمات</small></a>
+    <a class="dock-primary" href="https://wa.me/9647804228066" target="_blank" rel="noopener"><span>◉</span><small>واتساب</small></a>
+    <a href="#work"><span>▦</span><small>الأعمال</small></a>
+    <a href="#contact"><span>↗</span><small>ابدأ</small></a>
+  </nav>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>

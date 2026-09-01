@@ -107,6 +107,7 @@
       .from('.hero-lead', { y: 26, opacity: 0, duration: .7 }, '-=.52')
       .from('.hero-actions', { y: 18, opacity: 0, duration: .55 }, '-=.4')
       .from('.hero-meta', { y: 24, opacity: 0, duration: .65 }, '-=.35')
+      .from('.hero-rotors', { scale: .84, opacity: 0, duration: 1.25 }, '-=1.05')
       .from('.hero-rays i', { scaleY: .18, opacity: 0, duration: 1.15, stagger: .045 }, '-=1.05');
 
     gsap.utils.toArray('.reveal').forEach((el) => {
@@ -125,6 +126,13 @@
       scale: 1.06,
       ease: 'none',
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.2 }
+    });
+
+    gsap.to('.hero-rotors', {
+      yPercent: -10,
+      scale: 1.08,
+      ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1.35 }
     });
 
     gsap.to('.hero-copy', {

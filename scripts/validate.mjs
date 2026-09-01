@@ -50,6 +50,7 @@ const checks = [
   ['studio stylesheet', /href="\/studio-v5\.css(?:\?[^\"]*)?"/i.test(html) && studioCss.length > 10000],
   ['v6 visual language', /href="\/nexacore-v6\.css(?:\?[^\"]*)?"/i.test(html) && nexacoreCss.length > 15000],
   ['v6 luminous hero', /class="hero-rays"/.test(html) && /\.hero-rays/.test(nexacoreCss)],
+  ['v6 rotating depth', /class="hero-rotors"/.test(html) && /@keyframes v6-rotor-cw/.test(nexacoreCss)],
   ['self-hosted gsap', /src="\/vendor\/gsap\.min\.js/.test(html) && /src="\/vendor\/ScrollTrigger\.min\.js/.test(html)],
   ['interactive capabilities', /class="[^"]*capability-console[^"]*"/i.test(html) && /selectCapability/.test(js)],
   ['currency toggle', /data-currency="IQD"/i.test(html) && /data-currency="USD"/i.test(html)],

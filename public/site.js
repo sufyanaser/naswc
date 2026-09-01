@@ -41,6 +41,48 @@
     });
   }));
 
+  const capabilityRows = [...document.querySelectorAll('.capability-row')];
+  const capabilityScene = document.querySelector('.capability-scene');
+  const capabilityCode = document.getElementById('capabilityCode');
+  const capabilityTitle = document.getElementById('capabilityTitle');
+  const capabilityBody = document.getElementById('capabilityBody');
+  const capabilityTags = document.getElementById('capabilityTags');
+  const selectCapability = (row) => {
+    if (!row || row.classList.contains('active')) return;
+    capabilityRows.forEach((item) => {
+      const active = item === row;
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-selected', String(active));
+    });
+    const applyContent = () => {
+      capabilityCode.textContent = row.dataset.code;
+      capabilityTitle.textContent = row.dataset.title;
+      capabilityBody.textContent = row.dataset.body;
+      capabilityTags.replaceChildren(...row.dataset.tags.split('|').map((tag) => {
+        const item = document.createElement('b');
+        item.textContent = tag;
+        return item;
+      }));
+    };
+    if (window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.to([capabilityCode, capabilityTitle, capabilityBody, capabilityTags], {
+        y: 10, opacity: 0, duration: .16, ease: 'power2.in',
+        onComplete: () => {
+          applyContent();
+          gsap.fromTo([capabilityCode, capabilityTitle, capabilityBody, capabilityTags], { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: .35, stagger: .035, ease: 'power3.out' });
+          gsap.fromTo('.scene-orbit', { rotation: -12, scale: .92 }, { rotation: 0, scale: 1, duration: .65, ease: 'power3.out' });
+        }
+      });
+    } else applyContent();
+    capabilityScene?.setAttribute('data-active', row.dataset.code);
+  };
+  capabilityRows.forEach((row) => {
+    row.addEventListener('click', () => selectCapability(row));
+    row.addEventListener('pointerenter', (event) => {
+      if (event.pointerType === 'mouse') selectCapability(row);
+    });
+  });
+
   const dockLinks = [...document.querySelectorAll('.mobile-app-dock a[href^="#"]')];
   const dockSections = dockLinks.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
   if ('IntersectionObserver' in window && dockSections.length) {

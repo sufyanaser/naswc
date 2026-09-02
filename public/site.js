@@ -95,6 +95,142 @@
     dockSections.forEach((section) => dockObserver.observe(section));
   }
 
+  const partnersSection = document.getElementById('partners');
+  const partnersKicker = partnersSection?.querySelector('[data-partners-kicker]');
+  const partnersTitle = partnersSection?.querySelector('[data-partners-title]');
+  const partnersDescription = partnersSection?.querySelector('[data-partners-description]');
+  const partnersList = partnersSection?.querySelector('[data-partners-list]');
+
+  const partnerInitials = (name) => String(name || 'Partner')
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part.charAt(0))
+    .join('')
+    .toUpperCase() || 'P';
+
+  const safeUrl = (value, { sameOriginOnly = false } = {}) => {
+    if (!value) return null;
+    try {
+      const url = new URL(String(value), window.location.origin);
+      if (!['http:', 'https:'].includes(url.protocol)) return null;
+      if (sameOriginOnly && url.origin !== window.location.origin) return null;
+      return url.href;
+    } catch {
+      return null;
+    }
+  };
+
+  const createPartnerCard = (partner) => {
+    const href = safeUrl(partner.url);
+    const card = document.createElement(href ? 'a' : 'article');
+    card.className = 'partner-card';
+    if (href) {
+      card.href = href;
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
+    }
+
+    const logo = document.createElement('span');
+    logo.className = 'partner-logo';
+    logo.setAttribute('aria-hidden', 'true');
+    const fallback = document.createElement('span');
+    fallback.className = 'partner-initials';
+    fallback.textContent = partnerInitials(partner.name);
+    logo.append(fallback);
+
+    const photo = safeUrl(partner.photo);
+    if (photo) {
+      const image = document.createElement('img');
+      image.src = photo;
+      image.alt = '';
+      image.loading = 'lazy';
+      image.decoding = 'async';
+      fallback.hidden = true;
+      image.addEventListener('error', () => {
+        image.remove();
+        fallback.hidden = false;
+      }, { once: true });
+      logo.prepend(image);
+    }
+
+    const body = document.createElement('span');
+    body.className = 'partner-copy';
+    if (partner.role) {
+      const role = document.createElement('small');
+      role.textContent = partner.role;
+      body.append(role);
+    }
+    const name = document.createElement('strong');
+    name.textContent = partner.name;
+    body.append(name);
+    if (partner.bio) {
+      const bio = document.createElement('span');
+      bio.className = 'partner-bio';
+      bio.textContent = partner.bio;
+      body.append(bio);
+    }
+
+    if (href) {
+      const arrow = document.createElement('span');
+      arrow.className = 'partner-arrow';
+      arrow.textContent = '↗';
+      arrow.setAttribute('aria-hidden', 'true');
+      card.append(logo, body, arrow);
+      card.setAttribute('aria-label', `${partner.name} — ${partner.role || 'Strategic Partner'}`);
+    } else {
+      card.append(logo, body);
+    }
+    return card;
+  };
+
+  const renderPartners = (content) => {
+    if (!partnersSection || !partnersKicker || !partnersTitle || !partnersDescription || !partnersList) return;
+    const faqSection = document.getElementById('faq');
+    if (faqSection && partnersSection.nextElementSibling !== faqSection) {
+      faqSection.before(partnersSection);
+    }
+    const partners = content?.partners;
+    const items = Array.isArray(partners?.items)
+      ? partners.items.filter((item) => item && String(item.name || '').trim())
+      : [];
+    const visible = partners?.enabled !== false && items.length > 0;
+    partnersSection.hidden = !visible;
+    if (!visible) {
+      partnersList.replaceChildren();
+      return;
+    }
+
+    partnersKicker.textContent = partners.kicker || 'Strategic Partners';
+    partnersTitle.textContent = partners.title || 'Strategic Partners';
+    partnersDescription.textContent = partners.sub || '';
+    partnersDescription.hidden = !partnersDescription.textContent;
+    partnersList.replaceChildren(...items.map(createPartnerCard));
+
+    if (new URLSearchParams(window.location.search).get('preview') === 'partners') {
+      window.requestAnimationFrame(() => partnersSection.scrollIntoView({ block: 'start' }));
+    }
+  };
+
+  const loadPartners = async () => {
+    try {
+      const response = await fetch('/content.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Content request failed: ${response.status}`);
+      renderPartners(await response.json());
+    } catch (error) {
+      console.warn('Strategic Partners could not be loaded.', error);
+      renderPartners(null);
+    }
+  };
+
+  window.addEventListener('message', (event) => {
+    if (event.origin !== window.location.origin) return;
+    if (event.data?.type === 'nascw-preview-content' && event.data.content) {
+      renderPartners(event.data.content);
+    }
+  });
+  loadPartners();
+
   window.addEventListener('load', () => {
     if (!window.gsap || !window.ScrollTrigger || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     gsap.registerPlugin(ScrollTrigger);

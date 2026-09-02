@@ -420,5 +420,34 @@ window.__DEFAULT_CONTENT__={
         "photo": ""
       }
     ]
+  },
+  "partners": {
+    "enabled": true,
+    "kicker": "Strategic Partners",
+    "title": "Strategic Partners",
+    "sub": "Selected operational partners around NAS CodeWorks.",
+    "items": [
+      {
+        "name": "BHTC for Training & Consulting",
+        "role": "Training & Consulting",
+        "bio": "Consulting and business development services for organizations.",
+        "url": "https://www.instagram.com/bhtc.firm",
+        "photo": "/uploads/partners/logos/1788241350483-c099bb88-76ae-4ee9-9cb0-ae338022942b.jpg"
+      },
+      {
+        "name": "moral.academy",
+        "role": "Media Training Academy",
+        "bio": "Media training for professionals, officials, and spokespeople with AI-enhanced skill development.",
+        "url": "https://www.instagram.com/moral.academy.1",
+        "photo": "/uploads/partners/logos/1788241361517-46e2eeda-9f47-4e45-ada2-5fc8251f1684.jpg"
+      },
+      {
+        "name": "MC AGENCY",
+        "role": "Marketing & Creative Production",
+        "bio": "Digital marketing and creative production.",
+        "url": "https://www.instagram.com/multi_creatoriq",
+        "photo": "/uploads/partners/logos/1788241365319-34c92253-8382-4518-b686-df285994e1bf.jpg"
+      }
+    ]
   }
 };

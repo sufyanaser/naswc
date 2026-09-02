@@ -21,6 +21,7 @@ const adminJs = fs.readFileSync('public/admin.js', 'utf8');
 const adminUxJs = fs.readFileSync('public/admin-uiux.js', 'utf8');
 const uploadJs = fs.readFileSync('public/admin-upload-r2.js', 'utf8');
 const docpdf = fs.readFileSync('public/docpdf/index.html', 'utf8');
+const defaultContent = JSON.parse(fs.readFileSync('public/content.json', 'utf8'));
 
 const adminIds = [
   'gate', 'gate-pass', 'gate-go', 'adminroot', 'tb-status', 'tb-status-text',
@@ -47,6 +48,10 @@ const checks = [
   ['systems section', /id="systems"/i.test(html)],
   ['work section', /id="work"/i.test(html)],
   ['contact section', /id="contact"/i.test(html)],
+  ['strategic partners section', /id="partners"/i.test(html) && /data-partners-list/i.test(html)],
+  ['strategic partners data binding', /fetch\('\/content\.json'/.test(js) && /renderPartners/.test(js)],
+  ['strategic partners placement', html.indexOf('id="partners"') < html.indexOf('id="contact"') && /faqSection\.before\(partnersSection\)/.test(js)],
+  ['strategic partners fallback data', defaultContent.partners?.enabled === true && defaultContent.partners.items?.length > 0],
   ['studio stylesheet', /href="\/studio-v5\.css(?:\?[^\"]*)?"/i.test(html) && studioCss.length > 10000],
   ['v6 visual language', /href="\/nexacore-v6\.css(?:\?[^\"]*)?"/i.test(html) && nexacoreCss.length > 15000],
   ['v6 luminous hero', /class="hero-rays"/.test(html) && /\.hero-rays/.test(nexacoreCss)],

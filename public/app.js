@@ -3,6 +3,22 @@
   const languageButtons = [...document.querySelectorAll('[data-lang-set]')];
   const menuButton = document.getElementById('menuBtn');
   const mobileMenu = document.getElementById('mobileMenu');
+  const themeButton = document.getElementById('themeToggle');
+
+  function applyTheme(theme) {
+    const active = theme === 'dark' ? 'dark' : 'light';
+    root.dataset.theme = active;
+    themeButton?.setAttribute('aria-pressed', String(active === 'dark'));
+    themeButton?.setAttribute('aria-label', active === 'dark'
+      ? (root.lang === 'ar' ? 'تفعيل الوضع النهاري' : 'Switch to light mode')
+      : (root.lang === 'ar' ? 'تفعيل الوضع الليلي' : 'Switch to dark mode'));
+    try { localStorage.setItem('nascw-theme', active); } catch {}
+  }
+
+  let savedTheme;
+  try { savedTheme = localStorage.getItem('nascw-theme'); } catch {}
+  applyTheme(savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  themeButton?.addEventListener('click', () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
 
   function applyLang(lang) {
     const active = lang === 'en' ? 'en' : 'ar';
@@ -10,6 +26,7 @@
     root.dir = active === 'ar' ? 'rtl' : 'ltr';
     languageButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.langSet === active)));
     menuButton?.setAttribute('aria-label', active === 'ar' ? 'فتح القائمة' : 'Open menu');
+    applyTheme(root.dataset.theme);
     document.title = active === 'ar' ? 'NAS CodeWorks — هندسة برمجيات وذكاء اصطناعي' : 'NAS CodeWorks — Software Engineering & AI';
     try { localStorage.setItem('nascw-language', active); } catch {}
   }

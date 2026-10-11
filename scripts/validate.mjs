@@ -50,10 +50,9 @@ const checks = [
   ['bilingual content pairs present', /data-lang="ar"/.test(html) && /data-lang="en"/.test(html)],
   ['bilingual toggle behavior wired', /applyLang/.test(js) && /data-lang-set/.test(js)],
 
-  ['header section', /<header class="topbar"/i.test(html)],
+  ['header section', /<header class="site-header"/i.test(html)],
   ['hero section', /class="hero"/.test(html)],
   ['core services section', /id="services"/i.test(html)],
-  ['website packages section', /id="packages"/i.test(html)],
   ['selected work section', /id="work"/i.test(html)],
   ['why nas codeworks section', /id="why"/i.test(html)],
   ['engagement process section', /id="process"/i.test(html)],
@@ -61,14 +60,9 @@ const checks = [
 
   ['selected work status badges are honest', /is-dev/.test(html) && /is-beta/.test(html) && !/is-live/.test(html)],
 
-  ['strategic partners section markup', /id="partners"/i.test(html) && /data-partners-list/i.test(html)],
-  ['strategic partners data binding', /fetch\('\/content\.json'/.test(js) && /renderPartners/.test(js)],
-  ['strategic partners placed before contact', html.indexOf('id="partners"') > -1 && html.indexOf('id="partners"') < html.indexOf('id="contact"')],
-  ['strategic partners fallback data', defaultContent.partners?.enabled === true && defaultContent.partners.items?.length > 0],
-
   ['lightweight reveal-on-scroll (no animation library)', /\breveal\b/.test(html) && /IntersectionObserver/.test(js)],
-  ['currency toggle markup', /data-currency="IQD"/i.test(html) && /data-currency="USD"/i.test(html)],
-  ['currency toggle behavior', /price-card\[data-iqd\]\[data-usd\]/.test(js)],
+  ['functional mascot assets', /nasai-coding\.png/.test(html) && /nasai-thinking\.png/.test(html)],
+  ['contact email link', /mailto:info@nascw\.net/.test(html)],
   ['whatsapp business number', /9647804228066/.test(html) && !/9647708111744/.test(html)],
   ['canonical url', /rel="canonical" href="https:\/\/nascw\.net\/"/.test(html)],
   ['legal footer line preserved', /شركة الرنين للخدمات الإعلامية والرقمية والإعلانية والإنتاج الفني/.test(html)],

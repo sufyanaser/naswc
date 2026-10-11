@@ -84,13 +84,20 @@
   const motionContract = {
     owners: Object.freeze({
       AGENT_2: ['section-reveals', 'scroll-trigger', 'card-transitions', 'nav-micro-interactions', 'cta-animations', 'shared-motion-utilities'],
-      AGENT_3: ['mascot-intro', 'intro-timeline', 'skip-intro', 'intro-to-hero-transition', 'mascot-entrance', 'reduced-motion-intro-fallback']
+      AGENT_3: ['mascot-intro', 'intro-timeline', 'skip-intro', 'intro-to-hero-transition', 'mascot-entrance', 'hero-to-header-spatial-continuity', 'reduced-motion-intro-fallback']
     }),
     timelines: new Set(),
     triggers: new Set(),
     introListeners: new Set(),
     introCompleted: false,
     introDetail: null,
+    handoffState: {
+      mode: 'hero',
+      progress: 0,
+      fromRect: null,
+      toRect: null,
+      currentRect: null
+    },
     isReducedMotion() {
       return motionMedia.matches;
     },
@@ -134,6 +141,9 @@
     revealAllImmediately() {
       this.cleanup();
       document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+      const handoffLayer = document.getElementById('nasMascotHandoffLayer');
+      if (handoffLayer) handoffLayer.hidden = true;
+      topbar?.classList.remove('is-mascot-docked');
       if (hasGsap) {
         window.gsap.killTweensOf('.reveal, .service-card, .work-card, .value-list article, .process-list li, .hero-mascot');
         window.gsap.set('.reveal, .service-card, .work-card, .value-list article, .process-list li, .hero-mascot', { clearProps: 'transform,opacity' });
@@ -144,14 +154,18 @@
   window.addEventListener('pagehide', () => motionContract.cleanup(), { once: true });
 
   // ---------------------------------------------------------------------------
-  // AGENT 3: Mascot Intro, Intro Timeline, Skip Intro, Intro-to-Hero Transition,
-  //          Mascot Entrance Behavior & Reduced-Motion Intro Fallback
+  // AGENT 3: Cinematic Mascot Intro V2 (Depth Emergence), Skip Intro,
+  //          Intro-to-Hero Transition, Mascot Entrance & Reduced-Motion Fallback
   // ---------------------------------------------------------------------------
   function initAgent3IntroAndHero() {
     const introEl = document.getElementById('nasIntro');
     const skipBtn = document.getElementById('skipIntroBtn');
     const progressBar = document.getElementById('introProgressBar');
     const introSteps = [...document.querySelectorAll('[data-intro-step]')];
+    const introMascot = document.querySelector('.nas-intro-mascot');
+    const introAtmo = [...document.querySelectorAll('.nas-intro-atmo')];
+    const introStage = document.querySelector('.nas-intro-stage');
+    const introBackdrop = document.querySelector('.nas-intro-backdrop');
     const heroCopy = document.querySelector('.hero .hero-copy');
     const heroVisual = document.querySelector('.hero .system-visual');
     const heroMascot = document.querySelector('.hero .hero-mascot');
@@ -176,7 +190,10 @@
       if (introEl) {
         introEl.hidden = true;
         if (hasGsap) {
-          window.gsap.set(['.nas-intro-backdrop', '.nas-intro-stage', '.nas-intro-mascot-wrap', '.nas-intro-copy', progressBar].filter(Boolean), { clearProps: 'all' });
+          window.gsap.set(
+            [introBackdrop, introStage, introMascot, ...introAtmo, progressBar].filter(Boolean),
+            { clearProps: 'all' }
+          );
         }
       }
     };
@@ -185,6 +202,19 @@
       introSteps.forEach((step, idx) => {
         step.classList.toggle('is-active', idx <= stepIndex);
       });
+    };
+
+    // Measure the real hero-mascot's settled position/size (neutralizing the
+    // not-yet-visible .reveal transform) so the intro mascot can morph into
+    // its exact dimensions and position at handoff — a true depth-to-hero match.
+    const measureHeroTarget = () => {
+      if (!heroMascot || !heroVisual) return null;
+      const prevTransform = heroVisual.style.transform;
+      heroVisual.style.transform = 'none';
+      const rect = heroMascot.getBoundingClientRect();
+      heroVisual.style.transform = prevTransform;
+      if (!rect.width || !rect.height) return null;
+      return rect;
     };
 
     const params = new URLSearchParams(window.location.search);
@@ -215,12 +245,25 @@
       return;
     }
 
-    // 3. First-visit Mascot Intro sequence
+    // 3. First-visit Cinematic Mascot Intro V2
     heroCopy?.classList.add('is-visible');
     heroVisual?.classList.add('is-visible');
     introEl.hidden = false;
     root.classList.add('has-intro-active');
     setActiveStep(0);
+
+    // Natural (scale:1, pre-animation) rect of the intro mascot, centered in
+    // its field — the FLIP "from" box for the handoff morph below.
+    const naturalMascotRect = introMascot ? introMascot.getBoundingClientRect() : null;
+    const heroTargetRect = measureHeroTarget();
+    let handoffX = 0;
+    let handoffY = 0;
+    let handoffScale = 1;
+    if (naturalMascotRect && heroTargetRect && naturalMascotRect.width) {
+      handoffScale = heroTargetRect.width / naturalMascotRect.width;
+      handoffX = (heroTargetRect.left + heroTargetRect.width / 2) - (naturalMascotRect.left + naturalMascotRect.width / 2);
+      handoffY = (heroTargetRect.top + heroTargetRect.height / 2) - (naturalMascotRect.top + naturalMascotRect.height / 2);
+    }
 
     let introTimeline = null;
     let heroTimeline = null;
@@ -244,8 +287,17 @@
       heroTimeline
         .fromTo(heroCopy, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.48 * durScale }, 0)
         .fromTo(heroVisual, { y: 20, scale: 0.985, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.52 * durScale }, 0.04 * durScale)
-        .fromTo(heroPipeSteps, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.34 * durScale, stagger: 0.05 * durScale }, 0.1 * durScale)
-        .fromTo(heroMascot, { y: 22, scale: 0.9, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.38 * durScale, ease: 'back.out(1.4)' }, 0.14 * durScale);
+        .fromTo(heroPipeSteps, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.34 * durScale, stagger: 0.05 * durScale }, 0.1 * durScale);
+
+      // When skipped, nothing already morphed into place, so the hero mascot
+      // still needs its own entrance. On the full cinematic path the intro
+      // mascot clone has already morphed onto this exact spot/size, so this
+      // is a same-position crossfade — never a second, differently placed copy.
+      if (fastSkip) {
+        heroTimeline.fromTo(heroMascot, { y: 22, scale: 0.9, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.38 * durScale, ease: 'back.out(1.4)' }, 0.14 * durScale);
+      } else {
+        heroTimeline.fromTo(heroMascot, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.02);
+      }
     };
 
     const finishIntro = (skipped) => {
@@ -280,25 +332,167 @@
     window.requestAnimationFrame(() => skipBtn?.focus({ preventScroll: true }));
 
     introTimeline = motionContract.registerTimeline(window.gsap.timeline({
-      defaults: { ease: 'power3.out' },
+      defaults: { ease: 'power2.out' },
       onComplete: () => finishIntro(false)
     }));
 
-    introTimeline
-      .fromTo('.nas-intro-stage', { y: 18, scale: 0.96, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.38 }, 0)
-      .fromTo('.nas-intro-mascot-wrap', { scale: 0.84, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.38, ease: 'back.out(1.5)' }, 0.05)
-      .fromTo(progressBar, { scaleX: 0.12 }, { scaleX: 0.42, duration: 0.38 }, 0.08)
-      .call(() => setActiveStep(1), null, 0.45)
-      .to('.nas-intro-mascot', { y: -6, duration: 0.28, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 0.45)
-      .to(progressBar, { scaleX: 0.76, duration: 0.42 }, 0.45)
-      .call(() => setActiveStep(2), null, 0.9)
-      .to(progressBar, { scaleX: 1, duration: 0.34 }, 0.9)
-      .addLabel('handoff', 1.28)
-      .call(() => {
-        runHeroTransition(false, () => {});
-      }, null, 'handoff')
-      .to('.nas-intro-stage', { y: -16, scale: 0.97, opacity: 0, duration: 0.36, ease: 'power2.inOut' }, 'handoff')
-      .to('.nas-intro-backdrop', { opacity: 0, duration: 0.38, ease: 'power2.out' }, 'handoff+=0.04');
+    // Phase 1 — Atmosphere (0 - 0.32s): animated blurred gradient mesh fades in.
+    introTimeline.to(introAtmo, { opacity: 1, duration: 0.42, stagger: 0.04, ease: 'power1.out' }, 0);
+    introTimeline.fromTo(introStage, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, 0.1);
+
+    // Phase 2 — Distant Appearance (0.22 - 0.62s): mascot materializes small,
+    // out-of-focus and dim, deep in the scene.
+    if (introMascot) {
+      introTimeline.fromTo(
+        introMascot,
+        { scale: 0.32, opacity: 0, filter: 'blur(20px) brightness(0.78)' },
+        { scale: 0.42, opacity: 1, filter: 'blur(13px) brightness(0.86)', duration: 0.4, ease: 'power1.out' },
+        0.22
+      );
+    }
+    introTimeline.fromTo(progressBar, { scaleX: 0.12 }, { scaleX: 0.4, duration: 0.4 }, 0.22);
+    introTimeline.call(() => setActiveStep(1), null, 0.55);
+
+    // Phase 3 — Depth Approach (0.55 - 1.65s): camera-approach illusion —
+    // the mascot grows, sharpens and brightens as it closes the distance.
+    if (introMascot) {
+      introTimeline.to(
+        introMascot,
+        { scale: 1.05, filter: 'blur(2px) brightness(0.97)', duration: 0.78, ease: 'power2.inOut' },
+        0.55
+      );
+      introTimeline.to(
+        introMascot,
+        { scale: 1, filter: 'blur(0px) brightness(1)', duration: 0.32, ease: 'power2.out' },
+        1.33
+      );
+    }
+    introTimeline.to(progressBar, { scaleX: 0.82, duration: 0.78, ease: 'power2.inOut' }, 0.55);
+    introTimeline.call(() => setActiveStep(2), null, 1.4);
+    introTimeline.to(progressBar, { scaleX: 1, duration: 0.3 }, 1.4);
+
+    // Phase 4 — Hero Handoff (1.65 - 2.3s): the mascot morphs — same screen
+    // position and size — onto its resting place in the hero, while the
+    // cinematic scene dissolves and the real hero content takes over.
+    introTimeline.addLabel('handoff', 1.65);
+    if (introMascot) {
+      introTimeline.to(
+        introMascot,
+        { x: handoffX, y: handoffY, scale: handoffScale, duration: 0.55, ease: 'power2.inOut' },
+        'handoff'
+      );
+    }
+    introTimeline.call(() => { runHeroTransition(false, () => {}); }, null, 'handoff+=0.42');
+    introTimeline.to(introMascot, { opacity: 0, duration: 0.22, ease: 'power1.in' }, 'handoff+=0.42');
+    introTimeline.to(introStage, { y: -14, opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 'handoff');
+    introTimeline.to([introBackdrop, ...introAtmo], { opacity: 0, duration: 0.4, ease: 'power2.out' }, 'handoff+=0.1');
+  }
+
+  // ---------------------------------------------------------------------------
+  // AGENT 3: Hero-to-Header Spatial Mascot Continuity (Measured FLIP Trajectory)
+  // ---------------------------------------------------------------------------
+  function initHeroToHeaderSpatialContinuity() {
+    const heroMascot = document.querySelector('.hero .hero-mascot');
+    const brandMark = document.querySelector('.site-header .brand-mark');
+    const handoffLayer = document.getElementById('nasMascotHandoffLayer');
+    const traveler = document.getElementById('nasMascotTraveler');
+    if (!heroMascot || !brandMark || !handoffLayer || !traveler) return;
+
+    const START_SCROLL = 72;
+    const END_SCROLL = 420;
+    let rafPending = false;
+
+    const updateSpatialHandoff = () => {
+      rafPending = false;
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+
+      if (motionContract.isReducedMotion() || root.dataset.motionFreeze === 'true') {
+        handoffLayer.hidden = true;
+        heroMascot.style.opacity = '';
+        const docked = scrollY >= END_SCROLL && root.dataset.motionFreeze !== 'true';
+        topbar?.classList.toggle('is-mascot-docked', docked);
+        motionContract.handoffState = {
+          mode: docked ? 'docked-in-header' : 'hero',
+          progress: docked ? 1 : 0,
+          fromRect: null,
+          toRect: null,
+          currentRect: null
+        };
+        return;
+      }
+
+      const rawP = Math.min(1, Math.max(0, (scrollY - START_SCROLL) / (END_SCROLL - START_SCROLL)));
+
+      if (rawP <= 0) {
+        handoffLayer.hidden = true;
+        heroMascot.style.opacity = '';
+        heroMascot.classList.add('is-floating');
+        topbar?.classList.remove('is-mascot-docked');
+        motionContract.handoffState = {
+          mode: 'hero',
+          progress: 0,
+          fromRect: null,
+          toRect: null,
+          currentRect: null
+        };
+        return;
+      }
+
+      if (rawP >= 1) {
+        handoffLayer.hidden = true;
+        heroMascot.style.opacity = '0';
+        heroMascot.classList.remove('is-floating');
+        topbar?.classList.add('is-mascot-docked');
+        const toRect = brandMark.getBoundingClientRect();
+        const box = { x: Math.round(toRect.left), y: Math.round(toRect.top), w: Math.round(toRect.width) };
+        motionContract.handoffState = {
+          mode: 'docked-in-header',
+          progress: 1,
+          fromRect: motionContract.handoffState.fromRect,
+          toRect: box,
+          currentRect: { ...box, scale: Number((toRect.width / (window.innerWidth <= 720 ? 175 : 235)).toFixed(3)) }
+        };
+        return;
+      }
+
+      // In-flight spatial FLIP interpolation between live .hero-mascot rect and .brand-mark rect
+      heroMascot.classList.remove('is-floating');
+      const fromRect = heroMascot.getBoundingClientRect();
+      const toRect = brandMark.getBoundingClientRect();
+      const naturalW = window.innerWidth <= 720 ? 175 : 235;
+      const t = rawP < 0.5 ? 2 * rawP * rawP : 1 - Math.pow(-2 * rawP + 2, 2) / 2;
+
+      const curW = fromRect.width + (toRect.width - fromRect.width) * t;
+      const curLeft = fromRect.left + (toRect.left - fromRect.left) * t;
+      const curTop = fromRect.top + (toRect.top - fromRect.top) * t - Math.sin(Math.PI * t) * 26;
+      const scale = curW / naturalW;
+
+      heroMascot.style.opacity = String(Math.max(0, 1 - rawP * 4).toFixed(3));
+      handoffLayer.hidden = false;
+      traveler.style.transform = `translate3d(${curLeft.toFixed(2)}px, ${curTop.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+      traveler.style.borderRadius = `${Math.round(t * 28)}%`;
+      traveler.style.opacity = rawP > 0.88 ? String(Math.max(0, (1 - rawP) / 0.12).toFixed(3)) : '1';
+      topbar?.classList.toggle('is-mascot-docked', rawP > 0.82);
+
+      motionContract.handoffState = {
+        mode: 'in-flight',
+        progress: Number(rawP.toFixed(3)),
+        fromRect: { x: Math.round(fromRect.left), y: Math.round(fromRect.top), w: Math.round(fromRect.width) },
+        toRect: { x: Math.round(toRect.left), y: Math.round(toRect.top), w: Math.round(toRect.width) },
+        currentRect: { x: Math.round(curLeft), y: Math.round(curTop), w: Math.round(curW), scale: Number(scale.toFixed(3)) }
+      };
+    };
+
+    const requestUpdate = () => {
+      if (!rafPending) {
+        rafPending = true;
+        window.requestAnimationFrame(updateSpatialHandoff);
+      }
+    };
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+    updateSpatialHandoff();
   }
 
   // ---------------------------------------------------------------------------
@@ -468,17 +662,24 @@
       motionContract.cleanup();
       const introEl = document.getElementById('nasIntro');
       if (introEl) introEl.hidden = true;
+      const handoffLayer = document.getElementById('nasMascotHandoffLayer');
+      if (handoffLayer) handoffLayer.hidden = true;
       root.classList.remove('has-intro-active');
       document.querySelectorAll('.reveal').forEach((el) => {
         el.classList.add('is-visible');
         if (hasGsap) window.gsap.set(el, { clearProps: 'all' });
       });
-      document.querySelector('.hero-mascot')?.classList.remove('is-floating');
+      const hm = document.querySelector('.hero-mascot');
+      if (hm) {
+        hm.classList.remove('is-floating');
+        hm.style.opacity = '';
+      }
     }
   });
 
   // Coordinate Agent 3 -> Agent 2 via Motion Ownership Contract
   motionContract.onIntroComplete(() => {
+    initHeroToHeaderSpatialContinuity();
     initAgent2ScrollAndInteractions();
   });
   initAgent3IntroAndHero();

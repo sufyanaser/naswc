@@ -144,14 +144,18 @@
   window.addEventListener('pagehide', () => motionContract.cleanup(), { once: true });
 
   // ---------------------------------------------------------------------------
-  // AGENT 3: Mascot Intro, Intro Timeline, Skip Intro, Intro-to-Hero Transition,
-  //          Mascot Entrance Behavior & Reduced-Motion Intro Fallback
+  // AGENT 3: Cinematic Mascot Intro V2 (Depth Emergence), Skip Intro,
+  //          Intro-to-Hero Transition, Mascot Entrance & Reduced-Motion Fallback
   // ---------------------------------------------------------------------------
   function initAgent3IntroAndHero() {
     const introEl = document.getElementById('nasIntro');
     const skipBtn = document.getElementById('skipIntroBtn');
     const progressBar = document.getElementById('introProgressBar');
     const introSteps = [...document.querySelectorAll('[data-intro-step]')];
+    const introMascot = document.querySelector('.nas-intro-mascot');
+    const introAtmo = [...document.querySelectorAll('.nas-intro-atmo')];
+    const introStage = document.querySelector('.nas-intro-stage');
+    const introBackdrop = document.querySelector('.nas-intro-backdrop');
     const heroCopy = document.querySelector('.hero .hero-copy');
     const heroVisual = document.querySelector('.hero .system-visual');
     const heroMascot = document.querySelector('.hero .hero-mascot');
@@ -176,7 +180,10 @@
       if (introEl) {
         introEl.hidden = true;
         if (hasGsap) {
-          window.gsap.set(['.nas-intro-backdrop', '.nas-intro-stage', '.nas-intro-mascot-wrap', '.nas-intro-copy', progressBar].filter(Boolean), { clearProps: 'all' });
+          window.gsap.set(
+            [introBackdrop, introStage, introMascot, ...introAtmo, progressBar].filter(Boolean),
+            { clearProps: 'all' }
+          );
         }
       }
     };
@@ -185,6 +192,19 @@
       introSteps.forEach((step, idx) => {
         step.classList.toggle('is-active', idx <= stepIndex);
       });
+    };
+
+    // Measure the real hero-mascot's settled position/size (neutralizing the
+    // not-yet-visible .reveal transform) so the intro mascot can morph into
+    // its exact dimensions and position at handoff — a true depth-to-hero match.
+    const measureHeroTarget = () => {
+      if (!heroMascot || !heroVisual) return null;
+      const prevTransform = heroVisual.style.transform;
+      heroVisual.style.transform = 'none';
+      const rect = heroMascot.getBoundingClientRect();
+      heroVisual.style.transform = prevTransform;
+      if (!rect.width || !rect.height) return null;
+      return rect;
     };
 
     const params = new URLSearchParams(window.location.search);
@@ -215,12 +235,25 @@
       return;
     }
 
-    // 3. First-visit Mascot Intro sequence
+    // 3. First-visit Cinematic Mascot Intro V2
     heroCopy?.classList.add('is-visible');
     heroVisual?.classList.add('is-visible');
     introEl.hidden = false;
     root.classList.add('has-intro-active');
     setActiveStep(0);
+
+    // Natural (scale:1, pre-animation) rect of the intro mascot, centered in
+    // its field — the FLIP "from" box for the handoff morph below.
+    const naturalMascotRect = introMascot ? introMascot.getBoundingClientRect() : null;
+    const heroTargetRect = measureHeroTarget();
+    let handoffX = 0;
+    let handoffY = 0;
+    let handoffScale = 1;
+    if (naturalMascotRect && heroTargetRect && naturalMascotRect.width) {
+      handoffScale = heroTargetRect.width / naturalMascotRect.width;
+      handoffX = (heroTargetRect.left + heroTargetRect.width / 2) - (naturalMascotRect.left + naturalMascotRect.width / 2);
+      handoffY = (heroTargetRect.top + heroTargetRect.height / 2) - (naturalMascotRect.top + naturalMascotRect.height / 2);
+    }
 
     let introTimeline = null;
     let heroTimeline = null;
@@ -244,8 +277,17 @@
       heroTimeline
         .fromTo(heroCopy, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.48 * durScale }, 0)
         .fromTo(heroVisual, { y: 20, scale: 0.985, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.52 * durScale }, 0.04 * durScale)
-        .fromTo(heroPipeSteps, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.34 * durScale, stagger: 0.05 * durScale }, 0.1 * durScale)
-        .fromTo(heroMascot, { y: 22, scale: 0.9, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.38 * durScale, ease: 'back.out(1.4)' }, 0.14 * durScale);
+        .fromTo(heroPipeSteps, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.34 * durScale, stagger: 0.05 * durScale }, 0.1 * durScale);
+
+      // When skipped, nothing already morphed into place, so the hero mascot
+      // still needs its own entrance. On the full cinematic path the intro
+      // mascot clone has already morphed onto this exact spot/size, so this
+      // is a same-position crossfade — never a second, differently placed copy.
+      if (fastSkip) {
+        heroTimeline.fromTo(heroMascot, { y: 22, scale: 0.9, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.38 * durScale, ease: 'back.out(1.4)' }, 0.14 * durScale);
+      } else {
+        heroTimeline.fromTo(heroMascot, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.02);
+      }
     };
 
     const finishIntro = (skipped) => {
@@ -280,25 +322,60 @@
     window.requestAnimationFrame(() => skipBtn?.focus({ preventScroll: true }));
 
     introTimeline = motionContract.registerTimeline(window.gsap.timeline({
-      defaults: { ease: 'power3.out' },
+      defaults: { ease: 'power2.out' },
       onComplete: () => finishIntro(false)
     }));
 
-    introTimeline
-      .fromTo('.nas-intro-stage', { y: 18, scale: 0.96, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.38 }, 0)
-      .fromTo('.nas-intro-mascot-wrap', { scale: 0.84, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.38, ease: 'back.out(1.5)' }, 0.05)
-      .fromTo(progressBar, { scaleX: 0.12 }, { scaleX: 0.42, duration: 0.38 }, 0.08)
-      .call(() => setActiveStep(1), null, 0.45)
-      .to('.nas-intro-mascot', { y: -6, duration: 0.28, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 0.45)
-      .to(progressBar, { scaleX: 0.76, duration: 0.42 }, 0.45)
-      .call(() => setActiveStep(2), null, 0.9)
-      .to(progressBar, { scaleX: 1, duration: 0.34 }, 0.9)
-      .addLabel('handoff', 1.28)
-      .call(() => {
-        runHeroTransition(false, () => {});
-      }, null, 'handoff')
-      .to('.nas-intro-stage', { y: -16, scale: 0.97, opacity: 0, duration: 0.36, ease: 'power2.inOut' }, 'handoff')
-      .to('.nas-intro-backdrop', { opacity: 0, duration: 0.38, ease: 'power2.out' }, 'handoff+=0.04');
+    // Phase 1 — Atmosphere (0 - 0.32s): animated blurred gradient mesh fades in.
+    introTimeline.to(introAtmo, { opacity: 1, duration: 0.42, stagger: 0.04, ease: 'power1.out' }, 0);
+    introTimeline.fromTo(introStage, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, 0.1);
+
+    // Phase 2 — Distant Appearance (0.22 - 0.62s): mascot materializes small,
+    // out-of-focus and dim, deep in the scene.
+    if (introMascot) {
+      introTimeline.fromTo(
+        introMascot,
+        { scale: 0.32, opacity: 0, filter: 'blur(20px) brightness(0.78)' },
+        { scale: 0.42, opacity: 1, filter: 'blur(13px) brightness(0.86)', duration: 0.4, ease: 'power1.out' },
+        0.22
+      );
+    }
+    introTimeline.fromTo(progressBar, { scaleX: 0.12 }, { scaleX: 0.4, duration: 0.4 }, 0.22);
+    introTimeline.call(() => setActiveStep(1), null, 0.55);
+
+    // Phase 3 — Depth Approach (0.55 - 1.65s): camera-approach illusion —
+    // the mascot grows, sharpens and brightens as it closes the distance.
+    if (introMascot) {
+      introTimeline.to(
+        introMascot,
+        { scale: 1.05, filter: 'blur(2px) brightness(0.97)', duration: 0.78, ease: 'power2.inOut' },
+        0.55
+      );
+      introTimeline.to(
+        introMascot,
+        { scale: 1, filter: 'blur(0px) brightness(1)', duration: 0.32, ease: 'power2.out' },
+        1.33
+      );
+    }
+    introTimeline.to(progressBar, { scaleX: 0.82, duration: 0.78, ease: 'power2.inOut' }, 0.55);
+    introTimeline.call(() => setActiveStep(2), null, 1.4);
+    introTimeline.to(progressBar, { scaleX: 1, duration: 0.3 }, 1.4);
+
+    // Phase 4 — Hero Handoff (1.65 - 2.3s): the mascot morphs — same screen
+    // position and size — onto its resting place in the hero, while the
+    // cinematic scene dissolves and the real hero content takes over.
+    introTimeline.addLabel('handoff', 1.65);
+    if (introMascot) {
+      introTimeline.to(
+        introMascot,
+        { x: handoffX, y: handoffY, scale: handoffScale, duration: 0.55, ease: 'power2.inOut' },
+        'handoff'
+      );
+    }
+    introTimeline.call(() => { runHeroTransition(false, () => {}); }, null, 'handoff+=0.42');
+    introTimeline.to(introMascot, { opacity: 0, duration: 0.22, ease: 'power1.in' }, 'handoff+=0.42');
+    introTimeline.to(introStage, { y: -14, opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 'handoff');
+    introTimeline.to([introBackdrop, ...introAtmo], { opacity: 0, duration: 0.4, ease: 'power2.out' }, 'handoff+=0.1');
   }
 
   // ---------------------------------------------------------------------------

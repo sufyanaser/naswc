@@ -5,7 +5,8 @@ const required = [
   'public/vendor/gsap.min.js', 'public/vendor/ScrollTrigger.min.js',
   'public/admin/index.html', 'public/admin.js', 'public/admin-uiux.css', 'public/admin-uiux.js',
   'public/admin-upload-r2.js', 'public/admin-publish-click.js', 'public/admin-partners-force.js',
-  'public/docpdf/index.html', 'docs/UI_UX_AUDIT.md'
+  'public/docpdf/index.html', 'docs/UI_UX_AUDIT.md',
+  'public/robots.txt', 'public/sitemap.xml'
 ];
 for (const file of required) {
   if (!fs.existsSync(file)) throw new Error(`Missing ${file}`);
@@ -62,6 +63,7 @@ const checks = [
   ['new whatsapp number', /9647804228066/.test(html) && !/9647708111744/.test(html)],
   ['mobile app dock', /class="mobile-app-dock"/i.test(html)],
   ['currency behavior', /price-card\[data-iqd\]\[data-usd\]/.test(js)],
+  ['canonical url', /rel="canonical" href="https:\/\/nascw\.net\/"/.test(html)],
   ['css content', css.length > 10000],
   ['js content', js.length > 500]
   ,['admin control ids preserved', adminIds.every(id => new RegExp(`id=["']${id}["']`).test(adminHtml))]

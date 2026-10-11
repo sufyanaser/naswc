@@ -59,6 +59,51 @@ html[data-theme=dark] .nas-intro-stage{background:linear-gradient(145deg,rgba(17
 @keyframes nasMascotFloat{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-6px,0)}}
 .hero-mascot.is-floating{animation:nasMascotFloat 5s ease-in-out infinite}
 
+/* Agent 3: Hero-to-Header Spatial Mascot Continuity (FLIP traveler + docked state) */
+.nas-mascot-handoff-layer[hidden]{display:none!important}
+.nas-mascot-handoff-layer{position:fixed;inset:0;z-index:120;pointer-events:none;overflow:hidden}
+.nas-mascot-traveler{position:fixed;top:0;left:0;width:235px;height:auto;transform-origin:0 0;will-change:transform,opacity,border-radius;filter:drop-shadow(0 16px 22px rgba(13,76,103,.18));pointer-events:none}
+.site-header .brand-mark{position:relative;overflow:visible;transition:box-shadow .24s ease,transform .24s cubic-bezier(.22,1,.36,1)}
+.site-header .brand-mark img{border-radius:11px}
+.brand-dock-dot{position:absolute;inset-block-start:-3px;inset-inline-end:-3px;width:9px;height:9px;border-radius:50%;background:var(--teal);border:2px solid var(--paper);box-shadow:0 0 0 3px rgba(22,170,150,.22);opacity:0;transform:scale(.35);transition:opacity .22s ease,transform .24s cubic-bezier(.22,1,.36,1);pointer-events:none}
+.site-header.is-mascot-docked .brand-mark{box-shadow:0 0 0 2px rgba(22,170,150,.38),0 8px 20px rgba(8,157,173,.22)}
+html[data-theme=dark] .site-header.is-mascot-docked .brand-mark{box-shadow:0 0 0 2px rgba(111,233,202,.45),0 8px 22px rgba(8,157,173,.32)}
+.site-header.is-mascot-docked .brand-dock-dot{opacity:1;transform:scale(1)}
+
+/* Button Variants System & Interactive States (Agent 1 & Agent 2) */
+.button:active{transform:translateY(0) scale(.985)}
+.button[disabled],.button.is-disabled{opacity:.54;pointer-events:none;box-shadow:none}
+.button.is-loading{pointer-events:none;opacity:.82}
+.button-ghost{background:rgba(247,248,250,.78);border-color:var(--line);color:var(--ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.75)}
+.button-ghost:hover{border-color:var(--teal);background:var(--paper);color:var(--ink)}
+html[data-theme=dark] .button-ghost{background:rgba(16,29,42,.78);border-color:#284350;color:#effaf7;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+html[data-theme=dark] .button-ghost:hover{border-color:var(--teal);background:#142533}
+.button-whatsapp:hover{border-color:#6fe9ca;background:rgba(111,233,202,.08);box-shadow:0 10px 26px rgba(13,154,135,.22)}
+.mobile-menu a.mobile-cta{background:linear-gradient(135deg,#1159bd 0%,#08aeb0 58%,#5ddfbc 125%);color:#fff;justify-content:center;text-align:center}
+.mobile-menu a.mobile-cta:hover{background:linear-gradient(135deg,#0d4fae 0%,#079b9e 58%,#4ccba9 125%);color:#fff}
+
+/* Typography & Cards Visual Quality Polish (non-layout-affecting at rest) */
+.card-no,.step-no,.value-list article>span,.pipe-step>span,.art-panel b,.nas-intro-step b{font-variant-numeric:tabular-nums}
+.service-card .line-icon{transition:transform .24s cubic-bezier(.22,1,.36,1),box-shadow .24s ease}
+.service-card .card-no,.process-list .step-no{transition:color .2s ease}
+.service-card li{transition:border-color .2s ease,color .2s ease,background .2s ease}
+.service-card:hover .line-icon{transform:translateY(-2px) scale(1.04);box-shadow:0 14px 28px rgba(10,151,166,.26)}
+.service-card:hover .card-no,.process-list li:hover .step-no{color:var(--teal)}
+.service-card:hover li{border-color:rgba(22,170,150,.36)}
+.work-card{transition:border-color .22s ease,box-shadow .22s ease}
+.work-card:hover{border-color:rgba(22,170,150,.42);box-shadow:0 18px 42px rgba(16,26,43,.08)}
+html[data-theme=dark] .work-card:hover{border-color:rgba(111,233,202,.38);box-shadow:0 18px 44px rgba(0,0,0,.34)}
+.work-card .signal-chart i{transform-origin:bottom center;transition:transform .32s cubic-bezier(.22,1,.36,1),filter .24s ease}
+.work-card:hover .signal-chart i:nth-child(even){transform:scaleY(1.08);filter:brightness(1.06)}
+.work-card:hover .signal-chart i:nth-child(odd){transform:scaleY(.94)}
+.work-card .crm-art svg path{stroke-dasharray:220;stroke-dashoffset:0;transition:stroke .24s ease}
+.work-card:hover .crm-art svg path{stroke:var(--teal)}
+.work-card .approval{transition:border-color .22s ease,transform .22s ease}
+.work-card:hover .approval{border-color:rgba(22,170,150,.45);transform:translateY(-2px)}
+.process-list li{transition:background .18s ease}
+.process-list li:hover{background:rgba(22,170,150,.025)}
+html[data-theme=dark] .process-list li:hover{background:rgba(111,233,202,.03)}
+
 /* Agent 2: ScrollTrigger, Navigation & CTA micro-interactions (transform/opacity only) */
 .site-header.is-scrolled .nav-shell{box-shadow:0 16px 40px rgba(19,49,75,.12),inset 0 1px 0 rgba(255,255,255,.94)}
 html[data-theme=dark] .site-header.is-scrolled .nav-shell{box-shadow:0 18px 44px rgba(0,0,0,.38),inset 0 1px 0 rgba(151,238,217,.08)}
@@ -67,7 +112,9 @@ html[data-theme=dark] .site-header.is-scrolled .nav-shell{box-shadow:0 18px 44px
 .button svg{transition:transform .18s ease}
 html[dir=ltr] .button-primary:hover svg{transform:translateX(2px)}
 html[dir=rtl] .button-primary:hover svg{transform:scaleX(-1) translateX(2px)}
-@media(max-width:720px){.nas-intro{padding:16px}.nas-intro-stage{padding:18px;border-radius:20px}.nas-intro-mascot{width:min(240px,62vw)}.nas-intro-mascot-field{padding-bottom:14vh}.nas-intro-steps{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){.nas-intro{display:none!important}.nas-intro-atmo{animation:none!important}.hero-mascot.is-floating{animation:none!important;transform:none!important}.button svg{transition:none}}
+@media(max-width:720px){.nas-intro{padding:16px}.nas-intro-stage{padding:18px;border-radius:20px}.nas-intro-mascot{width:min(240px,62vw)}.nas-intro-mascot-field{padding-bottom:14vh}.nas-intro-steps{grid-template-columns:1fr}.nas-mascot-traveler{width:175px}}
+@media(prefers-reduced-motion:reduce){.nas-intro,.nas-mascot-handoff-layer{display:none!important}.nas-intro-atmo{animation:none!important}.hero-mascot.is-floating{animation:none!important;transform:none!important}.button svg,.service-card .line-icon,.work-card .signal-chart i{transition:none}}
 html[data-motion-freeze=true] .hero-mascot.is-floating{animation:none!important;transform:none!important}
+html[data-motion-freeze=true] .nas-mascot-handoff-layer{display:none!important}
+
 

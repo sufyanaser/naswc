@@ -5,7 +5,7 @@ const required = [
   'public/vendor/gsap.min.js', 'public/vendor/ScrollTrigger.min.js',
   'public/admin/index.html', 'public/admin.js', 'public/admin-uiux.css', 'public/admin-uiux.js',
   'public/admin-upload-r2.js', 'public/admin-publish-click.js', 'public/admin-partners-force.js',
-  'public/docpdf/index.html', 'docs/UI_UX_AUDIT.md',
+  'public/docpdf/index.html', 'docs/UI_UX_AUDIT.md', 'MOTION_ARCHITECTURE_DECISION.md',
   'public/robots.txt', 'public/sitemap.xml'
 ];
 for (const file of required) {
@@ -15,6 +15,7 @@ for (const file of required) {
 const html = fs.readFileSync('public/index.html', 'utf8');
 const css = fs.readFileSync('public/style.css', 'utf8');
 const js = fs.readFileSync('public/app.js', 'utf8');
+const motionDoc = fs.readFileSync('MOTION_ARCHITECTURE_DECISION.md', 'utf8');
 const adminHtml = fs.readFileSync('public/admin/index.html', 'utf8');
 const adminJs = fs.readFileSync('public/admin.js', 'utf8');
 const adminUxJs = fs.readFileSync('public/admin-uiux.js', 'utf8');
@@ -48,6 +49,9 @@ const checks = [
   ['self-hosted gsap 3.15 and scrolltrigger loaded', /src="\/vendor\/gsap\.min\.js/.test(html) && /src="\/vendor\/ScrollTrigger\.min\.js/.test(html)],
   ['motion ownership contract wired', /__NASCW_MOTION__/.test(js) && /AGENT_2/.test(js) && /AGENT_3/.test(js) && /onIntroComplete/.test(js)],
   ['agent 3 mascot intro and skip intro wired', /id="nasIntro"/.test(html) && /id="skipIntroBtn"/.test(html) && /initAgent3IntroAndHero/.test(js)],
+  ['hero-to-header spatial mascot continuity wired', /id="nasMascotHandoffLayer"/.test(html) && /id="nasMascotTraveler"/.test(html) && /initHeroToHeaderSpatialContinuity/.test(js) && /handoffState/.test(js)],
+  ['button variants integrated into page elements', /button-ghost/.test(html) && /button-cta/.test(html) && /button-surface/.test(html) && /button-whatsapp/.test(html) && /mobile-cta/.test(html) && /\.button-ghost/.test(css)],
+  ['motion architecture decision doc synchronized', /GSAP 3\.15\.0/.test(motionDoc) && /ScrollTrigger 3\.15\.0/.test(motionDoc) && /initHeroToHeaderSpatialContinuity/.test(motionDoc) && /IntersectionObserver/.test(motionDoc)],
   ['agent 2 scrolltrigger and observer fallback wired', /\breveal\b/.test(html) && /initAgent2ScrollAndInteractions/.test(js) && /IntersectionObserver/.test(js)],
   ['reduced motion fallback supported', /prefers-reduced-motion:\s*reduce/.test(css) && /prefers-reduced-motion:\s*reduce/.test(js)],
 

@@ -84,13 +84,20 @@
   const motionContract = {
     owners: Object.freeze({
       AGENT_2: ['section-reveals', 'scroll-trigger', 'card-transitions', 'nav-micro-interactions', 'cta-animations', 'shared-motion-utilities'],
-      AGENT_3: ['mascot-intro', 'intro-timeline', 'skip-intro', 'intro-to-hero-transition', 'mascot-entrance', 'reduced-motion-intro-fallback']
+      AGENT_3: ['mascot-intro', 'intro-timeline', 'skip-intro', 'intro-to-hero-transition', 'mascot-entrance', 'hero-to-header-spatial-continuity', 'reduced-motion-intro-fallback']
     }),
     timelines: new Set(),
     triggers: new Set(),
     introListeners: new Set(),
     introCompleted: false,
     introDetail: null,
+    handoffState: {
+      mode: 'hero',
+      progress: 0,
+      fromRect: null,
+      toRect: null,
+      currentRect: null
+    },
     isReducedMotion() {
       return motionMedia.matches;
     },
@@ -134,6 +141,9 @@
     revealAllImmediately() {
       this.cleanup();
       document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+      const handoffLayer = document.getElementById('nasMascotHandoffLayer');
+      if (handoffLayer) handoffLayer.hidden = true;
+      topbar?.classList.remove('is-mascot-docked');
       if (hasGsap) {
         window.gsap.killTweensOf('.reveal, .service-card, .work-card, .value-list article, .process-list li, .hero-mascot');
         window.gsap.set('.reveal, .service-card, .work-card, .value-list article, .process-list li, .hero-mascot', { clearProps: 'transform,opacity' });
@@ -379,6 +389,113 @@
   }
 
   // ---------------------------------------------------------------------------
+  // AGENT 3: Hero-to-Header Spatial Mascot Continuity (Measured FLIP Trajectory)
+  // ---------------------------------------------------------------------------
+  function initHeroToHeaderSpatialContinuity() {
+    const heroMascot = document.querySelector('.hero .hero-mascot');
+    const brandMark = document.querySelector('.site-header .brand-mark');
+    const handoffLayer = document.getElementById('nasMascotHandoffLayer');
+    const traveler = document.getElementById('nasMascotTraveler');
+    if (!heroMascot || !brandMark || !handoffLayer || !traveler) return;
+
+    const START_SCROLL = 72;
+    const END_SCROLL = 420;
+    let rafPending = false;
+
+    const updateSpatialHandoff = () => {
+      rafPending = false;
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+
+      if (motionContract.isReducedMotion() || root.dataset.motionFreeze === 'true') {
+        handoffLayer.hidden = true;
+        heroMascot.style.opacity = '';
+        const docked = scrollY >= END_SCROLL && root.dataset.motionFreeze !== 'true';
+        topbar?.classList.toggle('is-mascot-docked', docked);
+        motionContract.handoffState = {
+          mode: docked ? 'docked-in-header' : 'hero',
+          progress: docked ? 1 : 0,
+          fromRect: null,
+          toRect: null,
+          currentRect: null
+        };
+        return;
+      }
+
+      const rawP = Math.min(1, Math.max(0, (scrollY - START_SCROLL) / (END_SCROLL - START_SCROLL)));
+
+      if (rawP <= 0) {
+        handoffLayer.hidden = true;
+        heroMascot.style.opacity = '';
+        heroMascot.classList.add('is-floating');
+        topbar?.classList.remove('is-mascot-docked');
+        motionContract.handoffState = {
+          mode: 'hero',
+          progress: 0,
+          fromRect: null,
+          toRect: null,
+          currentRect: null
+        };
+        return;
+      }
+
+      if (rawP >= 1) {
+        handoffLayer.hidden = true;
+        heroMascot.style.opacity = '0';
+        heroMascot.classList.remove('is-floating');
+        topbar?.classList.add('is-mascot-docked');
+        const toRect = brandMark.getBoundingClientRect();
+        const box = { x: Math.round(toRect.left), y: Math.round(toRect.top), w: Math.round(toRect.width) };
+        motionContract.handoffState = {
+          mode: 'docked-in-header',
+          progress: 1,
+          fromRect: motionContract.handoffState.fromRect,
+          toRect: box,
+          currentRect: { ...box, scale: Number((toRect.width / (window.innerWidth <= 720 ? 175 : 235)).toFixed(3)) }
+        };
+        return;
+      }
+
+      // In-flight spatial FLIP interpolation between live .hero-mascot rect and .brand-mark rect
+      heroMascot.classList.remove('is-floating');
+      const fromRect = heroMascot.getBoundingClientRect();
+      const toRect = brandMark.getBoundingClientRect();
+      const naturalW = window.innerWidth <= 720 ? 175 : 235;
+      const t = rawP < 0.5 ? 2 * rawP * rawP : 1 - Math.pow(-2 * rawP + 2, 2) / 2;
+
+      const curW = fromRect.width + (toRect.width - fromRect.width) * t;
+      const curLeft = fromRect.left + (toRect.left - fromRect.left) * t;
+      const curTop = fromRect.top + (toRect.top - fromRect.top) * t - Math.sin(Math.PI * t) * 26;
+      const scale = curW / naturalW;
+
+      heroMascot.style.opacity = String(Math.max(0, 1 - rawP * 4).toFixed(3));
+      handoffLayer.hidden = false;
+      traveler.style.transform = `translate3d(${curLeft.toFixed(2)}px, ${curTop.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+      traveler.style.borderRadius = `${Math.round(t * 28)}%`;
+      traveler.style.opacity = rawP > 0.88 ? String(Math.max(0, (1 - rawP) / 0.12).toFixed(3)) : '1';
+      topbar?.classList.toggle('is-mascot-docked', rawP > 0.82);
+
+      motionContract.handoffState = {
+        mode: 'in-flight',
+        progress: Number(rawP.toFixed(3)),
+        fromRect: { x: Math.round(fromRect.left), y: Math.round(fromRect.top), w: Math.round(fromRect.width) },
+        toRect: { x: Math.round(toRect.left), y: Math.round(toRect.top), w: Math.round(toRect.width) },
+        currentRect: { x: Math.round(curLeft), y: Math.round(curTop), w: Math.round(curW), scale: Number(scale.toFixed(3)) }
+      };
+    };
+
+    const requestUpdate = () => {
+      if (!rafPending) {
+        rafPending = true;
+        window.requestAnimationFrame(updateSpatialHandoff);
+      }
+    };
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+    updateSpatialHandoff();
+  }
+
+  // ---------------------------------------------------------------------------
   // AGENT 2: Section Reveals, ScrollTrigger, Card Transitions,
   //          Navigation Micro-Interactions & CTA Animations
   // ---------------------------------------------------------------------------
@@ -545,17 +662,24 @@
       motionContract.cleanup();
       const introEl = document.getElementById('nasIntro');
       if (introEl) introEl.hidden = true;
+      const handoffLayer = document.getElementById('nasMascotHandoffLayer');
+      if (handoffLayer) handoffLayer.hidden = true;
       root.classList.remove('has-intro-active');
       document.querySelectorAll('.reveal').forEach((el) => {
         el.classList.add('is-visible');
         if (hasGsap) window.gsap.set(el, { clearProps: 'all' });
       });
-      document.querySelector('.hero-mascot')?.classList.remove('is-floating');
+      const hm = document.querySelector('.hero-mascot');
+      if (hm) {
+        hm.classList.remove('is-floating');
+        hm.style.opacity = '';
+      }
     }
   });
 
   // Coordinate Agent 3 -> Agent 2 via Motion Ownership Contract
   motionContract.onIntroComplete(() => {
+    initHeroToHeaderSpatialContinuity();
     initAgent2ScrollAndInteractions();
   });
   initAgent3IntroAndHero();

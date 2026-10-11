@@ -1,8 +1,7 @@
 import fs from 'node:fs';
 
 const required = [
-  'public/index.html', 'public/site.css', 'public/studio-v5.css', 'public/nexacore-v6.css', 'public/site.js',
-  'public/vendor/gsap.min.js', 'public/vendor/ScrollTrigger.min.js',
+  'public/index.html', 'public/style.css', 'public/app.js',
   'public/admin/index.html', 'public/admin.js', 'public/admin-uiux.css', 'public/admin-uiux.js',
   'public/admin-upload-r2.js', 'public/admin-publish-click.js', 'public/admin-partners-force.js',
   'public/docpdf/index.html', 'docs/UI_UX_AUDIT.md',
@@ -13,10 +12,8 @@ for (const file of required) {
 }
 
 const html = fs.readFileSync('public/index.html', 'utf8');
-const css = fs.readFileSync('public/site.css', 'utf8');
-const js = fs.readFileSync('public/site.js', 'utf8');
-const studioCss = fs.readFileSync('public/studio-v5.css', 'utf8');
-const nexacoreCss = fs.readFileSync('public/nexacore-v6.css', 'utf8');
+const css = fs.readFileSync('public/style.css', 'utf8');
+const js = fs.readFileSync('public/app.js', 'utf8');
 const adminHtml = fs.readFileSync('public/admin/index.html', 'utf8');
 const adminJs = fs.readFileSync('public/admin.js', 'utf8');
 const adminUxJs = fs.readFileSync('public/admin-uiux.js', 'utf8');
@@ -40,40 +37,53 @@ const frozenStateKeys = [
 ];
 
 const checks = [
-  ['html lang', /<html[^>]*lang="ar"/i.test(html)],
-  ['rtl direction', /dir="rtl"/i.test(html)],
-  ['site stylesheet', /href="\/site\.css(?:\?[^\"]*)?"/i.test(html)],
-  ['site script', /src="\/site\.js(?:\?[^\"]*)?"/i.test(html)],
-  ['services section', /id="services"/i.test(html)],
-  ['websites section', /id="websites"/i.test(html)],
-  ['systems section', /id="systems"/i.test(html)],
-  ['work section', /id="work"/i.test(html)],
-  ['contact section', /id="contact"/i.test(html)],
-  ['strategic partners section', /id="partners"/i.test(html) && /data-partners-list/i.test(html)],
+  // --- Public marketing site (v7 — light bilingual SaaS redesign) ---
+  ['default document language is Arabic', /<html[^>]*lang="ar"/i.test(html)],
+  ['default direction is rtl', /<html[^>]*dir="rtl"/i.test(html)],
+  ['consolidated stylesheet loaded', /href="\/style\.css(?:\?[^"]*)?"/i.test(html)],
+  ['consolidated script loaded', /src="\/app\.js(?:\?[^"]*)?"/i.test(html)],
+  ['no legacy patch stylesheets referenced', !/site\.css|studio-v5\.css|nexacore-v6\.css|hero-workflow\.css|team-orbit|layout-rhythm-pass|compare-focus|premium-team-services|team-photo-transparent-fix|team-final-cards/.test(html)],
+  ['no legacy patch scripts referenced', !/src="\/(?:site|render|render-core|partners-render|custom-blocks-render|slideshow-polish|founder-copy-fix|header-nav-polish|copy-tone-patch|copy-tone-apply|team-four-cards)\.js/.test(html)],
+  ['no gsap / scrolltrigger dependency', !/vendor\/gsap|vendor\/ScrollTrigger/.test(html) && !/gsap|ScrollTrigger/.test(js)],
+
+  ['bilingual AR/EN toggle markup', /data-lang-set="ar"/.test(html) && /data-lang-set="en"/.test(html)],
+  ['bilingual content pairs present', /data-lang="ar"/.test(html) && /data-lang="en"/.test(html)],
+  ['bilingual toggle behavior wired', /applyLang/.test(js) && /data-lang-set/.test(js)],
+
+  ['header section', /<header class="topbar"/i.test(html)],
+  ['hero section', /class="hero"/.test(html)],
+  ['core services section', /id="services"/i.test(html)],
+  ['website packages section', /id="packages"/i.test(html)],
+  ['selected work section', /id="work"/i.test(html)],
+  ['why nas codeworks section', /id="why"/i.test(html)],
+  ['engagement process section', /id="process"/i.test(html)],
+  ['contact / cta section', /id="contact"/i.test(html)],
+
+  ['selected work status badges are honest', /is-dev/.test(html) && /is-beta/.test(html) && !/is-live/.test(html)],
+
+  ['strategic partners section markup', /id="partners"/i.test(html) && /data-partners-list/i.test(html)],
   ['strategic partners data binding', /fetch\('\/content\.json'/.test(js) && /renderPartners/.test(js)],
-  ['strategic partners placement', html.indexOf('id="partners"') < html.indexOf('id="contact"') && /faqSection\.before\(partnersSection\)/.test(js)],
+  ['strategic partners placed before contact', html.indexOf('id="partners"') > -1 && html.indexOf('id="partners"') < html.indexOf('id="contact"')],
   ['strategic partners fallback data', defaultContent.partners?.enabled === true && defaultContent.partners.items?.length > 0],
-  ['studio stylesheet', /href="\/studio-v5\.css(?:\?[^\"]*)?"/i.test(html) && studioCss.length > 10000],
-  ['v6 visual language', /href="\/nexacore-v6\.css(?:\?[^\"]*)?"/i.test(html) && nexacoreCss.length > 15000],
-  ['v6 luminous hero', /class="hero-rays"/.test(html) && /\.hero-rays/.test(nexacoreCss)],
-  ['v6 rotating depth', /class="hero-rotors"/.test(html) && /@keyframes v6-rotor-cw/.test(nexacoreCss)],
-  ['self-hosted gsap', /src="\/vendor\/gsap\.min\.js/.test(html) && /src="\/vendor\/ScrollTrigger\.min\.js/.test(html)],
-  ['interactive capabilities', /class="[^"]*capability-console[^"]*"/i.test(html) && /selectCapability/.test(js)],
-  ['currency toggle', /data-currency="IQD"/i.test(html) && /data-currency="USD"/i.test(html)],
-  ['new whatsapp number', /9647804228066/.test(html) && !/9647708111744/.test(html)],
-  ['mobile app dock', /class="mobile-app-dock"/i.test(html)],
-  ['currency behavior', /price-card\[data-iqd\]\[data-usd\]/.test(js)],
+
+  ['lightweight reveal-on-scroll (no animation library)', /\breveal\b/.test(html) && /IntersectionObserver/.test(js)],
+  ['currency toggle markup', /data-currency="IQD"/i.test(html) && /data-currency="USD"/i.test(html)],
+  ['currency toggle behavior', /price-card\[data-iqd\]\[data-usd\]/.test(js)],
+  ['whatsapp business number', /9647804228066/.test(html) && !/9647708111744/.test(html)],
   ['canonical url', /rel="canonical" href="https:\/\/nascw\.net\/"/.test(html)],
-  ['css content', css.length > 10000],
-  ['js content', js.length > 500]
-  ,['admin control ids preserved', adminIds.every(id => new RegExp(`id=["']${id}["']`).test(adminHtml))]
-  ,['all section builders preserved', sectionBuilders.every(id => new RegExp(`B\\.${id}\\s*=`).test(adminJs))]
-  ,['admin state keys preserved', frozenStateKeys.every(key => adminJs.includes(key) || adminHtml.includes(key))]
-  ,['same import export nodes moved', /menu\.append\(importButton, exportButton\)/.test(adminUxJs)]
-  ,['advanced blocks preserved', ['text','divider','image','callout'].every(type => fs.readFileSync('public/admin-publish-click.js','utf8').includes(`'${type}'`))]
-  ,['upload api preserved', adminJs.includes('/api/upload-image') && uploadJs.includes('/api/content')]
-  ,['document studio state preserved', docpdf.includes("S='nas_docpdf_clear_v4'")]
-  ,['gate controls preserved', ['gate-pass','gate-go','gate-err'].every(id => new RegExp(`id=["']${id}["']`).test(adminHtml))]
+  ['legal footer line preserved', /شركة الرنين للخدمات الإعلامية والرقمية والإعلانية والإنتاج الفني/.test(html)],
+  ['stylesheet substantial', css.length > 10000],
+  ['script content present', js.length > 500],
+
+  // --- Admin CMS / Document Studio (frozen contracts — docs/UI_UX_AUDIT.md) ---
+  ['admin control ids preserved', adminIds.every(id => new RegExp(`id=["']${id}["']`).test(adminHtml))],
+  ['all section builders preserved', sectionBuilders.every(id => new RegExp(`B\\.${id}\\s*=`).test(adminJs))],
+  ['admin state keys preserved', frozenStateKeys.every(key => adminJs.includes(key) || adminHtml.includes(key))],
+  ['same import export nodes moved', /menu\.append\(importButton, exportButton\)/.test(adminUxJs)],
+  ['advanced blocks preserved', ['text', 'divider', 'image', 'callout'].every(type => fs.readFileSync('public/admin-publish-click.js', 'utf8').includes(`'${type}'`))],
+  ['upload api preserved', adminJs.includes('/api/upload-image') && uploadJs.includes('/api/content')],
+  ['document studio state preserved', docpdf.includes("S='nas_docpdf_clear_v4'")],
+  ['gate controls preserved', ['gate-pass', 'gate-go', 'gate-err'].every(id => new RegExp(`id=["']${id}["']`).test(adminHtml))]
 ];
 const failed = checks.filter(([, ok]) => !ok);
 if (failed.length) throw new Error(`Validation failed: ${failed.map(([n]) => n).join(', ')}`);
